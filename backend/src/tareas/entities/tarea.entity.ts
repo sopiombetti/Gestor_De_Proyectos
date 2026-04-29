@@ -1,7 +1,9 @@
-import { Usuario } from "src/usuarios/entities/usuario.entity";
-import { JoinColumn } from "typeorm/browser";
+import { Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class Tarea {
-    @JoinColumn({ name: 'usuario_id' })
-    usuario!: Usuario;
+
+  @PrimaryGeneratedColumn()
+  id!: number;
+
 }
