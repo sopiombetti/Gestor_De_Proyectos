@@ -25,7 +25,7 @@ export default function UserRegister(){
             </h2>
             </div>
 
-        <form className="flex flex-col gap-3 bg-white p-6 rounded shadow-md w-96">
+        <form className="flex flex-col gap-3 p-6 w-96">
             
             <div className="flex gap-22">
                 <div className="w-1/2">
