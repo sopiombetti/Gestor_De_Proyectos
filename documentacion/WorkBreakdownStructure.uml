@@ -55,6 +55,37 @@ skinparam componentStyle rectangle
 [Vista Tareas] --> [Panel Prioridad]
 [Vista Tareas] --> [Panel Comentarios]
 
+'BACKEND API-AUTENTIFICACION'
+[Backend] --> [API de Autenticación]
+[API de Autenticación] --> [Registro Usuario]
+[API de Autenticación] --> [Login Usuario]
+[API de Autenticación] --> [Validación JWT]
+[API de Autenticación] --> [Hash Contraseñas]
+[API de Autenticación] --> [Roles y Permisos]
+[API de Autenticación] --> [Recuperación Contraseña]
+
+[Backend] --> [API de Tareas]
+[API de Tareas] --> [Crear Tarea]
+[API de Tareas] --> [Editar Tarea]
+[API de Tareas] --> [Eliminar Tarea]
+[API de Tareas] --> [Obtener Tareas]
+[API de Tareas] --> [Asignar Usuarios]
+[API de Tareas] --> [Cambiar Prioridad]
+[API de Tareas] --> [Comentarios]
+[API de Tareas] --> [Estados de Tarea]
+
+[Backend] --> [API de Proyectos]
+[API de Proyectos] --> [Crear Proyecto]
+[API de Proyectos] --> [Editar Proyecto]
+[API de Proyectos] --> [Eliminar Proyecto]
+[API de Proyectos] --> [Miembros Proyecto]
+[API de Proyectos] --> [Roles Proyecto]
+
+[Backend] --> [Importación WBS]
+[Importación WBS] --> [Lectura Archivo]
+[Importación WBS] --> [Validación Estructura]
+[Importación WBS] --> [Creación Automática Tareas]
+[Importación WBS] --> [Manejo Errores]
 
 
 
