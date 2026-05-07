@@ -88,5 +88,25 @@ skinparam componentStyle rectangle
 [Importación WBS] --> [Manejo Errores]
 
 
+'BASE DE DATOS'
+[Database] --> [Diseño Base Datos]
+[Diseño Base Datos] --> [Modelo Usuarios]
+[Diseño Base Datos] --> [Modelo Proyecto]
+[Diseño Base Datos] --> [Modelo Tareas]
+[Diseño Base Datos] --> [Modelo Roles]
+
+[Database] --> [Creación Tablas]
+[Creación Tablas] --> [Tabla Usuarios]
+[Creación Tablas] --> [Tabla Proyectos]
+[Creación Tablas] --> [Tabla Tareas]
+[Creación Tablas] --> [Tabla Prioridades]
+
+[Database] --> [Relaciones ER]
+[Relaciones ER] --> [Usuario crea Proyecto]
+[Relaciones ER] --> [Proyecto contiene Tareas]
+[Relaciones ER] --> [Usuario asignado a Tarea]
+[Relaciones ER] --> [Roles y Permisos]
+
+
 
 @enduml
