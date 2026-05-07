@@ -53,7 +53,7 @@ skinparam componentStyle rectangle
 [Vista Tareas] --> [Panel Editar Tarea]
 [Vista Tareas] --> [Panel Usuarios Asignados]
 [Vista Tareas] --> [Panel Prioridad]
-[Vista Tareas] --> [Panel Comentarios]
+
 
 'BACKEND API-AUTENTIFICACION'
 [Backend] --> [API de Autenticación]
@@ -71,7 +71,6 @@ skinparam componentStyle rectangle
 [API de Tareas] --> [Obtener Tareas]
 [API de Tareas] --> [Asignar Usuarios]
 [API de Tareas] --> [Cambiar Prioridad]
-[API de Tareas] --> [Comentarios]
 [API de Tareas] --> [Estados de Tarea]
 
 [Backend] --> [API de Proyectos]
@@ -80,6 +79,13 @@ skinparam componentStyle rectangle
 [API de Proyectos] --> [Eliminar Proyecto]
 [API de Proyectos] --> [Miembros Proyecto]
 [API de Proyectos] --> [Roles Proyecto]
+
+[Backend] --> [API de Usuarios]
+[API de Usuarios] --> [Crear Usuario]
+[API de Usuarios] --> [Editar Usuario]
+[API de Usuarios] --> [Eliminar Usuario]
+[API de Usuarios] --> [Miembros Usuario]
+[API de Usuarios] --> [Roles Usuario]
 
 [Backend] --> [Importación WBS]
 [Importación WBS] --> [Lectura Archivo]
