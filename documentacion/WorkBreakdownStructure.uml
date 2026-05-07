@@ -1,0 +1,61 @@
+@startuml
+skinparam componentStyle rectangle
+
+[Gestor de Proyectos] --> [Frontend]
+[Gestor de Proyectos] --> [Backend]
+[Gestor de Proyectos] --> [Database]
+[Gestor de Proyectos] --> [UX/UI Design]
+[Gestor de Proyectos] --> [QA Testing]
+
+'FRONTEND AUTENTIFICACION'
+
+[Frontend] --> [Interfaz de Autenticación]
+[Interfaz de Autenticación] --> [Formulario de Registro]
+[Formulario de Registro] --> [Input Nombre]
+[Formulario de Registro] --> [Input Mail]
+[Formulario de Registro] --> [Input Contraseña]
+[Formulario de Registro] --> [Botón Registrar]
+[Formulario de Registro] --> [Validaciones Registro]
+[Formulario de Registro] --> [Conexión Backend Registro]
+[Formulario de Registro] --> [Pantalla Usuario Registrado]
+
+[Interfaz de Autenticación] --> [Formulario de Ingreso]
+[Formulario de Ingreso] --> [Input Mail Login]
+[Formulario de Ingreso] --> [Input Contraseña Login]
+[Formulario de Ingreso] --> [Botón Ingresar]
+[Formulario de Ingreso] --> [Autenticación Usuario]
+[Formulario de Ingreso] --> [Conexión Backend Login]
+[Formulario de Ingreso] --> [Pantalla Bienvenida]
+
+
+'FRONTEND DASHBOARD USUARIO'
+[Frontend] --> [Dashboard de Usuario]
+[Dashboard de Usuario] --> [ Proyecto Asignado]
+[Dashboard de Usuario] --> [Lista de Tareas]
+[Dashboard de Usuario] --> [Tus Tareas]
+[Dashboard de Usuario] --> [Nav menu]
+[Nav menu] --> [Mi perfil]
+[Nav menu] --> [Volver al Dashboard de usuario]
+[Nav menu] --> [Notificaciones]
+[Nav menu] --> [Cerrar Sesión]
+
+
+'FRONTEND TAREAS'
+[Frontend] --> [Lista de Tareas]
+[Lista de Tareas] --> [Estado]
+[Lista de Tareas] --> [input Título de Tarea]
+[Lista de Tareas] --> [seleccion Prioridad de Tarea]
+[Lista de Tareas] --> [seleccion Usuario Asignado]
+
+[Lista de Tareas] --> [Vista Tareas]
+[Vista Tareas] --> [Panel Detalle de Tarea]
+[Vista Tareas] --> [Panel Crear Tarea]
+[Vista Tareas] --> [Panel Editar Tarea]
+[Vista Tareas] --> [Panel Usuarios Asignados]
+[Vista Tareas] --> [Panel Prioridad]
+[Vista Tareas] --> [Panel Comentarios]
+
+
+
+
+@enduml
