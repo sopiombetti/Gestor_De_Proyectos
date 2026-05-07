@@ -132,6 +132,24 @@ skinparam componentStyle rectangle
 [User Flows] --> [Flujo Asignar Usuarios]
 
 
+'QA TESTING'
+[QA Testing] --> [Tests de Autenticación]
+[Tests de Autenticación] --> [Test Login]
+[Tests de Autenticación] --> [Test Registro]
+[Tests de Autenticación] --> [Test JWT]
+[Tests de Autenticación] --> [Test Permisos]
+
+[QA Testing] --> [Tests de Tareas]
+[Tests de Tareas] --> [Test Crear Tarea]
+[Tests de Tareas] --> [Test Editar Tarea]
+[Tests de Tareas] --> [Test Eliminar Tarea]
+[Tests de Tareas] --> [Test Prioridades]
+[Tests de Tareas] --> [Test Comentarios]
+
+[QA Testing] --> [Tests de Importación WBS]
+[Tests de Importación WBS] --> [Test Lectura Archivo]
+[Tests de Importación WBS] --> [Test Validación Datos]
+[Tests de Importación WBS] --> [Test Creación Automática]
 
 
 @enduml
