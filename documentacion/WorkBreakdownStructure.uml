@@ -108,5 +108,30 @@ skinparam componentStyle rectangle
 [Relaciones ER] --> [Roles y Permisos]
 
 
+'UX/UI DESIGN'
+[UX/UI Design] --> [Wireframes]
+[Wireframes] --> [Pantalla Login]
+[Wireframes] --> [Pantalla Registro]
+[Wireframes] --> [Dashboard Usuario]
+[Wireframes] --> [Vista Tareas]
+[Wireframes] --> [Kanban Board]
+
+[UX/UI Design] --> [Design System]
+[Design System] --> [Paleta de Colores]
+[Design System] --> [Tipografía]
+[Design System] --> [Botones]
+[Design System] --> [Inputs]
+[Design System] --> [Cards]
+[Design System] --> [Modales]
+
+[UX/UI Design] --> [User Flows]
+[User Flows] --> [Flujo Registro]
+[User Flows] --> [Flujo Login]
+[User Flows] --> [Flujo Crear Proyecto]
+[User Flows] --> [Flujo Crear Tarea]
+[User Flows] --> [Flujo Asignar Usuarios]
+
+
+
 
 @enduml
