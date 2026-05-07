@@ -1,0 +1,37 @@
+@startuml
+
+entity Usuario {
+    id : integer
+    nombre : varchar
+    apellido : varchar
+    mail : varchar
+    contrasenia : varchar
+    posicionLaboral : varchar
+}
+
+entity Proyecto {
+    id : integer
+    titulo : varchar
+    descripcion : varchar
+    fechaCreacion : timestamp
+    id_lider : integer
+}
+
+entity Tarea {
+    id : integer
+    titulo : string
+    descripcion : string
+    prioridad : string
+    estimacion : double
+}
+
+entity Estado {
+    id : string
+    nombre : string
+}
+
+Proyecto "1" --> "*" Tarea
+Usuario "1" --> "*" Tarea
+Estado "1" --> "*" Tarea
+
+@enduml
