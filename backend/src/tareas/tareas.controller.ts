@@ -5,7 +5,7 @@ import { UpdateTareaDto } from './dto/update-tarea.dto';
 
 @Controller('tareas')
 export class TareasController {
-  constructor(private readonly tareasService: TareasService) {}
+  constructor(private readonly tareasService: TareasService) { }
 
   @Post()
   create(@Body() createTareaDto: CreateTareaDto) {
@@ -20,6 +20,21 @@ export class TareasController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.tareasService.findOne(+id);
+  }
+  
+  @Get('/usuario/:id')
+  findByUsuario(@Param('id') id: string) {
+    return this.tareasService.findByUsuario(+id);
+  }
+
+  @Get('/prioridad/:id')
+  findByPrioridad(@Param('id') id: string) {
+    return this.tareasService.findByPrioridad(+id);
+  }
+
+  @Get('/estado/:id')
+  findByEstado(@Param('id') id: string) {
+    return this.tareasService.findByEstado(+id);
   }
 
   @Patch(':id')
