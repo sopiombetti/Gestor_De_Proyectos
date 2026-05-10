@@ -21,7 +21,7 @@ export class Tarea {
   
   @ManyToOne(() => Proyecto, (proyecto) => proyecto.tareas)
   @JoinColumn({ name: 'idProyecto' })
-  proyecto!: Proyecto;
+  Proyecto!: Proyecto;
   
   @Column()
   idEstado!: number;
