@@ -1,6 +1,5 @@
-import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { BadRequestException, NotFoundException } from "@nestjs/common";
+import {  NotFoundException } from "@nestjs/common";
 import { Estado } from "./entities/estado.entity";
 
 export class ValidarEstado{

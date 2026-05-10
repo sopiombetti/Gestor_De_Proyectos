@@ -6,6 +6,7 @@ import { TareasModule } from './tareas/tareas.module';
 import { ProyectosModule } from './proyectos/proyectos.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EstadosModule } from './estados/estados.module';
+import { PrioridadModule } from './prioridad/prioridad.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { EstadosModule } from './estados/estados.module';
     TareasModule,
     ProyectosModule,
     EstadosModule,
+    PrioridadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
