@@ -5,34 +5,42 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Tarea } from './entities/tarea.entity';
 import { Repository } from 'typeorm';
 import { ValidarTarea } from './validarTarea';
-import { ValidarUsuario } from '../usuarios/validarUsuario';
+import { UsuariosService } from 'src/usuarios/usuarios.service';
+import { EstadosService } from 'src/estados/estados.service';
 
 @Injectable()
 export class TareasService {
   constructor(@InjectRepository(Tarea)
-  private readonly tareaRepo: Repository<Tarea>, private readonly validarTarea: ValidarTarea, private readonly validarUsuario: ValidarUsuario) { }
+  private readonly tareaRepo: Repository<Tarea>, private readonly validarTarea: ValidarTarea, private readonly usuarioService: UsuariosService, private readonly estadoService: EstadosService) { }
 
   async create(createTareaDto: CreateTareaDto) {
-    this.validarTarea.validarDto(createTareaDto);
+
     const nuevaTarea = this.tareaRepo.create({... createTareaDto})
     return await this.tareaRepo.save(nuevaTarea);   
+  
   }
 
   async findAll() {
+
     return await this.tareaRepo.find;
+
   }
 
   findOne(id: number) {
+
     const tarea = this.validarTarea.validarIdTarea(id);
     return tarea;
+
   }
 
   async findByUsuario(idUsuario: number) {
 
-    await this.validarUsuario.validarIdUsuario(idUsuario);
+    await this.usuarioService.findOne(idUsuario);
+
     const tareas = await this.tareaRepo.find({
       where: { idUsuario },
     });
+
   return tareas;
 
   }
@@ -42,17 +50,18 @@ export class TareasService {
     //await this.validarPrioridad.validarIdPrioridad(idPrioridad);
     return await this.tareaRepo.find({
     where: { idPrioridad },
-
     });
+
   }
 
   async findByEstado(idEstado: number) {
 
-    //await this.validarEstado.validarIdEstado(idEstado);
+    await this.estadoService.findOne(idEstado);
+
     return await this.tareaRepo.find({
     where: { idEstado },
-
     });
+    
   }
 
   async update(id: number, updateTareaDto: UpdateTareaDto) {
