@@ -1,8 +1,6 @@
-import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Tarea } from "./entities/tarea.entity";
-import { BadRequestException, NotFoundException } from "@nestjs/common";
-import { CreateTareaDto } from "./dto/create-tarea.dto";
+import { NotFoundException } from "@nestjs/common";
 
 export class ValidarTarea{
 
