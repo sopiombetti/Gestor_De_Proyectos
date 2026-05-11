@@ -9,5 +9,4 @@ export class PrioridadController {
   findAll() {
     return this.prioridadService.findAll();
   }
-  
 }

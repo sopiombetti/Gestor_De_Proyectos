@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Estado } from './entities/estado.entity';
 import { ValidarEstado } from './validarEstado';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,11 +16,8 @@ export class EstadosService {
   }
 
   findOne(id: number) {
-
     const estado = this.validarEstado.validarIdEstado(id)
-
     return estado;
-
   }
 
 }

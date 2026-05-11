@@ -19,26 +19,5 @@ export class ValidarUsuario{
             throw new NotFoundException('Usuario no encontrado');
         }
         return usuario;
-    }
-
-    public async validarDto(dto: CreateUsuarioDto) {
-        if(dto.apellido === null){
-            if(dto.nombre === null){
-                    
-                throw new BadRequestException('Los campos "Nombre" y "Apellido" son obligatorios.');
-            }
-            
-            throw new BadRequestException('El campo "Nombre" es obligatorio.');
-
-        }else if(dto.apellido === null){
-            
-            throw new BadRequestException('El campo "Apellido" es obligatorio.');
-
-        }else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dto.email)) {
-
-            throw new BadRequestException('Email inválido');
-
-        }
-    }
-    
+    }    
 }

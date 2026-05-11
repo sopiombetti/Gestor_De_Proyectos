@@ -7,6 +7,5 @@ export class Estado {
     id!: number;
     
     @Column()
-    nombre!: string;
-    
+    nombre!: string; 
 }
