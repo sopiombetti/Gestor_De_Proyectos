@@ -7,15 +7,17 @@ import { Repository } from 'typeorm';
 import { ValidarTarea } from './validarTarea';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
 import { EstadosService } from 'src/estados/estados.service';
+import { PrioridadService } from 'src/prioridad/prioridad.service';
 
 @Injectable()
 export class TareasService {
   constructor(@InjectRepository(Tarea)
-  private readonly tareaRepo: Repository<Tarea>, private readonly validarTarea: ValidarTarea, private readonly usuarioService: UsuariosService, private readonly estadoService: EstadosService) { }
+  private readonly tareaRepo: Repository<Tarea>, private readonly validarTarea: ValidarTarea, private readonly usuarioService: UsuariosService, private readonly estadoService: EstadosService, private readonly prioridadService: PrioridadService) { }
 
   async create(createTareaDto: CreateTareaDto) {
 
     const nuevaTarea = this.tareaRepo.create({... createTareaDto})
+    
     return await this.tareaRepo.save(nuevaTarea);   
   
   }
@@ -29,6 +31,7 @@ export class TareasService {
   findOne(id: number) {
 
     const tarea = this.validarTarea.validarIdTarea(id);
+    
     return tarea;
 
   }
@@ -41,13 +44,14 @@ export class TareasService {
       where: { idUsuario },
     });
 
-  return tareas;
+    return tareas;
 
   }
 
   async findByPrioridad(idPrioridad: number) {
 
-    //await this.validarPrioridad.validarIdPrioridad(idPrioridad);
+    await this.prioridadService.findOne(idPrioridad);
+
     return await this.tareaRepo.find({
     where: { idPrioridad },
     });
