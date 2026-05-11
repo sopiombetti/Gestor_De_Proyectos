@@ -1,5 +1,8 @@
+import { Estado } from 'src/estados/entities/estado.entity';
+import { Prioridad } from 'src/prioridad/entities/prioridad.entity';
 import { Proyecto } from 'src/proyectos/entities/proyecto.entity';
-import { Column, Entity, ForeignKey, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Usuario } from 'src/usuarios/entities/usuario.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Tarea {
@@ -13,21 +16,21 @@ export class Tarea {
   @Column()
   descripcion!: string;
   
-  @Column()
-  idPrioridad!: number;
-  
-  @Column()
-  idProyecto!: number;
-  
-  @ManyToOne(() => Proyecto, (proyecto) => proyecto.tareas)
+  @ManyToOne(() => Proyecto)
   @JoinColumn({ name: 'idProyecto' })
-  Proyecto!: Proyecto;
+  proyecto!: Proyecto;
   
-  @Column()
-  idEstado!: number;
+  @ManyToOne(() => Estado)
+  @JoinColumn({ name: 'idEstado' })
+  estado!: Estado;
   
-  @Column()
-  idUsuario!: number;
+  @ManyToOne(() => Prioridad)
+  @JoinColumn({ name: 'idPrioridad' })
+  prioridad!: Prioridad;
+
+  @ManyToOne(() => Usuario)
+  @JoinColumn({ name: 'idUsuario' })
+  usuario!: Usuario;
 
   @Column()
   estimacion!: number;

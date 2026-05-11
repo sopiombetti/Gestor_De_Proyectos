@@ -16,75 +16,69 @@ export class TareasService {
 
   async create(createTareaDto: CreateTareaDto) {
 
-    const nuevaTarea = this.tareaRepo.create({... createTareaDto})
+    //await this.proyectoService.findOne(createTareaDto.idProyecto)
+    await this.estadoService.findOne(createTareaDto.idEstado);
+    await this.prioridadService.findOne(createTareaDto.idPrioridad);
+
+    if(createTareaDto.idUsuario){
+      await this.usuarioService.findOne(createTareaDto.idUsuario);
+    }
+
+    const nuevaTarea = this.tareaRepo.create({
+      titulo: createTareaDto.titulo,
+      descripcion: createTareaDto.descripcion,
+      usuario: createTareaDto.idUsuario ? { id : createTareaDto.idUsuario } : undefined,
+      estimacion: createTareaDto.estimacion ?? undefined, 
+      proyecto: { id: createTareaDto.idProyecto }, 
+      estado: { id: createTareaDto.idEstado },
+      prioridad: { id: createTareaDto.idPrioridad}
+    })
     
     return await this.tareaRepo.save(nuevaTarea);   
-  
   }
 
   async findAll() {
-
     return await this.tareaRepo.find;
-
   }
 
   findOne(id: number) {
-
     const tarea = this.validarTarea.validarIdTarea(id);
-    
     return tarea;
-
   }
 
   async findByUsuario(idUsuario: number) {
-
     await this.usuarioService.findOne(idUsuario);
-
-    const tareas = await this.tareaRepo.find({
-      where: { idUsuario },
+    const tareas: Tarea[] = await this.tareaRepo.find({
+      where: {  usuario: { id: idUsuario } },
     });
-
     return tareas;
-
   }
 
   async findByPrioridad(idPrioridad: number) {
-
     await this.prioridadService.findOne(idPrioridad);
-
-    return await this.tareaRepo.find({
-    where: { idPrioridad },
-    });
-
+    const tareas: Tarea[] = await this.tareaRepo.find({
+    where: { prioridad: { id: idPrioridad } },
+    }); 
+    return tareas;
   }
 
   async findByEstado(idEstado: number) {
-
     await this.estadoService.findOne(idEstado);
-
-    return await this.tareaRepo.find({
-    where: { idEstado },
+    const tareas: Tarea[] = await this.tareaRepo.find({
+    where: { estado: { id: idEstado } },
     });
-    
+    return tareas;
   }
 
   async update(id: number, updateTareaDto: UpdateTareaDto) {
-
     const tarea = await this.validarTarea.validarIdTarea(id);
-
     const tareaActualizada = this.tareaRepo.merge(tarea, updateTareaDto);
-
     return await this.tareaRepo.save(tareaActualizada);
-
   }
 
   async remove(id: number) {
-
     const tarea = await this.validarTarea.validarIdTarea(id);
-
     await this.tareaRepo.remove(tarea);
-
     return { message: 'Tarea eliminada correctamente' };
-
   }
 }

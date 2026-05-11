@@ -9,7 +9,6 @@ export class ValidarEstado{
     constructor(estado: Repository<Estado>) { 
         this.estadoRepo = estado;
     }
-
     
     public async validarIdEstado(id: number) {
         const estado = await this.estadoRepo.findOne({ where: { id } });

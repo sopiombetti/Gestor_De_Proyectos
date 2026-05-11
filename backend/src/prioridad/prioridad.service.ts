@@ -15,10 +15,7 @@ export class PrioridadService {
   }
 
   findOne(id: number) {
-    
     const prioridad = this.validarPrioridad.validarIdprioridad(id);
-    
     return prioridad;
-
   }
 }
