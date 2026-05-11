@@ -12,11 +12,6 @@ export class ProyectosController {
     return this.proyectosService.create(createProyectoDto);
   }
 
-  @Get()
-  findAll() {
-    return this.proyectosService.findAll();
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.proyectosService.findOne(+id);
