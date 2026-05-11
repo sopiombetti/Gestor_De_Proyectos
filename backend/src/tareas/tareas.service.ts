@@ -8,15 +8,16 @@ import { ValidarTarea } from './validarTarea';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
 import { EstadosService } from 'src/estados/estados.service';
 import { PrioridadService } from 'src/prioridad/prioridad.service';
+import { ProyectosService } from 'src/proyectos/proyectos.service';
 
 @Injectable()
 export class TareasService {
   constructor(@InjectRepository(Tarea)
-  private readonly tareaRepo: Repository<Tarea>, private readonly validarTarea: ValidarTarea, private readonly usuarioService: UsuariosService, private readonly estadoService: EstadosService, private readonly prioridadService: PrioridadService) { }
+  private readonly tareaRepo: Repository<Tarea>, private readonly validarTarea: ValidarTarea, private readonly usuarioService: UsuariosService, private readonly estadoService: EstadosService, private readonly prioridadService: PrioridadService, private readonly proyectoService: ProyectosService) { }
 
   async create(createTareaDto: CreateTareaDto) {
 
-    //await this.proyectoService.findOne(createTareaDto.idProyecto)
+    await this.proyectoService.findOne(createTareaDto.idProyecto);
     await this.estadoService.findOne(createTareaDto.idEstado);
     await this.prioridadService.findOne(createTareaDto.idPrioridad);
 
