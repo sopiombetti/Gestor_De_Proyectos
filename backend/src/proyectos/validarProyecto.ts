@@ -1,14 +1,15 @@
 import { Repository } from "typeorm";
-import { NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Proyecto } from "./entities/proyecto.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
+@Injectable()
 export class ValidarProyecto{
 
-    proyectoRepo!: Repository<Proyecto>;
-
-    constructor(proyecto: Repository<Proyecto>) { 
-        this.proyectoRepo = proyecto;
-    }
+    constructor(
+            @InjectRepository(Proyecto)
+            private readonly proyectoRepo: Repository<Proyecto>,
+        ) { }
 
     
     public async validarIdProyecto(id: number) {

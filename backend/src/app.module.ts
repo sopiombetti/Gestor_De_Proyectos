@@ -15,7 +15,7 @@ import { PrioridadModule } from './prioridad/prioridad.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'postgres',
+      password: '123456',
       database: 'gestor_proyectos',
       autoLoadEntities: true,
       synchronize: true,

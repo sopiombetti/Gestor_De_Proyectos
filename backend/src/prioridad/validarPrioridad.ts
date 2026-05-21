@@ -1,14 +1,15 @@
 import { Repository } from "typeorm";
-import { NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Prioridad } from "./entities/prioridad.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
+@Injectable()
 export class ValidarPrioridad{
 
-    prioridadRepo!: Repository<Prioridad>;
-
-    constructor(prioridad: Repository<Prioridad>) { 
-        this.prioridadRepo = prioridad;
-    }
+    constructor(
+            @InjectRepository(Prioridad)
+            private readonly prioridadRepo: Repository<Prioridad>,
+        ) { }
 
     
     public async validarIdprioridad(id: number) {

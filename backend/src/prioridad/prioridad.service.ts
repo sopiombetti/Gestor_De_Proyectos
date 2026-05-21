@@ -11,7 +11,7 @@ export class PrioridadService {
   private readonly prioridadRepo: Repository<Prioridad>, private readonly validarPrioridad: ValidarPrioridad) { }
   
   findAll() {
-    return this.prioridadRepo.find;
+    return this.prioridadRepo.find();
   }
 
   findOne(id: number) {

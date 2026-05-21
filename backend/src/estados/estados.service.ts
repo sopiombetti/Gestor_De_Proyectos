@@ -12,7 +12,7 @@ export class EstadosService {
 
   
   findAll() {
-    return this.tareaRepo.find;
+    return this.tareaRepo.find();
   }
 
   findOne(id: number) {
