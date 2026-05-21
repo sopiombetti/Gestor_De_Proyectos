@@ -39,7 +39,9 @@ export class TareasService {
   }
 
   async findAll() {
-    return await this.tareaRepo.find;
+      return await this.tareaRepo.find({
+        relations: ['proyecto', 'estado', 'prioridad', 'usuario'],
+      });
   }
 
   findOne(id: number) {
