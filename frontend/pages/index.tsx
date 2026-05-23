@@ -47,7 +47,7 @@ export default function Home() {
               <h3 className="font-bold">Asignadas</h3>
               <div className="flex justify-between">
                 <h3 className="font-bold text-xl md:text-3xl">10</h3>
-                <Image src="/check.svg" alt="check"/>
+                <img src="/check.svg" alt="check"/>
               </div>
               
             </div>
@@ -55,14 +55,14 @@ export default function Home() {
               <h3 className="font-bold">En Proceso</h3>
               <div className="flex justify-between">
                 <h3 className="font-bold text-xl md:text-3xl">5</h3>
-                <Image src="/check.svg" alt="check"/>
+                <img src="/check.svg" alt="check"/>
               </div>
             </div>
             <div className="flex flex-col justify-between rounded-lg shadow-2xl h-30 w-30 md:h-30 md:w-40 p-5 border border-secondary">
               <h3 className="font-bold">En Revisión</h3>
               <div className="flex justify-between">
                 <h3 className="font-bold text-xl md:text-3xl">3</h3>
-                <Image src="/check.svg" alt="check"/>
+                <img src="/check.svg" alt="check"/>
               </div>
             </div>
           </div>
