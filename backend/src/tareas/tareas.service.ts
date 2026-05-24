@@ -3,7 +3,7 @@ import { CreateTareaDto } from './dto/create-tarea.dto';
 import { UpdateTareaDto } from './dto/update-tarea.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tarea } from './entities/tarea.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, IsNull, Repository } from 'typeorm';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
 import { EstadosService } from 'src/estados/estados.service';
 import { PrioridadService } from 'src/prioridad/prioridad.service';
@@ -13,11 +13,11 @@ import { FindTareasQueryDto } from './dto/find-tareas-query.dto';
 @Injectable()
 export class TareasService {
   constructor(@InjectRepository(Tarea)
-  private readonly tareaRepo: Repository<Tarea>, 
-  private readonly usuarioService: UsuariosService, 
-  private readonly estadoService: EstadosService, 
-  private readonly prioridadService: PrioridadService, 
-  private readonly proyectoService: ProyectosService) { }
+  private readonly tareaRepo: Repository<Tarea>,
+    private readonly usuarioService: UsuariosService,
+    private readonly estadoService: EstadosService,
+    private readonly prioridadService: PrioridadService,
+    private readonly proyectoService: ProyectosService) { }
 
   async create(createTareaDto: CreateTareaDto) {
 
@@ -44,17 +44,21 @@ export class TareasService {
 
   async findAll(filters: FindTareasQueryDto = {}) {
 
-    if(filters.idUsuario !== undefined) this.usuarioService.findOne(filters.idUsuario) ;
-    if(filters.idEstado !== undefined) this.estadoService.findOne(filters.idEstado) ;
-    if(filters.idPrioridad !== undefined) this.prioridadService.findOne(filters.idPrioridad);
-    if(filters.proyecto !== undefined) this.proyectoService.findOne(filters.proyecto) ;
-    
+    if (filters.idUsuario !== undefined && filters.idUsuario !== null) this.usuarioService.findOne(filters.idUsuario);
+    if (filters.idEstado !== undefined) this.estadoService.findOne(filters.idEstado);
+    if (filters.idPrioridad !== undefined) this.prioridadService.findOne(filters.idPrioridad);
+    if (filters.proyecto !== undefined) this.proyectoService.findOne(filters.proyecto);
+
     const where: FindOptionsWhere<Tarea> = {};
-    if(filters.idUsuario !== undefined) where.usuario = { id: filters.idUsuario };
-    if(filters.idEstado !== undefined) where.estado = { id: filters.idEstado };
-    if(filters.idPrioridad !== undefined) where.prioridad = { id: filters.idPrioridad };
-    if(filters.proyecto !== undefined) where.proyecto = { id: filters.proyecto };
-    
+    if (filters.idUsuario === null) {
+      where.usuario = IsNull();
+    } else if (filters.idUsuario !== undefined) {
+      where.usuario = { id: filters.idUsuario };
+    }
+    if (filters.idEstado !== undefined) where.estado = { id: filters.idEstado };
+    if (filters.idPrioridad !== undefined) where.prioridad = { id: filters.idPrioridad };
+    if (filters.proyecto !== undefined) where.proyecto = { id: filters.proyecto };
+
     return await this.tareaRepo.find({
       where,
       relations: ['proyecto', 'estado', 'prioridad', 'usuario'],

@@ -22,7 +22,7 @@ export class ProyectosService {
     const nuevoProyecto = this.proyectoRepo.create({
       titulo: createProyectoDto.titulo,
       descripcion: createProyectoDto.descripcion,
-      lider: { id: lider.id},
+      lider: { id: lider.id },
       fechaCreacion: createProyectoDto.fechaCreacion
     })
     return this.proyectoRepo.save(nuevoProyecto);

@@ -6,6 +6,6 @@ export class Prioridad {
     @PrimaryGeneratedColumn()
     id!: number;
     
-    @Column()
+    @Column({ unique: true })
     nombre!: string;
 }

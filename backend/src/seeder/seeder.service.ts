@@ -30,12 +30,12 @@ export class SeederService implements OnApplicationBootstrap {
             .execute();
     }
 
-    async seedPrioridades() {
-        const nombres = ['Asignada', 'En progreso', 'Finalizada'];
+    async seedEstados() {
+        const nombres = ['Sin asignar', 'Asignada', 'En progreso', 'Finalizada'];
         await this.seed(this.estadoRepo, nombres.map(nombre => ({ nombre })));
     }
 
-    async seedEstados() {
+    async seedPrioridades() {
         const nombres = ['Baja', 'Media', 'Alta'];
         await this.seed(this.prioridadRepo, nombres.map(nombre => ({ nombre })));
     }

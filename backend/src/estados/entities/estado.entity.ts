@@ -6,6 +6,6 @@ export class Estado {
     @PrimaryGeneratedColumn()
     id!: number;
     
-    @Column()
+    @Column({ unique: true })
     nombre!: string; 
 }

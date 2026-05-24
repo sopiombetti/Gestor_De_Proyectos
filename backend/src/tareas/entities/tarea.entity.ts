@@ -28,10 +28,10 @@ export class Tarea {
   @JoinColumn({ name: 'idPrioridad' })
   prioridad!: Prioridad;
 
-  @ManyToOne(() => Usuario)
+  @ManyToOne(() => Usuario, { nullable: true })
   @JoinColumn({ name: 'idUsuario' })
-  usuario!: Usuario;
+  usuario?: Usuario;
 
-  @Column()
-  estimacion!: number;
+  @Column({ nullable: true })
+  estimacion?: number;
 }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { LoginDto } from './dto/login-usuario.dto';
@@ -13,13 +13,33 @@ export class UsuariosService {
   private readonly usuarioRepo: Repository<Usuario>) { }
 
   async create(createUsuarioDto: CreateUsuarioDto) {
+    const existente = await this.usuarioRepo.findOne({ where: { email: createUsuarioDto.email } });
+    
+    if (existente) {
+      throw new ConflictException('Ya existe un usuario con ese email.');
+    }
+
     const hashedPassword = await bcrypt.hash(createUsuarioDto.password, 10);
+
+    const nuevoUsuario = this.usuarioRepo.create({
+      nombre: createUsuarioDto.nombre,
+      apellido: createUsuarioDto.apellido,
+      email: createUsuarioDto.email,
+      posicion_laboral: createUsuarioDto.posicion_laboral,
+      password: hashedPassword,
+    });
+    const saved = await this.usuarioRepo.save(nuevoUsuario);
+    return this.findOne(saved.id);
+    
+    
+    
+    /*const hashedPassword = await bcrypt.hash(createUsuarioDto.password, 10);
 
     const nuevoUsuario = this.usuarioRepo.create({
       ...createUsuarioDto,
       password: hashedPassword,
     });
-    return await this.usuarioRepo.save(nuevoUsuario);
+    return await this.usuarioRepo.save(nuevoUsuario); */
   }
 
   async findAll() {
