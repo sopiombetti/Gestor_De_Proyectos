@@ -31,15 +31,6 @@ export class UsuariosService {
     const saved = await this.usuarioRepo.save(nuevoUsuario);
     return this.findOne(saved.id);
     
-    
-    
-    /*const hashedPassword = await bcrypt.hash(createUsuarioDto.password, 10);
-
-    const nuevoUsuario = this.usuarioRepo.create({
-      ...createUsuarioDto,
-      password: hashedPassword,
-    });
-    return await this.usuarioRepo.save(nuevoUsuario); */
   }
 
   async findAll() {
