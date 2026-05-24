@@ -1,4 +1,4 @@
-export default function ApiLogin(email: string, password: string){
+export function ApiLogin(email: string, password: string){
     return fetch("http://localhost:3000/usuarios/login", {
         method: "POST",
         headers: {
@@ -8,5 +8,14 @@ export default function ApiLogin(email: string, password: string){
           email,
           password,
         }),
+    });
+}
+
+export async function ApiGetTareas(){
+    return fetch("http://localhost:3000/tareas", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }
     });
 }
