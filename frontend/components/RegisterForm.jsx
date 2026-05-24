@@ -6,7 +6,6 @@ export default function UserRegister(){
 
     const [nombreCompleto, setNombreCompleto]=useState("");
     const [correo, setCorreo]=useState("")
-    const [nombreUsuario, setNombreUsuario]=useState("")
     const [contrasenia, setContrasenia]=useState("")
     const[reContrasenia, setReContrasenia]=useState("")
 
@@ -48,14 +47,6 @@ export default function UserRegister(){
             />
             </div>
             </div>
-
-            <h2 className="whitespace-nowrap">Nombre de usuario</h2>
-            <input className=" w-[138%] border border-gray-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="nombreUsuario"
-            placeholder="🧑‍💻 Nombre de usuario"
-            value={nombreUsuario}
-            onChange={(e)=> setNombreUsuario(e.target.value)}
-            />
 
             <div className="flex gap-22">
             <div className="w-1/2">
