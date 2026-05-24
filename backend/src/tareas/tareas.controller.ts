@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { TareasService } from './tareas.service';
 import { CreateTareaDto } from './dto/create-tarea.dto';
 import { UpdateTareaDto } from './dto/update-tarea.dto';
+import { FindTareasQueryDto } from './dto/find-tareas-query.dto';
 
 @Controller('tareas')
 export class TareasController {
@@ -13,8 +14,8 @@ export class TareasController {
   }
 
   @Get()
-  findAll() {
-    return this.tareasService.findAll();
+  findAll(@Query() filters: FindTareasQueryDto) {
+    return this.tareasService.findAll(filters);
   }
 
   @Get(':id')
@@ -22,21 +23,6 @@ export class TareasController {
     return this.tareasService.findOne(+id);
   }
   
-  @Get('/usuario/:id')
-  findByUsuario(@Param('id') id: string) {
-    return this.tareasService.findByUsuario(+id);
-  }
-
-  @Get('/prioridad/:id')
-  findByPrioridad(@Param('id') id: string) {
-    return this.tareasService.findByPrioridad(+id);
-  }
-
-  @Get('/estado/:id')
-  findByEstado(@Param('id') id: string) {
-    return this.tareasService.findByEstado(+id);
-  }
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTareaDto: UpdateTareaDto) {
     return this.tareasService.update(+id, updateTareaDto);

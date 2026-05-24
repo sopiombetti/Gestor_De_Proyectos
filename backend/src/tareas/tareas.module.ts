@@ -1,9 +1,8 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TareasService } from './tareas.service';
 import { TareasController } from './tareas.controller';
 import { Tarea } from './entities/tarea.entity';
-import { ValidarTarea } from './validarTarea';
 import { UsuariosModule } from 'src/usuarios/usuarios.module';
 import { ProyectosModule } from 'src/proyectos/proyectos.module';
 import { PrioridadModule } from 'src/prioridad/prioridad.module';
@@ -13,9 +12,10 @@ import { EstadosModule } from 'src/estados/estados.module';
   imports: [TypeOrmModule.forFeature([Tarea]), 
             UsuariosModule, 
             ProyectosModule, 
-            PrioridadModule, 
+            PrioridadModule,  
             EstadosModule],
   controllers: [TareasController],
-  providers: [TareasService, ValidarTarea],
+  providers: [TareasService],
+  exports: [TareasService]
 })
 export class TareasModule {}

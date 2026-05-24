@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { LoginDto } from './dto/login-usuario.dto';
@@ -27,7 +27,7 @@ export class UsuariosService {
   }
 
   async findOne(id: number) {
-    const usuario = await this.usuarioRepo.findOne({ where: { id } });
+    const usuario = await this.findOneOrFail(id);
 
     if (!usuario) {
       throw new Error(`Usuario con id ${id} no encontado`);
@@ -40,8 +40,8 @@ export class UsuariosService {
   }
 
   async remove(id: number) {
-
-    if (!await this.usuarioRepo.findOne({ where: { id } })) {
+    const usuario = this.findOneOrFail(id);
+    if (!usuario) {
       throw new Error(`Usuario con id ${id} no encontado`);
     }
 
@@ -72,5 +72,11 @@ export class UsuariosService {
     };
   }
 
-
+  private async findOneOrFail(id: number): Promise<Usuario> {
+    const usuario = await this.usuarioRepo.findOne({ where: { id } });
+    if (!usuario) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    return usuario;
+  }
 }
