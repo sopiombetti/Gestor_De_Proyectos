@@ -2,7 +2,6 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { Estado } from './entities/estado.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateEstadoDto } from './dto/create-estado.dto';
 
 @Injectable()
 export class EstadosService {
@@ -10,12 +9,6 @@ export class EstadosService {
   constructor(@InjectRepository(Estado)
   private readonly estadoRepo: Repository<Estado>) { }
 
-  async create(createEstadoDto: CreateEstadoDto) {
-    const nuevoEstado = this.estadoRepo.create({
-      ...createEstadoDto
-    });
-    return await this.estadoRepo.save(nuevoEstado);
-  }
 
   findAll() {
     return this.estadoRepo.find();

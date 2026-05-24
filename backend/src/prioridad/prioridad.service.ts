@@ -2,20 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Prioridad } from './entities/prioridad.entity';
 import { Repository } from 'typeorm';
-import { CreatePrioridadDto } from './dto/create-prioridad.dto';
 
 @Injectable()
 export class PrioridadService {
 
   constructor(@InjectRepository(Prioridad)
   private readonly prioridadRepo: Repository<Prioridad>) { }
-
-  async create(createPrioridadDto: CreatePrioridadDto) {
-    const nuevaPrioridad = this.prioridadRepo.create({
-      ...createPrioridadDto
-    });
-    return await this.prioridadRepo.save(nuevaPrioridad);
-  }
 
   findAll() {
     return this.prioridadRepo.find();
