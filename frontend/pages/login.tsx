@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import ApiLogin from "../utils/api"
+import { ApiLogin } from "../utils/api"
 import { useRouter } from "next/router";
 
 export default function Login() {
@@ -22,13 +22,12 @@ export default function Login() {
       const data = await response.json();
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.id);
 
       console.log("Login exitoso");
 
-      
       router.push("/");
-        
-
+      
     } catch (error) {
       console.error(error);
     }

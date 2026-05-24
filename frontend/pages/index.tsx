@@ -1,41 +1,70 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from 'next/image'
 import Card from "@/components/Card";
+import { ApiGetTareas } from "@/utils/api";
 
 export default function Home() {
-  const router = useRouter();
+  // const router = useRouter();
+
+  // useEffect(() => {
+  //   router.push("/login");
+  // }, []);
+
+  const [tareas, setTareas] = useState([]);
+  //const userId = localStorage.getItem("userId");
 
   useEffect(() => {
-    router.push("/login");
-  }, []);
+    async function obtenerTareas(){
+      try {
+          const response = await ApiGetTareas();
+      
+          if (!response.ok) {
+            throw new Error("No se pueden obtener las tareas");
+          }
+      
+          const data = await response.json();
 
-  const tareas = [
-    {
-      id: 1,
-      titulo: "Hacer Home",
-      descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
-      prioridad: "Alta",
-      estado: "En Progreso",
-      proyectoid: 2
-    },
-    {
-      id: 2,
-      titulo: "Hacer Login",
-      descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
-      prioridad: "Media",
-      estado: "En Revisión",
-      proyectoid: 2
-    },
-    {
-      id: 3,
-      titulo: "Hacer BDD",
-      descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
-      prioridad: "Baja",
-      estado: "Asignada",
-      proyectoid: 3
-    },
-  ]
+          console.log(data);
+
+          //setTareas(data.filter(t => t.id === userId));
+          setTareas(data);
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
+    obtenerTareas();
+    
+  }, []);
+  
+
+  // const tareas = [
+  //   {
+  //     id: 1,
+  //     titulo: "Hacer Home",
+  //     descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+  //     prioridad: "Alta",
+  //     estado: "En Progreso",
+  //     proyectoid: 2
+  //   },
+  //   {
+  //     id: 2,
+  //     titulo: "Hacer Login",
+  //     descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+  //     prioridad: "Media",
+  //     estado: "En Revisión",
+  //     proyectoid: 2
+  //   },
+  //   {
+  //     id: 3,
+  //     titulo: "Hacer BDD",
+  //     descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+  //     prioridad: "Baja",
+  //     estado: "Asignada",
+  //     proyectoid: 3
+  //   },
+  // ]
 
   return (
     <div className="mx-10 md:mx-20 mt-10">
@@ -47,7 +76,7 @@ export default function Home() {
               <h3 className="font-bold">Asignadas</h3>
               <div className="flex justify-between">
                 <h3 className="font-bold text-xl md:text-3xl">10</h3>
-                <Image src="/check.svg" alt="check"/>
+                <img src="/check.svg" alt="check"/>
               </div>
               
             </div>
@@ -55,14 +84,14 @@ export default function Home() {
               <h3 className="font-bold">En Proceso</h3>
               <div className="flex justify-between">
                 <h3 className="font-bold text-xl md:text-3xl">5</h3>
-                <Image src="/check.svg" alt="check"/>
+                <img src="/check.svg" alt="check"/>
               </div>
             </div>
             <div className="flex flex-col justify-between rounded-lg shadow-2xl h-30 w-30 md:h-30 md:w-40 p-5 border border-secondary">
               <h3 className="font-bold">En Revisión</h3>
               <div className="flex justify-between">
                 <h3 className="font-bold text-xl md:text-3xl">3</h3>
-                <Image src="/check.svg" alt="check"/>
+                <img src="/check.svg" alt="check"/>
               </div>
             </div>
           </div>
