@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 @Injectable()
 export class UsuariosService {
@@ -54,9 +55,24 @@ export class UsuariosService {
     const email = body.email;
     const password = body.password;
 
+    const SECRET_KEY = "123456";
+
     const usuario = await this.usuarioRepo.findOne({
-      where: { email },
+        where: { email },
     });
+
+    function generarToken(usuario: any) {
+      return jwt.sign(
+        {
+          id: usuario.id,
+          email: usuario.email,
+        },
+        SECRET_KEY,
+        {
+          expiresIn: "1h",
+        }
+      );
+    }
 
     if (!usuario) {
       throw new Error("Usuario no encontrado");
@@ -66,9 +82,12 @@ export class UsuariosService {
       throw new Error("Constraseña no coincide")
     }
 
+    const token = generarToken(usuario);
+
     return {
       id: usuario.id,
-      nombre: usuario.nombre
+      nombre: usuario.nombre,
+      token
     };
   }
 
