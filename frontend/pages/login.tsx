@@ -2,9 +2,11 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { ApiLogin } from "../utils/api"
 import { useRouter } from "next/router";
+import { useUserContext } from "@/utils/userContext";
 
 export default function Login() {
 
+  const { login } = useUserContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -21,8 +23,13 @@ export default function Login() {
 
       const data = await response.json();
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("userId", data.id);
+      login(
+        {
+          id: data.id,
+          nombre: data.nombre,
+        },
+        data.token
+      );
 
       console.log("Login exitoso");
 
