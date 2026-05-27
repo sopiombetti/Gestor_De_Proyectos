@@ -1,6 +1,45 @@
 import Link from "next/link";
+import { useState, type FormEvent } from "react";
+import { ApiLogin } from "../utils/api"
+import { useRouter } from "next/router";
+import { useUserContext } from "@/utils/userContext";
 
 export default function Login() {
+
+  const { login } = useUserContext();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await ApiLogin(email, password);
+
+      if (!response.ok) {
+        throw new Error("Credenciales incorrectas");
+      }
+
+      const data = await response.json();
+
+      login(
+        {
+          id: data.id,
+          nombre: data.nombre,
+        },
+        data.token
+      );
+
+      console.log("Login exitoso");
+
+      router.push("/");
+      
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900 pt-10">
@@ -10,7 +49,7 @@ export default function Login() {
             <h4 className="mt-0 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Inicia sesión en tu cuenta
             </h4>
-              <form className="space-y-6" action="#" method="#">
+              <form className="space-y-6" action="#" method="#" onSubmit={handleLogin}>
                 <div>
                   <label htmlFor="email" className="block font-medium leading-6 text-gray-900">
                     Correo electrónico
@@ -20,6 +59,9 @@ export default function Login() {
                       id="email"
                       name="email"
                       type="email"
+                      placeholder="ejemplo@gmail.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-blue-400 focus:outline-blue-400 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -36,6 +78,9 @@ export default function Login() {
                       id="password"
                       name="password"
                       type="password"
+                      placeholder="Contraseña"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-blue-400 focus:outline-blue-400 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     />
                   </div>
