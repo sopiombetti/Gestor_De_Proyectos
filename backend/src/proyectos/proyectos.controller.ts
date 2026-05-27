@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ProyectosService } from './proyectos.service';
 import { CreateProyectoDto } from './dto/create-proyecto.dto';
 import { UpdateProyectoDto } from './dto/update-proyecto.dto';
@@ -23,7 +23,7 @@ export class ProyectosController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.proyectosService.remove(+id);
+  remove(@Param('id') id: string, @Query('force') force?: string) {
+    return this.proyectosService.remove(+id, force === 'true');
   }
 }

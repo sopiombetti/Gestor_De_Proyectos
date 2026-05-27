@@ -19,6 +19,6 @@ export class CreateUsuarioDto {
     password!: string;
 
     @IsString()
-    @IsNotEmpty({ message: 'La posición laboral es obligatorio.'})
+    @IsNotEmpty({ message: 'La posición laboral es obligatoria.'})
     posicion_laboral!: string;
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { LoginDto } from './dto/login-usuario.dto';
@@ -14,13 +14,24 @@ export class UsuariosService {
   private readonly usuarioRepo: Repository<Usuario>) { }
 
   async create(createUsuarioDto: CreateUsuarioDto) {
+    const existente = await this.usuarioRepo.findOne({ where: { email: createUsuarioDto.email } });
+    
+    if (existente) {
+      throw new ConflictException('Ya existe un usuario con ese email.');
+    }
+
     const hashedPassword = await bcrypt.hash(createUsuarioDto.password, 10);
 
     const nuevoUsuario = this.usuarioRepo.create({
-      ...createUsuarioDto,
+      nombre: createUsuarioDto.nombre,
+      apellido: createUsuarioDto.apellido,
+      email: createUsuarioDto.email,
+      posicion_laboral: createUsuarioDto.posicion_laboral,
       password: hashedPassword,
     });
-    return await this.usuarioRepo.save(nuevoUsuario);
+    const saved = await this.usuarioRepo.save(nuevoUsuario);
+    return this.findOne(saved.id);
+    
   }
 
   async findAll() {
@@ -28,7 +39,7 @@ export class UsuariosService {
   }
 
   async findOne(id: number) {
-    const usuario = await this.usuarioRepo.findOne({ where: { id } });
+    const usuario = await this.findOneOrFail(id);
 
     if (!usuario) {
       throw new Error(`Usuario con id ${id} no encontado`);
@@ -41,8 +52,8 @@ export class UsuariosService {
   }
 
   async remove(id: number) {
-
-    if (!await this.usuarioRepo.findOne({ where: { id } })) {
+    const usuario = this.findOneOrFail(id);
+    if (!usuario) {
       throw new Error(`Usuario con id ${id} no encontado`);
     }
 
@@ -91,5 +102,11 @@ export class UsuariosService {
     };
   }
 
-
+  private async findOneOrFail(id: number): Promise<Usuario> {
+    const usuario = await this.usuarioRepo.findOne({ where: { id } });
+    if (!usuario) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    return usuario;
+  }
 }

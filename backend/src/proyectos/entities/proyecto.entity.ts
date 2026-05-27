@@ -1,5 +1,5 @@
 import { Usuario } from "src/usuarios/entities/usuario.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Proyecto {
@@ -13,10 +13,10 @@ export class Proyecto {
     @Column()
     descripcion!: string;
     
-    @OneToOne(() => Usuario)
+    @OneToOne(() => Usuario, { onDelete: 'RESTRICT' })
     @JoinColumn({ name: 'idLider' })
     lider!: Usuario;
     
-    @Column()
+    @CreateDateColumn({ type: 'timestamptz' })
     fechaCreacion!: Date;
 }

@@ -6,15 +6,15 @@ export class UpdateProyectoDto extends PartialType(CreateProyectoDto) {
     @IsOptional()
     @IsString()
     @IsNotEmpty({ message: 'El título es obligatorio' })
-    titulo!: string;
+    titulo?: string;
 
     @IsOptional()
     @IsString()
     @IsNotEmpty({ message: 'La descripción es obligatoria' })
-    descripcion!: string;
+    descripcion?: string;
 
     @IsOptional()
     @IsInt({ message: 'El idLider debe ser un número.' })
     @Min(1, { message: 'El idLider debe ser mayor 0.' })
-    idLider!: number;
+    idLider?: number;
 }
