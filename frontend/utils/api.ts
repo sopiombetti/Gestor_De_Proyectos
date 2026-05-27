@@ -11,8 +11,13 @@ export function ApiLogin(email: string, password: string){
     });
 }
 
-export async function ApiGetTareas(){
-    return fetch("http://localhost:3000/tareas", {
+export async function ApiGetTareas(idUsuario: number, idPrioridad: string){
+    let url = `http://localhost:3000/tareas?idUsuario=${idUsuario}`;
+
+    if (idPrioridad) {
+      url += `&idPrioridad=${idPrioridad}`;
+    }
+    return fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
