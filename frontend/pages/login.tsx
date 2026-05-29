@@ -33,7 +33,7 @@ export default function Login() {
 
       console.log("Login exitoso");
 
-      router.push("/");
+      router.push("/home");
       
     } catch (error) {
       console.error(error);
