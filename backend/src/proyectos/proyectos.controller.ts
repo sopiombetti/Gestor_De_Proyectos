@@ -2,14 +2,20 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { ProyectosService } from './proyectos.service';
 import { CreateProyectoDto } from './dto/create-proyecto.dto';
 import { UpdateProyectoDto } from './dto/update-proyecto.dto';
+import { FindProyectoQueryDto } from './dto/find-proyecto.dto';
 
 @Controller('proyectos')
 export class ProyectosController {
-  constructor(private readonly proyectosService: ProyectosService) {}
+  constructor(private readonly proyectosService: ProyectosService) { }
 
   @Post()
   create(@Body() createProyectoDto: CreateProyectoDto) {
     return this.proyectosService.create(createProyectoDto);
+  }
+
+  @Get()
+  findAll(@Query() filters: FindProyectoQueryDto) {
+    return this.proyectosService.findAll(filters);
   }
 
   @Get(':id')
