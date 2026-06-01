@@ -2,10 +2,11 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { CreateProyectoDto } from './dto/create-proyecto.dto';
 import { UpdateProyectoDto } from './dto/update-proyecto.dto';
 import { Proyecto } from './entities/proyecto.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
 import { Tarea } from 'src/tareas/entities/tarea.entity';
+import { FindProyectoQueryDto } from './dto/find-proyecto.dto';
 
 @Injectable()
 export class ProyectosService {
@@ -26,6 +27,24 @@ export class ProyectosService {
       fechaCreacion: createProyectoDto.fechaCreacion
     })
     return this.proyectoRepo.save(nuevoProyecto);
+  }
+
+    async findAll(filters: FindProyectoQueryDto = {}) {
+
+    if (filters.idUsuario !== undefined) this.usuarioService.findOne(filters.idUsuario);
+    if (filters.proyecto !== undefined) this.findOneOrFail(filters.proyecto);
+
+    const where: FindOptionsWhere<Proyecto> = {};
+
+    if (filters.idUsuario !== undefined) { where.lider = { id: filters.idUsuario } }
+
+    if (filters.proyecto !== undefined) { where.id = filters.proyecto  }
+
+    return await this.proyectoRepo.find({
+      where,
+      relations: ['usuario'],
+    });
+
   }
 
   async findOne(id: number) {
