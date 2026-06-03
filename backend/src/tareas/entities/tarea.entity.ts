@@ -34,4 +34,7 @@ export class Tarea {
 
   @Column({ nullable: true })
   estimacion?: number;
+  
+  @Column({ type: 'timestamptz', nullable: true })
+  fechaAsignacion?: Date | null;
 }

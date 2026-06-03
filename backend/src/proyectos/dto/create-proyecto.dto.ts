@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsInt, Min, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, IsInt, Min } from 'class-validator';
 export class CreateProyectoDto {
 
     @IsString()
@@ -12,9 +12,5 @@ export class CreateProyectoDto {
     @IsInt({ message: 'El idLider debe ser un número.' })
     @Min(1, { message: 'El idLider debe ser mayor 0.' })
     idLider!: number;
-
-    @IsDateString()
-    @IsNotEmpty({ message: 'Hay un problema con la fecha.' })
-    fechaCreacion!: string;
 }
 

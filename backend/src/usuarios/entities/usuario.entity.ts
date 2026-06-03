@@ -1,6 +1,5 @@
-import { Proyecto } from 'src/proyectos/entities/proyecto.entity';
-import { Tarea } from 'src/tareas/entities/tarea.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('usuarios')
 export class Usuario {
@@ -13,10 +12,11 @@ export class Usuario {
     @Column()
     apellido!: string;
 
-    @Column()
+    @Column({ unique: true })
     email!: string;
 
     @Column()
+    @Exclude()
     password!: string;
 
     @Column()

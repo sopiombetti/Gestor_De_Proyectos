@@ -7,6 +7,7 @@ import { Usuario } from './entities/usuario.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
+import { JWT_SECRET, JWT_EXPIRES_IN } from 'src/auth/auth.constants';
 
 @Injectable()
 export class UsuariosService {
@@ -38,34 +39,41 @@ export class UsuariosService {
   }
 
   async findOne(id: number) {
-    const usuario = await this.findOneOrFail(id);
-
-    if (!usuario) {
-      throw new Error(`Usuario con id ${id} no encontado`);
-    }
-    return usuario;
+    return await this.findOneOrFail(id);
   }
 
-  update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    return `This action updates a #${id} usuario`;
+  async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
+    const usuario = await this.findOneOrFail(id);
+
+    if (updateUsuarioDto.email && updateUsuarioDto.email !== usuario.email) {
+      const existente = await this.usuarioRepo.findOne({
+        where: { email: updateUsuarioDto.email },
+      });
+      if (existente) {
+        throw new ConflictException('Ya existe un usuario con ese email.');
+      }
+      usuario.email = updateUsuarioDto.email;
+    }
+
+    if (updateUsuarioDto.nombre !== undefined) usuario.nombre = updateUsuarioDto.nombre;
+    if (updateUsuarioDto.apellido !== undefined) usuario.apellido = updateUsuarioDto.apellido;
+    if (updateUsuarioDto.password) {
+      usuario.password = await bcrypt.hash(updateUsuarioDto.password, 10);
+    }
+
+    await this.usuarioRepo.save(usuario);
+    return this.findOne(usuario.id);
   }
 
   async remove(id: number) {
-    const usuario = this.findOneOrFail(id);
-    if (!usuario) {
-      throw new Error(`Usuario con id ${id} no encontado`);
-    }
-
+    await this.findOneOrFail(id);
     await this.usuarioRepo.delete(id);
-
     return "Usuario eliminado.";
   }
 
   async login(body: LoginDto) {
     const email = body.email;
     const password = body.password;
-
-    const SECRET_KEY = "123456";
 
     const usuario = await this.usuarioRepo.findOne({
         where: { email },
@@ -78,9 +86,9 @@ export class UsuariosService {
           email: usuario.email,
           rol_admin: usuario.rol_admin
         },
-        SECRET_KEY,
+        JWT_SECRET,
         {
-          expiresIn: "1h",
+          expiresIn: JWT_EXPIRES_IN,
         }
       );
     }

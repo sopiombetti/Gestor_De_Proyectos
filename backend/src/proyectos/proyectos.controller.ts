@@ -1,14 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { ProyectosService } from './proyectos.service';
 import { CreateProyectoDto } from './dto/create-proyecto.dto';
 import { UpdateProyectoDto } from './dto/update-proyecto.dto';
 import { FindProyectoQueryDto } from './dto/find-proyecto.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 
 @Controller('proyectos')
+@UseGuards(JwtAuthGuard)
 export class ProyectosController {
   constructor(private readonly proyectosService: ProyectosService) { }
 
   @Post()
+   @UseGuards(AdminGuard)
   create(@Body() createProyectoDto: CreateProyectoDto) {
     return this.proyectosService.create(createProyectoDto);
   }
@@ -24,11 +28,13 @@ export class ProyectosController {
   }
 
   @Patch(':id')
+  @UseGuards(AdminGuard)
   update(@Param('id') id: string, @Body() updateProyectoDto: UpdateProyectoDto) {
     return this.proyectosService.update(+id, updateProyectoDto);
   }
 
   @Delete(':id')
+  @UseGuards(AdminGuard)
   remove(@Param('id') id: string, @Query('force') force?: string) {
     return this.proyectosService.remove(+id, force === 'true');
   }
