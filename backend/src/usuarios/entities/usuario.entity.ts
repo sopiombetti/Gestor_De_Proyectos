@@ -20,5 +20,5 @@ export class Usuario {
     password!: string;
 
     @Column()
-    posicion_laboral!: string;
+    rol_admin: boolean = false;
 }

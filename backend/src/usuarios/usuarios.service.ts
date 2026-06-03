@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { LoginDto } from './dto/login-usuario.dto';
@@ -26,7 +26,6 @@ export class UsuariosService {
       nombre: createUsuarioDto.nombre,
       apellido: createUsuarioDto.apellido,
       email: createUsuarioDto.email,
-      posicion_laboral: createUsuarioDto.posicion_laboral,
       password: hashedPassword,
     });
     const saved = await this.usuarioRepo.save(nuevoUsuario);
@@ -77,6 +76,7 @@ export class UsuariosService {
         {
           id: usuario.id,
           email: usuario.email,
+          rol_admin: usuario.rol_admin
         },
         SECRET_KEY,
         {
@@ -86,11 +86,11 @@ export class UsuariosService {
     }
 
     if (!usuario) {
-      throw new Error("Usuario no encontrado");
+      throw new UnauthorizedException("Credenciales incorrectas.");
     }
 
     if (!await bcrypt.compare(password, usuario.password)) {
-      throw new Error("Constraseña no coincide")
+      throw new UnauthorizedException("Credenciales incorrectas.");
     }
 
     const token = generarToken(usuario);

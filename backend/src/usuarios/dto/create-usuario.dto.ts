@@ -17,8 +17,4 @@ export class CreateUsuarioDto {
     @IsString()
     @IsNotEmpty({ message: 'Debe introducir una contraseña.'})
     password!: string;
-
-    @IsString()
-    @IsNotEmpty({ message: 'La posición laboral es obligatoria.'})
-    posicion_laboral!: string;
 }
