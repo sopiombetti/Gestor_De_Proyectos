@@ -9,6 +9,10 @@ import { EstadosService } from 'src/estados/estados.service';
 import { PrioridadService } from 'src/prioridad/prioridad.service';
 import { ProyectosService } from 'src/proyectos/proyectos.service';
 import { FindTareasQueryDto } from './dto/find-tareas-query.dto';
+import { Proyecto } from 'src/proyectos/entities/proyecto.entity';
+import { Estado } from 'src/estados/entities/estado.entity';
+import { Prioridad } from 'src/prioridad/entities/prioridad.entity';
+import { Usuario } from 'src/usuarios/entities/usuario.entity';
 
 @Injectable()
 export class TareasService {
@@ -36,7 +40,8 @@ export class TareasService {
       estimacion: createTareaDto.estimacion ?? undefined,
       proyecto: { id: createTareaDto.idProyecto },
       estado: { id: createTareaDto.idEstado },
-      prioridad: { id: createTareaDto.idPrioridad }
+      prioridad: { id: createTareaDto.idPrioridad },
+      fechaAsignacion: createTareaDto.idUsuario ? new Date() : undefined,
     })
 
     return await this.tareaRepo.save(nuevaTarea);
@@ -44,10 +49,10 @@ export class TareasService {
 
   async findAll(filters: FindTareasQueryDto = {}) {
 
-    if (filters.idUsuario !== undefined && filters.idUsuario !== null) this.usuarioService.findOne(filters.idUsuario);
-    if (filters.idEstado !== undefined) this.estadoService.findOne(filters.idEstado);
-    if (filters.idPrioridad !== undefined) this.prioridadService.findOne(filters.idPrioridad);
-    if (filters.proyecto !== undefined) this.proyectoService.findOne(filters.proyecto);
+    if (filters.idUsuario !== undefined && filters.idUsuario !== null) await this.usuarioService.findOne(filters.idUsuario);
+    if (filters.idEstado !== undefined) await this.estadoService.findOne(filters.idEstado);
+    if (filters.idPrioridad !== undefined) await this.prioridadService.findOne(filters.idPrioridad);
+    if (filters.proyecto !== undefined) await this.proyectoService.findOne(filters.proyecto);
 
     const where: FindOptionsWhere<Tarea> = {};
     if (filters.idUsuario === null) {
@@ -72,8 +77,33 @@ export class TareasService {
 
   async update(id: number, updateTareaDto: UpdateTareaDto) {
     const tarea = await this.findOneOrFail(id);
-    const tareaActualizada = this.tareaRepo.merge(tarea, updateTareaDto);
-    return await this.tareaRepo.save(tareaActualizada);
+
+    if (updateTareaDto.idProyecto !== undefined) {
+      await this.proyectoService.findOne(updateTareaDto.idProyecto);
+      tarea.proyecto = { id: updateTareaDto.idProyecto } as Proyecto;
+    }
+
+    if (updateTareaDto.idEstado !== undefined) {
+      await this.estadoService.findOne(updateTareaDto.idEstado);
+      tarea.estado = { id: updateTareaDto.idEstado } as Estado;
+    }
+
+    if (updateTareaDto.idPrioridad !== undefined) {
+      await this.prioridadService.findOne(updateTareaDto.idPrioridad);
+      tarea.prioridad = { id: updateTareaDto.idPrioridad } as Prioridad;
+    }
+
+    if (updateTareaDto.idUsuario !== undefined) {
+      await this.usuarioService.findOne(updateTareaDto.idUsuario);
+      tarea.usuario = { id: updateTareaDto.idUsuario } as Usuario;
+      tarea.fechaAsignacion = new Date();
+    }
+
+    if (updateTareaDto.titulo !== undefined) tarea.titulo = updateTareaDto.titulo;
+    if (updateTareaDto.descripcion !== undefined) tarea.descripcion = updateTareaDto.descripcion;
+    if (updateTareaDto.estimacion !== undefined) tarea.estimacion = updateTareaDto.estimacion;
+
+    return await this.tareaRepo.save(tarea);
   }
 
   async remove(id: number) {

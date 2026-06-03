@@ -10,7 +10,7 @@ export class FindProyectoQueryDto {
 
     @IsOptional()
     @Type(() => Number)
-    @IsInt({ message: 'La idProyecto debe ser un número' })
-    @Min(1, { message: 'La idProyecto debe ser mayor a 0' })
+    @IsInt({ message: 'El idProyecto debe ser un número' })
+    @Min(1, { message: 'El idProyecto debe ser mayor a 0' })
     proyecto?: number;
 }

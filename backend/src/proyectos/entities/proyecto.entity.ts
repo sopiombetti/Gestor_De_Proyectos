@@ -3,20 +3,20 @@ import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGenerate
 
 @Entity()
 export class Proyecto {
-    
-    @PrimaryGeneratedColumn()
-    id!: number;
-    
-    @Column()
-    titulo!: string;
-    
-    @Column()
-    descripcion!: string;
-    
-    @OneToOne(() => Usuario, { onDelete: 'RESTRICT' })
-    @JoinColumn({ name: 'idLider' })
-    lider!: Usuario;
-    
-    @CreateDateColumn({ type: 'timestamptz' })
-    fechaCreacion!: Date;
+
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column()
+  titulo!: string;
+
+  @Column()
+  descripcion!: string;
+
+  @OneToOne(() => Usuario, { onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'idLider' })
+  lider!: Usuario;
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  fechaCreacion!: Date;
 }
