@@ -9,4 +9,5 @@ export class LoginDto {
     @IsString()
     @IsNotEmpty({ message: 'Debe introducir una contraseña.'})
     password!: string;
+
 }
