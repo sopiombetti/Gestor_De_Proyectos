@@ -24,3 +24,12 @@ export async function ApiGetTareas(idUsuario: number, idPrioridad: string){
         }
     });
 }
+
+export async function ApiGetProyecto(){
+  return fetch("http://localhost:3000/proyectos/2", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }
+    });
+}
