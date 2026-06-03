@@ -11,20 +11,19 @@ export default function Home() {
 
   const [tareas, setTareas] = useState([]);
   const [prioridad, setPrioridad] = useState("");
-  const { user } = useUserContext();
+  const { user, token } = useUserContext();
 
   useEffect(() => {
+    console.log(user);
     async function obtenerTareas(){
       try {
-          const response = await ApiGetTareas(user?.id, prioridad);
+          const response = await ApiGetTareas(user?.id, prioridad, token);
       
           if (!response.ok) {
             throw new Error("No se pueden obtener las tareas");
           }
       
           const data = await response.json();
-
-          console.log(data);
           setTareas(data);
       }
       catch (error) {

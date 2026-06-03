@@ -1,5 +1,14 @@
+
+const API_URL = "http://localhost:3000";
+
+function authHeaders(token: string | null): Record<string, string> {
+  return token
+    ? { Authorization: `Bearer ${token}` }
+    : {};
+}
+
 export function ApiLogin(email: string, password: string){
-    return fetch("http://localhost:3000/usuarios/login", {
+    return fetch(`${API_URL}/usuarios/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -11,8 +20,8 @@ export function ApiLogin(email: string, password: string){
     });
 }
 
-export async function ApiGetTareas(idUsuario: number, idPrioridad: string){
-    let url = `http://localhost:3000/tareas?idUsuario=${idUsuario}`;
+export async function ApiGetTareas(idUsuario: number, idPrioridad: string, token: string | null){
+    let url = `${API_URL}/tareas?idUsuario=${idUsuario}`;
 
     if (idPrioridad) {
       url += `&idPrioridad=${idPrioridad}`;
@@ -21,15 +30,17 @@ export async function ApiGetTareas(idUsuario: number, idPrioridad: string){
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          ...authHeaders(token),
         }
     });
 }
 
-export async function ApiGetProyecto(){
-  return fetch("http://localhost:3000/proyectos/2", {
+export async function ApiGetProyecto(idUsuario: number, token: string | null){
+  return fetch(`${API_URL}/proyectos?idUsuario=${idUsuario}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          ...authHeaders(token),
         }
     });
 }

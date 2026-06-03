@@ -106,6 +106,7 @@ export class UsuariosService {
     return {
       id: usuario.id,
       nombre: usuario.nombre,
+      isAdmin: usuario.rol_admin,
       token
     };
   }

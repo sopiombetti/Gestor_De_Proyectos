@@ -8,6 +8,7 @@ import {
 type User = {
   id: number;
   nombre: string;
+  isAdmin: boolean;
 };
 
 type AuthContextType = {

@@ -1,23 +1,24 @@
+import CardProyecto from "@/components/CardProyecto";
 import { ApiGetProyecto } from "@/utils/api";
+import { useUserContext } from "@/utils/userContext";
 import { useEffect, useState } from "react"
 
-export default function admin(){
-    const [proyecto, setProyecto] = useState({});
-    const[show, setShow] = useState(false);
+export default function Admin(){
+    const [proyectos, setProyectos] = useState([]);
+    const [show, setShow] = useState(false);
+    const { user, token } = useUserContext();
 
     useEffect(() => {
         async function obtenerProyecto(){
               try {
-                  const response = await ApiGetProyecto();
+                  const response = await ApiGetProyecto(user?.id, token);
               
                   if (!response.ok) {
                     throw new Error("No se puede obtener el proyecto");
                   }
               
                   const data = await response.json();
-        
-                  console.log(data);
-                  setProyecto(data);
+                  setProyectos(data);
               }
               catch (error) {
                 console.error(error);
@@ -46,13 +47,7 @@ export default function admin(){
                 <input className="bg-white rounded-md w-[500px] p-2" id="file" name="file" type="file"/>
             </form>
         </div> : <></>}
-        <div className="flex flex-col space-y-3 border border-2 rounded-xl border-secondary p-6">
-            <h2 className="text-xl font-semibold">Proyecto {proyecto.titulo}</h2>
-            <p>{proyecto.descripcion}</p>
-            <p>Creado el: {proyecto.fechaCreacion}</p>
-            <p>Colaboradores:</p>
-        </div>
-        <button className="flex justify-center w-[200px] rounded-full bg-primary px-3 py-1.5 font-semibold leading-6 text-gray-900 shadow-sm hover:bg-violet-400">Generar Informe</button>        
+        {proyectos.map(proyecto => <CardProyecto proyecto={proyecto} key={proyecto.id}/>)}  
     </div>
   )
 }

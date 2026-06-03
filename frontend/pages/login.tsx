@@ -27,6 +27,7 @@ export default function Login() {
         {
           id: data.id,
           nombre: data.nombre,
+          isAdmin: data.isAdmin,
         },
         data.token
       );
