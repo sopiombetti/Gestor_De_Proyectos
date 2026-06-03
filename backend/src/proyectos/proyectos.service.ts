@@ -29,7 +29,7 @@ export class ProyectosService {
     return this.proyectoRepo.save(nuevoProyecto);
   }
 
-    async findAll(filters: FindProyectoQueryDto = {}) {
+  async findAll(filters: FindProyectoQueryDto = {}) {
 
     if (filters.idUsuario !== undefined) this.usuarioService.findOne(filters.idUsuario);
     if (filters.proyecto !== undefined) this.findOneOrFail(filters.proyecto);
