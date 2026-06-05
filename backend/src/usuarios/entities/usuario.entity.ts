@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Tarea } from 'src/tareas/entities/tarea.entity';
 
 @Entity('usuarios')
 export class Usuario {
@@ -21,4 +22,7 @@ export class Usuario {
 
     @Column()
     rol_admin: boolean = false;
+
+    // @OneToMany(() => Tarea, tarea => tarea.usuario)
+    // tareas: Tarea[];
 }
