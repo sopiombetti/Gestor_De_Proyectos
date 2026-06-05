@@ -44,3 +44,13 @@ export async function ApiGetProyecto(idUsuario: number, token: string | null){
         }
     });
 }
+
+export async function ApiGetReporte(id: number, token: string | null){
+  return fetch(`${API_URL}/reportes/proyectos/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(token),
+        }
+    });
+}
