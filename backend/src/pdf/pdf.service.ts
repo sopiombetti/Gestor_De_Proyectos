@@ -59,7 +59,7 @@ export class PdfService {
     const summary = this.buildSummary(project.tasks);
 
     return {
-      pageSize:    'A4',
+      pageSize: 'A4',
       pageMargins: [40, 60, 40, 60],
 
       // Encabezado en todas las páginas
