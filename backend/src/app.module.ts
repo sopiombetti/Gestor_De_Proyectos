@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EstadosModule } from './estados/estados.module';
 import { PrioridadModule } from './prioridad/prioridad.module';
 import { SeederModule } from './seeder/seeder.module';
+import { ReportesModule } from './pdf/pdf.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { SeederModule } from './seeder/seeder.module';
     EstadosModule,
     PrioridadModule,
     SeederModule,
+    ReportesModule
   ],
   controllers: [AppController],
   providers: [AppService],
