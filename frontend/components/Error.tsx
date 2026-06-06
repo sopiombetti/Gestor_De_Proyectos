@@ -1,19 +1,19 @@
 import { useState } from "react";
 
-export default function Error({text}) {
+export default function Error({ text }: { text: string }) {
 
-      const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(true);
 
-        if (!visible) return null;
+  if (!visible) return null;
 
   return (
     <div className="flex items-center justify-between bg-red-100 border border-red-500 text-red-800 px-4 py-3 rounded-md w-full">
 
       <div className="flex items-center gap-3">
-        
+
         <span className="text-red-800 text-2xl font-bold leading-none">
-  ⓘ
-</span>
+          ⓘ
+        </span>
 
         <p className="text-sm font-medium">
           {text}
@@ -26,7 +26,7 @@ export default function Error({text}) {
       >
         ✕
       </button>
-    
+
     </div>
   );
 }
