@@ -12,18 +12,18 @@ export class Tarea {
 
   @Column()
   titulo!: string;
-  
+
   @Column()
   descripcion!: string;
-  
+
   @ManyToOne(() => Proyecto)
   @JoinColumn({ name: 'idProyecto' })
   proyecto!: Proyecto;
-  
+
   @ManyToOne(() => Estado)
   @JoinColumn({ name: 'idEstado' })
   estado!: Estado;
-  
+
   @ManyToOne(() => Prioridad)
   @JoinColumn({ name: 'idPrioridad' })
   prioridad!: Prioridad;
@@ -34,7 +34,13 @@ export class Tarea {
 
   @Column({ nullable: true })
   estimacion?: number;
-  
+
+  @Column({ nullable: true })
+  tiempoFinal?: number;
+
   @Column({ type: 'timestamptz', nullable: true })
   fechaAsignacion?: Date | null;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  fechaCierre?: Date | null;
 }

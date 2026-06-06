@@ -23,4 +23,9 @@ export class UpdateTareaDto extends PartialType(CreateTareaDto) {
     @IsInt({ message: 'La estimación debe ser un número' })
     @Min(1, { message: 'La estimación debe ser mayor a 0' })
     estimacion?: number | undefined;
+    
+    @IsOptional()
+    @IsInt({ message: 'La estimación debe ser un número' })
+    @Min(1, { message: 'La estimación debe ser mayor a 0' })
+    tiempoFinal?: number | undefined;
 }

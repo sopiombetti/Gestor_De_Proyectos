@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTareaDto } from './dto/create-tarea.dto';
 import { UpdateTareaDto } from './dto/update-tarea.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,14 +24,14 @@ export class TareasService {
     private readonly proyectoService: ProyectosService) { }
 
   async create(createTareaDto: CreateTareaDto) {
-
+    let idEstado!: number;
     await this.proyectoService.findOne(createTareaDto.idProyecto);
-    await this.estadoService.findOne(createTareaDto.idEstado);
     await this.prioridadService.findOne(createTareaDto.idPrioridad);
 
     if (createTareaDto.idUsuario) {
       await this.usuarioService.findOne(createTareaDto.idUsuario);
-    }
+      idEstado = 2;
+    } else { idEstado = 1 }
 
     const nuevaTarea = this.tareaRepo.create({
       titulo: createTareaDto.titulo,
@@ -39,7 +39,7 @@ export class TareasService {
       usuario: createTareaDto.idUsuario ? { id: createTareaDto.idUsuario } : undefined,
       estimacion: createTareaDto.estimacion ?? undefined,
       proyecto: { id: createTareaDto.idProyecto },
-      estado: { id: createTareaDto.idEstado },
+      estado: { id: idEstado },
       prioridad: { id: createTareaDto.idPrioridad },
       fechaAsignacion: createTareaDto.idUsuario ? new Date() : undefined,
     })
@@ -77,6 +77,10 @@ export class TareasService {
 
   async update(id: number, updateTareaDto: UpdateTareaDto) {
     const tarea = await this.findOneOrFail(id);
+    
+    if (tarea.estado.id === 4) {
+      throw new ConflictException('No se puede editar una tarea finalizada.');
+    }
 
     if (updateTareaDto.idProyecto !== undefined) {
       await this.proyectoService.findOne(updateTareaDto.idProyecto);
@@ -85,6 +89,11 @@ export class TareasService {
 
     if (updateTareaDto.idEstado !== undefined) {
       await this.estadoService.findOne(updateTareaDto.idEstado);
+      this.validarEstado(updateTareaDto, tarea);
+      if (updateTareaDto.idEstado === 4) {
+        tarea.tiempoFinal = updateTareaDto.tiempoFinal;
+        tarea.fechaCierre = new Date();
+      }
       tarea.estado = { id: updateTareaDto.idEstado } as Estado;
     }
 
@@ -96,6 +105,7 @@ export class TareasService {
     if (updateTareaDto.idUsuario !== undefined) {
       await this.usuarioService.findOne(updateTareaDto.idUsuario);
       tarea.usuario = { id: updateTareaDto.idUsuario } as Usuario;
+      if (tarea.estado.id <= 2) tarea.estado = { id: 2 } as Estado;
       tarea.fechaAsignacion = new Date();
     }
 
@@ -113,10 +123,60 @@ export class TareasService {
   }
 
   private async findOneOrFail(id: number): Promise<Tarea> {
-    const tarea = await this.tareaRepo.findOne({ where: { id } });
-    if (!tarea) {
-      throw new NotFoundException('Tarea no encontrada');
-    }
+    const tarea = await this.tareaRepo.findOne({
+      where: { id },
+      relations: ['estado', 'usuario'],
+    });
+    if (!tarea) throw new NotFoundException('Tarea no encontrada');
     return tarea;
+  }
+
+  private validarEstado(updateTareaDto: UpdateTareaDto, tarea: Tarea) {
+
+    if (updateTareaDto.idEstado === 1) {
+      if (tarea.usuario !== null) {
+        throw new ConflictException(
+          'No se puede cambiar a estado "No asignada" una tarea con un usuario ya asignado.',
+        );
+      }
+    }
+    if (updateTareaDto.idEstado === 2) {
+      if (tarea.estado.id === 1) {
+        if (updateTareaDto.idUsuario === undefined) {
+          throw new ConflictException(
+            'No se puede cambiar a estado "Asignada" una tarea sin un usuario asignado.',
+          );
+        }
+      }
+    }
+    if (updateTareaDto.idEstado === 3) {
+      if (tarea.estado.id === 1) {
+        if (updateTareaDto.idUsuario === undefined) {
+          throw new ConflictException(
+            'No se puede iniciar una tarea sin un usuario asignado.',
+          );
+        }
+      }
+      if (updateTareaDto.estimacion === undefined && tarea.estimacion === undefined) {
+        throw new ConflictException(
+          'No se puede iniciar una tarea sin estimación calculada.',
+        );
+      }
+    }
+
+    if (updateTareaDto.idEstado === 4) {
+      if (tarea.estado.id !== 3) {
+        if (updateTareaDto.idUsuario === undefined) {
+          throw new ConflictException(
+            'No se puede finalizar una tarea que no fue iniciada.',
+          );
+        }
+      }
+      if (updateTareaDto.tiempoFinal === undefined) {
+        throw new ConflictException(
+          'No se puede finalizar una tarea sin la carga del tiempo que demoró en realizarse.',
+        );
+      }
+    }
   }
 }
