@@ -8,6 +8,7 @@ import { UsuariosService } from 'src/usuarios/usuarios.service';
 import { Tarea } from 'src/tareas/entities/tarea.entity';
 import { FindProyectoQueryDto } from './dto/find-proyecto.dto';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
+import { ProjectReport, TaskReport, ESTADO_MAP } from '../types/report.types';
 
 @Injectable()
 export class ProyectosService {
@@ -82,5 +83,45 @@ export class ProyectosService {
     const proyecto = await this.proyectoRepo.findOne({ where: { id } });
     if (!proyecto) throw new NotFoundException('No se encontró el proyecto.');
     return proyecto;
+  }
+
+  async getReportData(projectId: number): Promise<ProjectReport> {
+    const proyecto = await this.proyectoRepo.findOneOrFail({
+      where: { id: projectId },
+      relations: [
+        'tareas',
+        'tareas.usuario',
+        'tareas.estado',
+      ],
+    });
+
+    if (!proyecto) {
+      throw new NotFoundException(`No se encontró el proyecto.`);
+    }
+
+    const tasks: TaskReport[] = proyecto.tareas.map(tarea => ({
+      id: tarea.id,
+      name: tarea.titulo,
+      description: tarea.descripcion,
+      status: ESTADO_MAP[tarea.estado.id] ?? 'sin_asignar',
+
+      assignedUser: tarea.usuario
+        ? {
+            name:  `${tarea.usuario.nombre} ${tarea.usuario.apellido}`,
+            email: tarea.usuario.email,
+          }
+        : undefined,
+
+      assignedAt: tarea.fechaAsignacion ?? undefined,
+      estimatedHours: tarea.estimacion  ?? undefined,
+      // actualHours: tarea.tiempoReal ?? undefined,
+    }));
+
+    return {
+      name: proyecto.titulo,
+      description: proyecto.descripcion,
+      generatedAt: new Date(),
+      tasks,
+    };
   }
 }
