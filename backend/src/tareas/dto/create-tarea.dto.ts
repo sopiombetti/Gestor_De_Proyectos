@@ -13,10 +13,6 @@ export class CreateTareaDto {
     @IsInt({message: 'El idProyecto debe ser un número.'})
     @Min(1, {message: 'El idProyecto debe ser mayor 0.'})
     idProyecto!: number;
-    
-    @IsInt({message: 'El idEstado debe ser un número.'})
-    @Min(1, {message: 'El idEstado debe ser mayor 0.'})
-    idEstado!: number;
 
     @IsInt({message: 'El idPrioridad debe ser un número.'})
     @Min(1, {message: 'El idPrioridad debe ser mayor 0.'})
