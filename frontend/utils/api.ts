@@ -7,6 +7,21 @@ function authHeaders(token: string | null): Record<string, string> {
     : {};
 }
 
+export async function ApiRegister(nombre: string, apellido: string, email: string, password: string){
+    return fetch(`${API_URL}/usuarios`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+        nombre,
+        apellido,
+        email,
+        password
+        })
+    })
+}
+
 export function ApiLogin(email: string, password: string){
     return fetch(`${API_URL}/usuarios/login`, {
         method: "POST",
