@@ -1,6 +1,13 @@
+type Option = {
+  value: string | number;
+  label: string;
+};
+
 type SelectProps = {
   title: string;
-  options: string[];
+  options: Option[];
+  value: string | number;
+  onChange: (value: string) => void;
 };
 
 export default function Select({
@@ -28,8 +35,9 @@ export default function Select({
         "
       >
         {options.map((option) => (
-          <option key={option}>
-            {option}
+          <option key={option.value}>
+            value={option.value}
+            {option.label}
           </option>
         ))}
       </select>
