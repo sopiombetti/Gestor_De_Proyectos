@@ -69,3 +69,49 @@ export async function ApiGetReporte(id: number, token: string | null){
         }
     });
 }
+
+
+export async function ApiGetDetalleIdTarea(idUsuario: number, idPrioridad: string, token: string | null){
+    let url = `${API_URL}/tareas?idUsuario=${idUsuario}`;
+
+    if (idPrioridad) {
+      url += `&idPrioridad=${idPrioridad}`;
+    }
+    return fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(token),
+        }
+    });
+}
+
+export async function ApiGetUsuarios(token: string | null){
+    let url = `${API_URL}/usuarios`;
+
+  
+    return fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(token),
+        }
+    });
+}
+
+export async function ApiEditarTarea(idTarea: number,
+  idUsuario: number, token: string | null){
+  let url = `${API_URL}/tareas/${idTarea}`;
+
+  return fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(token),
+         },
+    body: JSON.stringify({
+      idUsuario,
+    }),
+  });
+}
+    
