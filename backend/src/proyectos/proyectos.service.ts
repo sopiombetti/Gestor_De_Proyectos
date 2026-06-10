@@ -22,6 +22,8 @@ export class ProyectosService {
   async create(createProyectoDto: CreateProyectoDto) {
 
     const lider = await this.usuarioService.findOne(createProyectoDto.idLider);
+    this.validarAdmin(lider);
+
     const nuevoProyecto = this.proyectoRepo.create({
       titulo: createProyectoDto.titulo,
       descripcion: createProyectoDto.descripcion,
@@ -32,8 +34,8 @@ export class ProyectosService {
 
   async findAll(filters: FindProyectoQueryDto = {}) {
 
-    if (filters.idUsuario !== undefined) this.usuarioService.findOne(filters.idUsuario);
-    if (filters.proyecto !== undefined) this.findOneOrFail(filters.proyecto);
+    if (filters.idUsuario !== undefined) await this.usuarioService.findOne(filters.idUsuario);
+    if (filters.proyecto !== undefined) await this.findOneOrFail(filters.proyecto);
 
     const where: FindOptionsWhere<Proyecto> = {};
 
@@ -55,9 +57,10 @@ export class ProyectosService {
 
   async update(id: number, updateProyectoDto: UpdateProyectoDto) {
     const proyecto = await this.findOne(id)
-    
+
     if (updateProyectoDto.idLider !== undefined) {
       const lider = await this.usuarioService.findOne(updateProyectoDto.idLider);
+      this.validarAdmin(lider);
       proyecto.lider = { id: lider.id } as Usuario;
     }
     if (updateProyectoDto.titulo !== undefined) proyecto.titulo = updateProyectoDto.titulo;
@@ -107,13 +110,13 @@ export class ProyectosService {
 
       assignedUser: tarea.usuario
         ? {
-            name:  `${tarea.usuario.nombre} ${tarea.usuario.apellido}`,
-            email: tarea.usuario.email,
-          }
+          name: `${tarea.usuario.nombre} ${tarea.usuario.apellido}`,
+          email: tarea.usuario.email,
+        }
         : undefined,
 
       assignedAt: tarea.fechaAsignacion ?? undefined,
-      estimatedHours: tarea.estimacion  ?? undefined,
+      estimatedHours: tarea.estimacion ?? undefined,
       // actualHours: tarea.tiempoReal ?? undefined,
     }));
 
@@ -123,5 +126,8 @@ export class ProyectosService {
       generatedAt: new Date(),
       tasks,
     };
+  }
+  private async validarAdmin(lider: Usuario) {
+    if (!lider.rol_admin) throw new ConflictException("El usuario a asignar como lider debe ser administrador.");
   }
 }

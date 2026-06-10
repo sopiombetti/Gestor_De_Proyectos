@@ -21,10 +21,15 @@ export class EstadosService {
 
   private async findOneOrFail(id: number): Promise<Estado> {
     const estado = await this.estadoRepo.findOne({ where: { id } });
-    if(!estado){
-       throw new NotFoundException('Estado no encontrado');
+    if (!estado) {
+      throw new NotFoundException('Estado no encontrado');
     }
     return estado;
   }
 
+  async findByCodigo(codigo: string): Promise<Estado> {
+    const estado = await this.estadoRepo.findOne({ where: { codigo } });
+    if (!estado) throw new NotFoundException(`Estado con código ${codigo} no encontrado`);
+    return estado;
+  }
 }
