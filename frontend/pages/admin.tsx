@@ -1,4 +1,5 @@
 import CardProyecto from "@/components/CardProyecto";
+import MensajeError from "@/components/Error";
 import { ApiGetProyecto } from "@/utils/api";
 import { useUserContext } from "@/utils/userContext";
 import { useEffect, useState } from "react"
@@ -7,6 +8,7 @@ export default function Admin(){
     const [proyectos, setProyectos] = useState([]);
     const [show, setShow] = useState(false);
     const { user, token } = useUserContext();
+    const [error, setError] = useState("");
 
     useEffect(() => {
         async function obtenerProyecto(){
@@ -14,6 +16,7 @@ export default function Admin(){
                   const response = await ApiGetProyecto(user?.id, token);
               
                   if (!response.ok) {
+                    setError("No se pudieron obtener los proyectos.");
                     throw new Error("No se puede obtener el proyecto");
                   }
               
@@ -32,6 +35,8 @@ export default function Admin(){
     }
 
   return(
+    <>
+    {error && <MensajeError text={error} />}
     <div className="flex flex-col m-20 space-y-10">
         <div className="flex flex-col space-y-6">
             <h1 className="font-bold text-2xl">Panel Administración</h1>
@@ -49,5 +54,6 @@ export default function Admin(){
         </div> : <></>}
         {proyectos.map(proyecto => <CardProyecto proyecto={proyecto} key={proyecto.id}/>)}  
     </div>
+    </>
   )
 }
