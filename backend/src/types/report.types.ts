@@ -1,8 +1,8 @@
 export enum EstadoId {
-  EN_PROGRESO = 1,
+  SIN_ASIGNAR = 1,
   ASIGNADA    = 2,
+  EN_PROGRESO = 3,
   FINALIZADA  = 4,
-  SIN_ASIGNAR = 5,
 }
 
 export type TaskStatus = 'sin_asignar' | 'asignada' | 'en_proceso' | 'finalizada';
@@ -26,6 +26,7 @@ export interface TaskReport {
   assignedAt?: Date;
   estimatedHours?: number;
   actualHours?: number;
+  completedAt?: Date;
 }
 
 export interface ProjectReport {
