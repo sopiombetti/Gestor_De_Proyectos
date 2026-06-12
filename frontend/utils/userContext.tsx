@@ -38,6 +38,7 @@ export function UserProvider({
 
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
+    document.cookie = `token=${token}; path=/; max-age=${60 * 60}`;
   }
 
   function logout() {
@@ -46,6 +47,7 @@ export function UserProvider({
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    document.cookie = 'token=; path=/; max-age=0';
   }
 
   return (
