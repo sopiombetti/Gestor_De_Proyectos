@@ -65,7 +65,6 @@ export class PdfService {
       // Encabezado en todas las páginas
       header: (currentPage, pageCount) => ({
         columns: [
-          { text: project.name, style: 'pageHeader', margin: [40, 15, 0, 0] },
           {
             text: `Página ${currentPage} de ${pageCount}`,
             alignment: 'right',
@@ -96,33 +95,42 @@ export class PdfService {
 
   // Portada
   private buildCover(project: ProjectReport) {
-    return [
-      {
-        canvas: [{
-          type: 'rect',
-          x: 0, y: 0, w: 515, h: 120,
-          color: this.colors.headerBg,
-          r: 6,
-        }],
-      },
-      {
-
-        stack: [
-          { text: 'INFORME DE PROYECTO', style: 'coverLabel' },
-          { text: project.name,          style: 'coverTitle' },
-          { text: project.description,   style: 'coverDesc'  },
+  return [
+    {
+      table: {
+        widths: ['*'],
+        body: [
+          [
+            {
+              stack: [
+                { text: 'INFORME DE PROYECTO', style: 'coverLabel' },
+                { text: project.name, style: 'coverTitle' },
+                { text: project.description, style: 'coverDesc'  },
+              ],
+              fillColor: this.colors.headerBg,
+              borderRadius: 6,
+              margin: [15, 18, 15, 18],
+            },
+          ],
         ],
-        absolutePosition: { x: 55, y: 25 },
-        margin: [0, 0, 0, 30],
       },
-      { text: '', margin: [0, 100, 0, 0] },
-    ];
-  }
+      layout: {
+        hLineWidth: () => 0,
+        vLineWidth: () => 0,
+        paddingTop: () => 0,
+        paddingBottom: () => 0,
+        paddingLeft: () => 0,
+        paddingRight: () => 0,
+      },
+      margin: [0, 0, 0, 30],
+    },
+  ];
+}
 
   // Resumen
   private buildSummary(tasks: TaskReport[]) {
-    const total      = tasks.length;
-    const byStatus   = this.groupByStatus(tasks);
+    const total = tasks.length;
+    const byStatus = this.groupByStatus(tasks);
 
     const statuses: TaskStatus[] = ['sin_asignar', 'asignada', 'en_proceso', 'finalizada'];
 
@@ -150,7 +158,7 @@ export class PdfService {
           vLineWidth: () => 0.5,
           hLineColor: () => '#E2E8F0',
           vLineColor: () => '#E2E8F0',
-          paddingTop:    () => 12,
+          paddingTop: () => 12,
           paddingBottom: () => 12,
         },
         margin: [0, 0, 0, 20],
@@ -169,61 +177,66 @@ export class PdfService {
   }
 
   private buildStatusSection(status: TaskStatus, tasks: TaskReport[]) {
-    const color = this.colors[status];
-    const label = this.statusLabel[status];
+  const color = this.colors[status];
+  const label = this.statusLabel[status];
 
-    return [
-      {
-        canvas: [{ type: 'rect', x: 0, y: 0, w: 4, h: 18, color }],
-      },
-      {
-        text: `${label}  (${tasks.length} tarea${tasks.length !== 1 ? 's' : ''})`,
-        style:            'statusTitle',
-        color,
-        absolutePosition: { x: 55, y: -2 },
-        margin:           [0, 0, 0, 0],
-      },
-      { text: '', margin: [0, 14, 0, 6] },
+  return [
+    {
+      columns: [
+        {
+          canvas: [{ type: 'rect', x: 0, y: 2, w: 4, h: 14, color }],
+          width: 12,
+        },
+        {
+          text: `${label}  (${tasks.length} tarea${tasks.length !== 1 ? 's' : ''})`,
+          style: 'statusTitle',
+          color,
+          width: '*',
+          margin: [4, 0, 0, 0],
+        },
+      ],
+      margin: [0, 0, 0, 8],
+    },
 
-      // Tabla de tareas
-      {
-        table: {
-          headerRows: 1,
-          widths:     this.getColumnWidths(status),
-          body: [
-            this.getTableHeader(status),
-            ...tasks.map((task, i) => this.buildTaskRow(task, status, i)),
-          ],
-        },
-        layout: {
-          hLineWidth: (i: number) => (i === 1 ? 0 : 0.5),
-          vLineWidth: ()           => 0,
-          hLineColor: ()           => '#E2E8F0',
-          fillColor:  (i: number) =>
-            i === 0
-              ? color
-              : i % 2 === 0
-              ? this.colors.rowAlt
-              : this.colors.white,
-        },
-        margin: [0, 0, 0, 24],
+    // Tabla de tareas
+    {
+      table: {
+        headerRows: 1,
+        widths: this.getColumnWidths(status),
+        body: [
+          this.getTableHeader(status),
+          ...tasks.map((task, i) => this.buildTaskRow(task, status, i)),
+        ],
       },
-    ];
-  }
+      layout: {
+        hLineWidth: (i: number) => (i === 1 ? 0 : 0.5),
+        vLineWidth: () => 0,
+        hLineColor: () => '#E2E8F0',
+        fillColor: (i: number) =>
+          i === 0
+            ? color
+            : i % 2 === 0
+            ? this.colors.rowAlt
+            : this.colors.white,
+      },
+      margin: [0, 0, 0, 24],
+    },
+  ];
+}
 
   // Columnas según estado
   private getColumnWidths(status: TaskStatus): string[] {
     switch (status) {
       case 'sin_asignar': return ['*', '60%'];
-      case 'asignada':    return ['*', '25%', '20%', '20%'];
-      case 'en_proceso':  return ['*', '25%', '20%', '15%'];
-      case 'finalizada':  return ['*', '20%', '15%', '15%', '15%'];
+      case 'asignada': return ['*', '25%', '20%', '20%'];
+      case 'en_proceso': return ['*', '25%', '20%', '15%'];
+      case 'finalizada': return ['*', '20%', '15%', '15%', '15%'];
     }
   }
 
   private getTableHeader(status: TaskStatus): any[] {
     const base = [
-      { text: 'TAREA',    style: 'tableHeader' },
+      { text: 'TAREA', style: 'tableHeader' },
       { text: 'DESCRIPCIÓN', style: 'tableHeader' },
     ];
 
@@ -233,21 +246,21 @@ export class PdfService {
       case 'asignada':
         return [
           ...base,
-          { text: 'USUARIO',         style: 'tableHeader' },
+          { text: 'USUARIO', style: 'tableHeader' },
           { text: 'FECHA ASIGNACIÓN', style: 'tableHeader' },
         ];
       case 'en_proceso':
         return [
           ...base,
-          { text: 'USUARIO',     style: 'tableHeader' },
+          { text: 'USUARIO', style: 'tableHeader' },
           { text: 'ESTIMACIÓN',  style: 'tableHeader' },
         ];
       case 'finalizada':
         return [
           ...base,
-          { text: 'USUARIO',     style: 'tableHeader' },
-          { text: 'ESTIMADO',    style: 'tableHeader' },
-          { text: 'REAL',        style: 'tableHeader' },
+          { text: 'USUARIO', style: 'tableHeader' },
+          { text: 'ESTIMADO',  style: 'tableHeader' },
+          { text: 'REAL', style: 'tableHeader' },
         ];
     }
   }
@@ -259,7 +272,6 @@ export class PdfService {
     const userCell = {
       stack: [
         { text: task.assignedUser?.name  ?? '—', style: 'taskName' },
-        { text: task.assignedUser?.email ?? '',   style: 'taskDesc' },
       ],
     };
 
@@ -298,8 +310,8 @@ export class PdfService {
             text:  task.actualHours ? `${task.actualHours}h` : '—',
             style: 'taskDesc',
             color: diff === null ? this.colors.text
-                 : diff > 0     ? '#DC2626'
-                 :                '#16A34A',
+                 : diff > 0  ? '#DC2626'
+                 : '#16A34A',
           },
         ];
       }
@@ -309,20 +321,20 @@ export class PdfService {
   // Estilos
   private buildStyles() {
     return {
-      coverLabel:      { fontSize: 9,  color: '#93C5FD', bold: true, margin: [0, 0, 0, 6] },
-      coverTitle:      { fontSize: 22, color: '#FFFFFF', bold: true, margin: [0, 0, 0, 6] },
-      coverDesc:       { fontSize: 10, color: '#CBD5E1' },
-      pageHeader:      { fontSize: 8,  color: this.colors.muted, bold: true },
+      coverLabel: { fontSize: 9,  color: '#93C5FD', bold: true, margin: [0, 0, 0, 6] },
+      coverTitle: { fontSize: 22, color: '#FFFFFF', bold: true, margin: [0, 0, 0, 6] },
+      coverDesc: { fontSize: 10, color: '#CBD5E1' },
+      pageHeader: { fontSize: 8,  color: this.colors.muted, bold: true },
       pageHeaderMuted: { fontSize: 8,  color: this.colors.muted },
-      footerText:      { fontSize: 7,  color: this.colors.muted },
-      sectionTitle:    { fontSize: 13, bold: true, color: this.colors.text },
-      statusTitle:     { fontSize: 11, bold: true },
-      summaryNumber:   { fontSize: 22, bold: true },
-      summaryLabel:    { fontSize: 7,  color: this.colors.muted, margin: [0, 4, 0, 0] },
-      tableHeader:     { fontSize: 8,  bold: true, color: '#FFFFFF', margin: [4, 6, 4, 6] },
-      taskName:        { fontSize: 8,  bold: true, margin: [4, 5, 4, 2] },
-      taskDesc:        { fontSize: 8,  color: this.colors.muted, margin: [4, 2, 4, 5] },
-      mutedText:       { fontSize: 8,  color: this.colors.muted },
+      footerText: { fontSize: 7,  color: this.colors.muted },
+      sectionTitle: { fontSize: 13, bold: true, color: this.colors.text },
+      statusTitle: { fontSize: 11, bold: true },
+      summaryNumber:  { fontSize: 22, bold: true },
+      summaryLabel: { fontSize: 7,  color: this.colors.muted, margin: [0, 4, 0, 0] },
+      tableHeader: { fontSize: 8,  bold: true, color: '#FFFFFF', margin: [4, 6, 4, 6] },
+      taskName: { fontSize: 8,  bold: true, margin: [4, 5, 4, 2] },
+      taskDesc: { fontSize: 8,  color: this.colors.muted, margin: [4, 2, 4, 5] },
+      mutedText: { fontSize: 8,  color: this.colors.muted },
     };
   }
 

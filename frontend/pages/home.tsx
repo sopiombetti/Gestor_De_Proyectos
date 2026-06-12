@@ -6,12 +6,14 @@ import Card from "@/components/Card";
 import { ApiGetTareas } from "@/utils/api";
 import { useUserContext } from "@/utils/userContext";
 import BoxTareas from "@/components/BoxTareas";
+import MensajeError from "@/components/Error";
 
 export default function Home() {
 
   const [tareas, setTareas] = useState([]);
   const [prioridad, setPrioridad] = useState("");
   const { user, token } = useUserContext();
+  const [error, setError] = useState("");
 
   useEffect(() => {
     console.log(user);
@@ -20,6 +22,7 @@ export default function Home() {
           const response = await ApiGetTareas(user?.id, prioridad, token);
       
           if (!response.ok) {
+            setError("No se pudieron obtener las tareas.");
             throw new Error("No se pueden obtener las tareas");
           }
       
@@ -36,6 +39,8 @@ export default function Home() {
   
 
   return (
+    <>
+    {error && <MensajeError text={error} />}
     <div className="mx-10 md:mx-20 mt-10">
       <section>
         <h2 className="text-2xl font-bold text-gray-900">Hola, {user?.nombre}</h2>
@@ -49,7 +54,7 @@ export default function Home() {
       </section>
       <section className="flex items-center my-14 bg-gray-300 rounded-lg h-18  w-3/4 md:w-[450px] border border-secondary">
         <h3 className="mr-20 ml-10 font-semibold text-lg">Filtrar Tareas</h3>
-        <select className="w-40" value={prioridad} onChange={(e) => setPrioridad(e.target.value)}>
+        <select className="w-40 bg-white" value={prioridad} onChange={(e) => setPrioridad(e.target.value)}>
           <option value="">Todas</option>
           <option value="1">Prioridad Alta</option>
           <option value="2">Prioridad Media</option>
@@ -60,5 +65,6 @@ export default function Home() {
         {tareas.map(tarea => <Card tarea={tarea} key={tarea.id}/>)}
       </section>
     </div>
+    </>
   )
 }

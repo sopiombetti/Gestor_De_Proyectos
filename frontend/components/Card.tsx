@@ -26,7 +26,7 @@ export default function Card({ tarea }: { tarea: Tarea }){
                     : "text-yellow-800 bg-yellow-200"
             }
             `}>{tarea.prioridad.nombre}</h4>
-            <h4 className="bg-secondary/75 py-1 px-2 rounded-sm text-white">{tarea.estado.nombre}</h4>
+            <h4 className="bg-secondary/75 min-w-25 text-center py-1 px-2 rounded-sm text-white">{tarea.estado.nombre}</h4>
         </div>
     )
 }
