@@ -28,7 +28,7 @@ export default function Navbar() {
       </div>
       {user ? 
       <nav className="relative">
-        <button onClick={() => setOpen(!open)} className="relative w-10 h-10">
+        <button onClick={() => setOpen(!open)} className="relative w-10 h-10 cursor-pointer">
           <Image
             src="/account_circle.svg"
             alt="Usuario"
@@ -43,7 +43,10 @@ export default function Navbar() {
             <Link href="/admin" className="block px-4 py-3 hover:bg-gray-100">
               Panel Administrador
             </Link> : <></>}
-            <button onClick={handleLogout} className="w-full text-left px-4 py-3 hover:bg-gray-100">
+            <Link href="/home" className="block px-4 py-3 hover:bg-gray-100">
+              Inicio
+            </Link>
+            <button onClick={handleLogout} className="w-full text-left px-4 py-3 hover:bg-gray-100 cursor-pointer">
               Cerrar Sesión
             </button>
           </div>

@@ -35,7 +35,7 @@ export default function Admin(){
     <div className="flex flex-col m-20 space-y-10">
         <div className="flex flex-col space-y-6">
             <h1 className="font-bold text-2xl">Panel Administración</h1>
-            <button className="flex justify-center w-[200px] rounded-full bg-secondary px-3 py-1.5 font-semibold leading-6 text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={handleCreate}>Crear Proyecto</button>
+            <button className="flex justify-center w-[200px] rounded-full bg-secondary px-3 py-1.5 font-semibold leading-6 text-white shadow-sm cursor-pointer hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={handleCreate}>Crear Proyecto</button>
         </div>
         {show ? <div className="flex bg-gray-200 rounded-2xl p-6">
             <form className="flex flex-col space-y-3">

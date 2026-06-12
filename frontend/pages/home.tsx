@@ -49,7 +49,7 @@ export default function Home() {
       </section>
       <section className="flex items-center my-14 bg-gray-300 rounded-lg h-18  w-3/4 md:w-[450px] border border-secondary">
         <h3 className="mr-20 ml-10 font-semibold text-lg">Filtrar Tareas</h3>
-        <select className="w-40" value={prioridad} onChange={(e) => setPrioridad(e.target.value)}>
+        <select className="w-40 bg-white" value={prioridad} onChange={(e) => setPrioridad(e.target.value)}>
           <option value="">Todas</option>
           <option value="1">Prioridad Alta</option>
           <option value="2">Prioridad Media</option>
