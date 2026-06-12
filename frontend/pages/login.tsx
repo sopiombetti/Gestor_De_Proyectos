@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { ApiLogin } from "../utils/api"
 import { useRouter } from "next/router";
 import { useUserContext } from "@/utils/userContext";
+import MensajeError from "../components/Error";
 
 export default function Login() {
 
@@ -10,6 +11,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [error, setError] = useState("");
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,6 +20,7 @@ export default function Login() {
       const response = await ApiLogin(email, password);
 
       if (!response.ok) {
+        setError("Credenciales incorrectas");
         throw new Error("Credenciales incorrectas");
       }
 
@@ -43,6 +46,8 @@ export default function Login() {
 
 
   return (
+    <>
+    {error && <MensajeError text={error} />}
     <section className="bg-gray-50 dark:bg-gray-900 pt-10">
       <div className="flex flex-col items-center px-6 mx-auto md:h-screen lg:py-0">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -60,7 +65,7 @@ export default function Login() {
                       id="email"
                       name="email"
                       type="email"
-                      placeholder="ejemplo@gmail.com"
+                      placeholder="📧 ejemplo@gmail.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-blue-400 focus:outline-blue-400 placeholder:text-gray-400 sm:text-sm sm:leading-6"
@@ -79,7 +84,7 @@ export default function Login() {
                       id="password"
                       name="password"
                       type="password"
-                      placeholder="Contraseña"
+                      placeholder="🔒 Contraseña"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-blue-400 focus:outline-blue-400 placeholder:text-gray-400 sm:text-sm sm:leading-6"
@@ -89,7 +94,7 @@ export default function Login() {
               
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-full bg-cyan-700 px-3 py-1.5 font-semibold leading-6 text-gray-900 shadow-sm hover:bg-cyan-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="flex w-full justify-center rounded-full bg-secondary px-3 py-1.5 font-semibold leading-6 text-gray-900 shadow-sm cursor-pointer hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Ingresar
                 </button>
@@ -104,5 +109,6 @@ export default function Login() {
         </div>
       </div>
     </section>
+    </>
   )
 }

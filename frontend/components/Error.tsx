@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Error({ text }: { text: string }) {
+export default function MensajeError({ text }: { text: string }) {
 
   const [visible, setVisible] = useState(true);
 
