@@ -30,7 +30,7 @@ export default function TaskDetail({
   const [estimacionCalculada, setEstimacionCalculada] =
     useState(estimacion ?? 0);
 
-  const tareaFinalizada = estadoSeleccionado === 3;
+  const tareaFinalizada = estadoSeleccionado === 4;
 
   const handleGuardarEstado = async () => {
     if (!token) return;
