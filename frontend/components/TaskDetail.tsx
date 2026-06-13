@@ -22,7 +22,6 @@ export default function TaskDetail({
   prioridad,
   estimacion,
 }: TaskDetailProps) {
-
   const { token } = useUserContext();
 
   const [estadoSeleccionado, setEstadoSeleccionado] =
@@ -31,10 +30,12 @@ export default function TaskDetail({
   const [estimacionCalculada, setEstimacionCalculada] =
     useState(estimacion ?? 0);
 
+  const tareaFinalizada = estadoSeleccionado === 3;
+
   const handleGuardarEstado = async () => {
     if (!token) return;
 
-    const response = await ApiEditarTarea(
+    await ApiEditarTarea(
       id,
       {
         idEstado: estadoSeleccionado,
@@ -42,15 +43,12 @@ export default function TaskDetail({
       token
     );
 
-    if (response.ok) {
-      //agregar exito "Estado actualizado correctamente");
-    }
   };
 
   const handleGuardarEstimacion = async () => {
     if (!token) return;
 
-    const response = await ApiEditarTarea(
+    await ApiEditarTarea(
       id,
       {
         estimacion: estimacionCalculada,
@@ -58,26 +56,25 @@ export default function TaskDetail({
       token
     );
 
-    if (response.ok) {
-     //agregar exito "Estimación guardada correctamente");
-    }
+
   };
 
-  return (
-    <div className="max-w-2xl mx-auto bg-white   p-6">
 
-      <div className=" pb-4 mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">
+  return (
+    <div className="max-w-2xl mx-auto bg-white p-6">
+
+      <div className="pb-4 mb-6">
+        <h1 className="text-3xl font-bold">
           {title}
         </h1>
       </div>
 
       <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-700 mb-2">
+        <h2 className="text-lg font-semibold mb-2">
           Descripción
         </h2>
 
-        <p className="text-gray-600 whitespace-pre-line">
+        <p className="whitespace-pre-line">
           {description}
         </p>
       </div>
@@ -86,31 +83,34 @@ export default function TaskDetail({
         <Select
           title="Estado"
           options={[
-            { value: 1, label: "Asignada" },
-            { value: 2, label: "En progreso" },
-            { value: 3, label: "Finalizada" },
+            { value: 1, label: "No asignada" },
+            { value: 2, label: "Asignada" },
+            { value: 3, label: "En progreso" },
+            { value: 4, label: "Finalizada" },
           ]}
           value={estadoSeleccionado}
           onChange={(value) =>
             setEstadoSeleccionado(Number(value))
           }
-        />
-       
- </div>
-        <Button
-          title="Guardar estado"
-          type="button"
-          onClick={handleGuardarEstado}
           
         />
-     
 
-      <div className="mt-8">
-        <h2 className="text-lg  text-gray-700 mb-2">
+        <div className="mt-4">
+          <Button
+            title="Guardar estado"
+            type="button"
+            onClick={handleGuardarEstado}
+            disabled={tareaFinalizada}
+          />
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <h2 className="text-lg mb-2">
           Prioridad
         </h2>
 
-        <span className="px-3 py-1 text-red-700">
+        <span className="px-3 py-1">
           {prioridad}
         </span>
       </div>
@@ -123,16 +123,17 @@ export default function TaskDetail({
         />
 
         <div className="mt-4">
-          <span className="px-3 py-1 text-green-700">
+          <span className="px-3 py-1">
             Estimación: {estimacionCalculada} horas
           </span>
         </div>
-   
+
         <div className="mt-4">
           <Button
             title="Guardar estimación"
             type="button"
             onClick={handleGuardarEstimacion}
+            disabled={tareaFinalizada}
           />
         </div>
       </div>
