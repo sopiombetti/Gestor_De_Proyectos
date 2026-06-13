@@ -2,23 +2,28 @@ type ButtonTypes = {
   title: string;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 };
 
-export default function Button({onClick, title, type = "button"}: ButtonTypes) {
+export default function Button({
+  title,
+  type,
+  onClick,
+  disabled = false,
+}: ButtonTypes) {
   return (
     <button
       type={type}
       onClick={onClick}
-      className="
-        bg-blue-500
-        text-white
-        px-4
-        py-2
-        cursor-pointer
-        hover:bg-blue-600
-        rounded-xl
-        transition-all
-      "
+      disabled={disabled}
+      className={`
+        px-4 py-2 rounded-lg
+        ${
+          disabled
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-blue-500 hover:bg-blue-600 text-white"
+        }
+      `}
     >
       {title}
     </button>

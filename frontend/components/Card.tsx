@@ -1,3 +1,5 @@
+import { useRouter } from "next/router"
+
 type Objeto = {
     id: number
     nombre: string
@@ -13,8 +15,12 @@ type Tarea = {
 }
 
 export default function Card({ tarea }: { tarea: Tarea }){
+    const router = useRouter();
     return(
-        <div className="flex justify-between items-center shadow-xl/30 h-16 rounded-md px-16">
+
+        <div 
+        onClick={() => router.push(`/tasks/task-detail?id=${tarea.id}`)}
+        className="flex justify-between items-center shadow-xl/30 h-16 rounded-md px-16">
 
             <h3 className="font-semibold">{tarea.titulo}</h3>
             <h4 className={`py-1 rounded-sm w-18 text-center
