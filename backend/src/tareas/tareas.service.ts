@@ -125,7 +125,7 @@ export class TareasService {
   private async findOneOrFail(id: number): Promise<Tarea> {
     const tarea = await this.tareaRepo.findOne({
       where: { id },
-      relations: ['estado', 'usuario'],
+      relations: ['estado', 'usuario', 'proyecto', 'prioridad'],
     });
     if (!tarea) throw new NotFoundException('Tarea no encontrada');
     return tarea;
