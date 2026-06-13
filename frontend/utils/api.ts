@@ -69,3 +69,52 @@ export async function ApiGetReporte(id: number, token: string | null){
         }
     });
 }
+
+
+
+export async function ApiGetUsuarios(token: string | null){
+    let url = `${API_URL}/usuarios`;
+
+  
+    return fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(token),
+        }
+    });
+}
+
+export async function ApiEditarTarea(
+  idTarea: number,
+  body: {
+    idUsuario?: number;
+    idEstado?: number;
+    estimacion?: number;
+    tiempoFinal?: number;
+  },
+  token: string | null
+) {
+  return fetch(`${API_URL}/tareas/${idTarea}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    },
+    body: JSON.stringify(body),
+  });
+}
+
+export async function ApiGetTareaPorId(
+  id: number,
+  token: string | null
+) {
+  return fetch(`${API_URL}/tareas/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    },
+  });
+}
+    

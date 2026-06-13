@@ -1,23 +1,25 @@
 type InputProps = {
-  title: string
-  placeholder?: string
-  type?: string
-}
+  title: string;
+  type: string;
+  value?: string | number;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
 
 export default function Input({
   title,
-  placeholder,
-  type = "text",
+  type,
+  value,
+  onChange,
 }: InputProps) {
   return (
-    <div className="flex flex-col gap-2 w-full">
-      <label className="text-sm font-medium text-gray-700">
-        {title}
-      </label>
+    <div className="flex flex-col gap-2 mb-4">
+      <label>{title}</label>
 
-      <input
+          <input
         type={type}
-        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+
         className="
         mb-4
           w-full

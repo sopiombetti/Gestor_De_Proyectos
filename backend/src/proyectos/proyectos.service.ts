@@ -116,8 +116,9 @@ export class ProyectosService {
         : undefined,
 
       assignedAt: tarea.fechaAsignacion ?? undefined,
-      estimatedHours: tarea.estimacion ?? undefined,
-      // actualHours: tarea.tiempoReal ?? undefined,
+      estimatedHours: tarea.estimacion  ?? undefined,
+      actualHours: tarea.tiempoFinal ?? undefined,
+      completedAt: tarea.fechaCierre ?? undefined
     }));
 
     return {

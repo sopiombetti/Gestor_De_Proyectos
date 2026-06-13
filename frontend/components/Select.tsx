@@ -1,11 +1,18 @@
-type SelectProps = {
+interface SelectProps {
   title: string;
-  options: string[];
-};
+  options: {
+    value: number | string;
+    label: string;
+  }[];
+  value: number | string;
+  onChange: (value: string) => void;
+}
 
 export default function Select({
   title,
   options,
+  value,
+  onChange,
 }: SelectProps) {
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -14,22 +21,16 @@ export default function Select({
       </label>
 
       <select
-        className="
-        mb-4
-          w-full
-          border
-          border-gray-300
-          rounded-xl
-          px-4
-          py-3
-          outline-none
-          focus:border-blue-500
-       
-        "
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full border border-gray-300 rounded-xl px-4 py-3 pb-2"
       >
         {options.map((option) => (
-          <option key={option}>
-            {option}
+          <option
+            key={option.value}
+            value={option.value}
+          >
+            {option.label}
           </option>
         ))}
       </select>
