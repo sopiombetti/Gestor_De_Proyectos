@@ -71,20 +71,6 @@ export async function ApiGetReporte(id: number, token: string | null){
 }
 
 
-export async function ApiGetDetalleIdTarea(idUsuario: number, idPrioridad: string, token: string | null){
-    let url = `${API_URL}/tareas?idUsuario=${idUsuario}`;
-
-    if (idPrioridad) {
-      url += `&idPrioridad=${idPrioridad}`;
-    }
-    return fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders(token),
-        }
-    });
-}
 
 export async function ApiGetUsuarios(token: string | null){
     let url = `${API_URL}/usuarios`;
@@ -99,19 +85,36 @@ export async function ApiGetUsuarios(token: string | null){
     });
 }
 
-export async function ApiEditarTarea(idTarea: number,
-  idUsuario: number, token: string | null){
-  let url = `${API_URL}/tareas/${idTarea}`;
+export async function ApiEditarTarea(
+  idTarea: number,
+  body: {
+    idUsuario?: number;
+    idEstado?: number;
+    estimacion?: number;
+    tiempoFinal?: number;
+  },
+  token: string | null
+) {
+  return fetch(`${API_URL}/tareas/${idTarea}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    },
+    body: JSON.stringify(body),
+  });
+}
 
-  return fetch(url, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders(token),
-         },
-    body: JSON.stringify({
-      idUsuario,
-    }),
+export async function ApiGetTareaPorId(
+  id: number,
+  token: string | null
+) {
+  return fetch(`${API_URL}/tareas/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    },
   });
 }
     
