@@ -9,10 +9,10 @@ import { EstadosService } from 'src/estados/estados.service';
 import { PrioridadService } from 'src/prioridad/prioridad.service';
 import { ProyectosService } from 'src/proyectos/proyectos.service';
 import { FindTareasQueryDto } from './dto/find-tareas-query.dto';
-import { Proyecto } from 'src/proyectos/entities/proyecto.entity';
-import { Estado } from 'src/estados/entities/estado.entity';
 import { Prioridad } from 'src/prioridad/entities/prioridad.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
+import { CambiarEstado } from 'src/estados/state/CambiarEstado';
+import instanciarEstado from 'src/estados/factoryEstados/factoryEstados';
 
 @Injectable()
 export class TareasService {
@@ -24,45 +24,44 @@ export class TareasService {
     private readonly proyectoService: ProyectosService) { }
 
   async create(createTareaDto: CreateTareaDto) {
-    let idEstado!: number;
     await this.proyectoService.findOne(createTareaDto.idProyecto);
     await this.prioridadService.findOne(createTareaDto.idPrioridad);
-
     if (createTareaDto.idUsuario) {
       await this.usuarioService.findOne(createTareaDto.idUsuario);
-      idEstado = 2;
-    } else { idEstado = 1 }
+    }
 
-    const nuevaTarea = this.tareaRepo.create({
+    let tarea = this.tareaRepo.create({
       titulo: createTareaDto.titulo,
       descripcion: createTareaDto.descripcion,
       usuario: createTareaDto.idUsuario ? { id: createTareaDto.idUsuario } : undefined,
       estimacion: createTareaDto.estimacion ?? undefined,
       proyecto: { id: createTareaDto.idProyecto },
-      estado: { id: idEstado },
       prioridad: { id: createTareaDto.idPrioridad },
       fechaAsignacion: createTareaDto.idUsuario ? new Date() : undefined,
-    })
+    });
 
-    return await this.tareaRepo.save(nuevaTarea);
+    const codigo = createTareaDto.idUsuario ? 'ASIGNADA' : 'SIN_ASIGNAR';
+    tarea = await this.aplicarEstado(codigo, tarea, createTareaDto);
+
+    return await this.tareaRepo.save(tarea);
   }
 
   async findAll(filters: FindTareasQueryDto = {}) {
 
-    if (filters.idUsuario !== undefined && filters.idUsuario !== null) await this.usuarioService.findOne(filters.idUsuario);
-    if (filters.idEstado !== undefined) await this.estadoService.findOne(filters.idEstado);
-    if (filters.idPrioridad !== undefined) await this.prioridadService.findOne(filters.idPrioridad);
-    if (filters.proyecto !== undefined) await this.proyectoService.findOne(filters.proyecto);
+    if (filters.idUsuario != null) await this.usuarioService.findOne(filters.idUsuario);
+    if (filters.idEstado != null) await this.estadoService.findOne(filters.idEstado);
+    if (filters.idPrioridad != null) await this.prioridadService.findOne(filters.idPrioridad);
+    if (filters.proyecto != null) await this.proyectoService.findOne(filters.proyecto);
 
     const where: FindOptionsWhere<Tarea> = {};
     if (filters.idUsuario === null) {
       where.usuario = IsNull();
-    } else if (filters.idUsuario !== undefined) {
+    } else if (filters.idUsuario != null) {
       where.usuario = { id: filters.idUsuario };
     }
-    if (filters.idEstado !== undefined) where.estado = { id: filters.idEstado };
-    if (filters.idPrioridad !== undefined) where.prioridad = { id: filters.idPrioridad };
-    if (filters.proyecto !== undefined) where.proyecto = { id: filters.proyecto };
+    if (filters.idEstado != null) where.estado = { id: filters.idEstado };
+    if (filters.idPrioridad != null) where.prioridad = { id: filters.idPrioridad };
+    if (filters.proyecto != null) where.proyecto = { id: filters.proyecto };
 
     return await this.tareaRepo.find({
       where,
@@ -76,42 +75,36 @@ export class TareasService {
   }
 
   async update(id: number, updateTareaDto: UpdateTareaDto) {
-    const tarea = await this.findOneOrFail(id);
-    
-    if (tarea.estado.id === 4) {
+    let tarea = await this.findOneOrFail(id);
+
+    if (tarea.estado.codigo === 'FINALIZADA') {
       throw new ConflictException('No se puede editar una tarea finalizada.');
     }
 
-    if (updateTareaDto.idProyecto !== undefined) {
-      await this.proyectoService.findOne(updateTareaDto.idProyecto);
-      tarea.proyecto = { id: updateTareaDto.idProyecto } as Proyecto;
+    if (updateTareaDto.idEstado != null) {
+      const estado = await this.estadoService.findOne(updateTareaDto.idEstado);
+      const nuevoEstado: CambiarEstado = instanciarEstado(estado);
+      nuevoEstado.validarCambio(updateTareaDto, tarea);
     }
 
-    if (updateTareaDto.idEstado !== undefined) {
-      await this.estadoService.findOne(updateTareaDto.idEstado);
-      this.validarEstado(updateTareaDto, tarea);
-      if (updateTareaDto.idEstado === 4) {
-        tarea.tiempoFinal = updateTareaDto.tiempoFinal;
-        tarea.fechaCierre = new Date();
-      }
-      tarea.estado = { id: updateTareaDto.idEstado } as Estado;
-    }
-
-    if (updateTareaDto.idPrioridad !== undefined) {
+    if (updateTareaDto.idPrioridad != null) {
       await this.prioridadService.findOne(updateTareaDto.idPrioridad);
       tarea.prioridad = { id: updateTareaDto.idPrioridad } as Prioridad;
     }
 
-    if (updateTareaDto.idUsuario !== undefined) {
+    if (updateTareaDto.idUsuario != null) {
       await this.usuarioService.findOne(updateTareaDto.idUsuario);
       tarea.usuario = { id: updateTareaDto.idUsuario } as Usuario;
-      if (tarea.estado.id <= 2) tarea.estado = { id: 2 } as Estado;
+      if (tarea.estado.codigo === 'SIN_ASIGNAR') {
+        tarea = await this.aplicarEstado('ASIGNADA', tarea, updateTareaDto);
+      }
+
       tarea.fechaAsignacion = new Date();
     }
 
-    if (updateTareaDto.titulo !== undefined) tarea.titulo = updateTareaDto.titulo;
-    if (updateTareaDto.descripcion !== undefined) tarea.descripcion = updateTareaDto.descripcion;
-    if (updateTareaDto.estimacion !== undefined) tarea.estimacion = updateTareaDto.estimacion;
+    if (updateTareaDto.titulo != null) tarea.titulo = updateTareaDto.titulo;
+    if (updateTareaDto.descripcion != null) tarea.descripcion = updateTareaDto.descripcion;
+    if (updateTareaDto.estimacion != null) tarea.estimacion = updateTareaDto.estimacion;
 
     return await this.tareaRepo.save(tarea);
   }
@@ -131,52 +124,8 @@ export class TareasService {
     return tarea;
   }
 
-  private validarEstado(updateTareaDto: UpdateTareaDto, tarea: Tarea) {
-
-    if (updateTareaDto.idEstado === 1) {
-      if (tarea.usuario !== null) {
-        throw new ConflictException(
-          'No se puede cambiar a estado "No asignada" una tarea con un usuario ya asignado.',
-        );
-      }
-    }
-    if (updateTareaDto.idEstado === 2) {
-      if (tarea.estado.id === 1) {
-        if (updateTareaDto.idUsuario === undefined) {
-          throw new ConflictException(
-            'No se puede cambiar a estado "Asignada" una tarea sin un usuario asignado.',
-          );
-        }
-      }
-    }
-    if (updateTareaDto.idEstado === 3) {
-      if (tarea.estado.id === 1) {
-        if (updateTareaDto.idUsuario === undefined) {
-          throw new ConflictException(
-            'No se puede iniciar una tarea sin un usuario asignado.',
-          );
-        }
-      }
-      if (updateTareaDto.estimacion === undefined && tarea.estimacion === undefined) {
-        throw new ConflictException(
-          'No se puede iniciar una tarea sin estimación calculada.',
-        );
-      }
-    }
-
-    if (updateTareaDto.idEstado === 4) {
-      if (tarea.estado.id !== 3) {
-        if (updateTareaDto.idUsuario === undefined) {
-          throw new ConflictException(
-            'No se puede finalizar una tarea que no fue iniciada.',
-          );
-        }
-      }
-      if (updateTareaDto.tiempoFinal === undefined) {
-        throw new ConflictException(
-          'No se puede finalizar una tarea sin la carga del tiempo que demoró en realizarse.',
-        );
-      }
-    }
+  private async aplicarEstado(codigo: string, tarea: Tarea, dto: UpdateTareaDto): Promise<Tarea> {
+    const estado = await this.estadoService.findByCodigo(codigo);
+    return instanciarEstado(estado).validarCambio(dto, tarea);
   }
 }
