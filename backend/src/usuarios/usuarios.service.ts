@@ -4,7 +4,7 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { LoginDto } from './dto/login-usuario.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './entities/usuario.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import { JWT_SECRET, JWT_EXPIRES_IN } from 'src/auth/auth.constants';
@@ -16,7 +16,7 @@ export class UsuariosService {
 
   async create(createUsuarioDto: CreateUsuarioDto) {
     const existente = await this.usuarioRepo.findOne({ where: { email: createUsuarioDto.email } });
-    
+
     if (existente) {
       throw new ConflictException('Ya existe un usuario con ese email.');
     }
@@ -31,7 +31,7 @@ export class UsuariosService {
     });
     const saved = await this.usuarioRepo.save(nuevoUsuario);
     return this.findOne(saved.id);
-    
+
   }
 
   async findAll() {
@@ -41,6 +41,11 @@ export class UsuariosService {
   async findOne(id: number) {
     return await this.findOneOrFail(id);
   }
+
+  async findByEmails(emails: string[]): Promise<Usuario[]> {
+  if (emails.length === 0) return [];
+  return this.usuarioRepo.find({ where: { email: In(emails) } });
+}
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     const usuario = await this.findOneOrFail(id);
@@ -76,7 +81,7 @@ export class UsuariosService {
     const password = body.password;
 
     const usuario = await this.usuarioRepo.findOne({
-        where: { email },
+      where: { email },
     });
 
     function generarToken(usuario: any) {

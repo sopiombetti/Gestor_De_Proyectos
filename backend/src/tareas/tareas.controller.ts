@@ -5,6 +5,7 @@ import { UpdateTareaDto } from './dto/update-tarea.dto';
 import { FindTareasQueryDto } from './dto/find-tareas-query.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AdminGuard } from 'src/auth/admin.guard';
+import { CreateTareasBulkFileDTO } from './dto/create-tareas-bulkFile.dto';
 
 @Controller('tareas')
 @UseGuards(JwtAuthGuard)
@@ -15,6 +16,12 @@ export class TareasController {
   @UseGuards(AdminGuard)
   create(@Body() createTareaDto: CreateTareaDto) {
     return this.tareasService.create(createTareaDto);
+  }
+
+  @Post('bulk')
+  @UseGuards(AdminGuard)
+  createBulk(@Body() createTareasBulkFileDTO: CreateTareasBulkFileDTO) { 
+    return this.tareasService.createBulk(createTareasBulkFileDTO);
   }
 
   @Get()
