@@ -18,6 +18,11 @@ export class PrioridadService {
     return prioridad;
   }
 
+  async findOneByName(nombre: string) {
+    const prioridad = await this.prioridadRepo.findOne({ where: { nombre } })
+    return prioridad;
+  }
+
   private async findOneOrFail(id: number): Promise<Prioridad> {
     const prioridad = await this.prioridadRepo.findOne({ where: { id } });
     if (!prioridad) {

@@ -2,9 +2,10 @@ import { Estado } from 'src/estados/entities/estado.entity';
 import { Prioridad } from 'src/prioridad/entities/prioridad.entity';
 import { Proyecto } from 'src/proyectos/entities/proyecto.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity()
+@Unique(['proyecto', 'titulo'])
 export class Tarea {
 
   @PrimaryGeneratedColumn()

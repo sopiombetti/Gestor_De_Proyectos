@@ -16,7 +16,7 @@ export class UsuariosService {
 
   async create(createUsuarioDto: CreateUsuarioDto) {
     const existente = await this.usuarioRepo.findOne({ where: { email: createUsuarioDto.email } });
-    
+
     if (existente) {
       throw new ConflictException('Ya existe un usuario con ese email.');
     }
@@ -31,7 +31,7 @@ export class UsuariosService {
     });
     const saved = await this.usuarioRepo.save(nuevoUsuario);
     return this.findOne(saved.id);
-    
+
   }
 
   async findAll() {
@@ -40,6 +40,14 @@ export class UsuariosService {
 
   async findOne(id: number) {
     return await this.findOneOrFail(id);
+  }
+
+  private async findOneByEmail(email: string): Promise<Usuario> {
+    const usuario = await this.usuarioRepo.findOne({ where: { email } });
+    if (!usuario) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    return usuario;
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
@@ -76,7 +84,7 @@ export class UsuariosService {
     const password = body.password;
 
     const usuario = await this.usuarioRepo.findOne({
-        where: { email },
+      where: { email },
     });
 
     function generarToken(usuario: any) {
