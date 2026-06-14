@@ -1,9 +1,9 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTareaDto } from './dto/create-tarea.dto';
 import { UpdateTareaDto } from './dto/update-tarea.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tarea } from './entities/tarea.entity';
-import { FindOptionsWhere, IsNull, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, IsNull, Repository } from 'typeorm';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
 import { EstadosService } from 'src/estados/estados.service';
 import { PrioridadService } from 'src/prioridad/prioridad.service';
@@ -12,6 +12,11 @@ import { FindTareasQueryDto } from './dto/find-tareas-query.dto';
 import { CambiarEstado } from 'src/estados/state/CambiarEstado';
 import instanciarEstado from 'src/estados/factoryEstados/factoryEstados';
 import { CreateTareasBulkFileDTO } from './dto/create-tareas-bulkFile.dto';
+import { Prioridad } from 'src/prioridad/entities/prioridad.entity';
+import { Usuario } from 'src/usuarios/entities/usuario.entity';
+
+type ErrorFila = { fila: number; mensajes: string[] };
+type TareaResuelta = { titulo: string; descripcion: string; prioridad: Prioridad; usuario?: Usuario };
 
 @Injectable()
 export class TareasService {
@@ -20,7 +25,8 @@ export class TareasService {
     private readonly usuarioService: UsuariosService,
     private readonly estadoService: EstadosService,
     private readonly prioridadService: PrioridadService,
-    private readonly proyectoService: ProyectosService) {
+    private readonly proyectoService: ProyectosService,
+    private readonly dataSource: DataSource,) {
   }
 
   async create(createTareaDto: CreateTareaDto) {
@@ -34,11 +40,18 @@ export class TareasService {
   }
 
   async createBulk(dto: CreateTareasBulkFileDTO) {
-    this.validarProyecto(dto.idProyecto);
+    await this.validarProyecto(dto.idProyecto);
 
-    const errores: { fila: number; mensajes: string[] }[] = [];
+    const { resueltas, errores } = await this.validarFilas(dto);
 
-    throw new Error('Method not implemented.');
+    if (errores.length > 0) {
+      throw new BadRequestException({
+        mensaje: 'No se importó ninguna tarea. Corregí estas filas:',
+        errores,
+      });
+    }
+
+    return await this.insertarTareas(dto.idProyecto, resueltas);
   }
 
   async findOne(id: number) {
@@ -97,6 +110,84 @@ export class TareasService {
     await this.aplicarEstadoDefault(tarea, dto);
 
     return tarea;
+  }
+
+  private async validarFilas(dto: CreateTareasBulkFileDTO): Promise<{ resueltas: TareaResuelta[]; errores: ErrorFila[] }> {
+
+    const prioridades = await this.prioridadService.findAll();
+    const prioridadPorNombre = new Map(prioridades.map(p => [this.normalizar(p.nombre), p]));
+
+    const emails = [...new Set(dto.tareas.map(t => t.email).filter((e): e is string => !!e))];
+    const usuarios = await this.usuarioService.findByEmails(emails);
+    const usuarioPorEmail = new Map(usuarios.map(u => [u.email, u]));
+
+    const existentes = await this.tareaRepo.find({
+      where: { proyecto: { id: dto.idProyecto } },
+      select: ['titulo'],
+    });
+    const titulosExistentes = new Set(existentes.map(t => t.titulo.trim()));
+
+    const titulosArchivo = new Set<string>();
+    const errores: ErrorFila[] = [];
+    const resueltas: TareaResuelta[] = [];
+
+    dto.tareas.forEach((row, i) => {
+      const fila = i + 1;
+      const mensajes: string[] = [];
+
+      // Prioridad: tiene que existir
+      const prioridad = prioridadPorNombre.get(this.normalizar(row.prioridad));
+      if (!prioridad) mensajes.push(`La prioridad "${row.prioridad}" no existe.`);
+
+      // Email: opcional, pero si viene tiene que resolver
+      let usuario: Usuario | undefined;
+      if (row.email) {
+        usuario = usuarioPorEmail.get(row.email);
+        if (!usuario) mensajes.push(`No existe un usuario con el email "${row.email}".`);
+      }
+
+      // Duplicados: dentro del archivo Y contra lo ya cargado en el proyecto
+      const titulo = row.titulo.trim();
+      if (titulosExistentes.has(titulo)) mensajes.push(`Ya existe una tarea "${titulo}" en el proyecto.`);
+      if (titulosArchivo.has(titulo)) mensajes.push(`El título "${titulo}" está repetido en el archivo.`);
+      titulosArchivo.add(titulo);
+
+      // Si la fila está limpia, la dejo resuelta para la fase 2; si no, acumulo el error
+      if (mensajes.length) {
+        errores.push({ fila, mensajes });
+      } else {
+        resueltas.push({ titulo, descripcion: row.descripcion, prioridad: prioridad!, usuario });
+      }
+    });
+
+    return { resueltas, errores };
+  }
+
+  private async insertarTareas(idProyecto: number, resueltas: TareaResuelta[]) {
+
+    const estadoAsignada = await this.estadoService.findByCodigo('ASIGNADA');
+    const estadoSinAsignar = await this.estadoService.findByCodigo('SIN_ASIGNAR');
+
+    return await this.dataSource.transaction(async (manager) => {
+      const repo = manager.getRepository(Tarea);
+
+      const tareas = resueltas.map(r => repo.create({
+        titulo: r.titulo,
+        descripcion: r.descripcion,
+        prioridad: r.prioridad,
+        usuario: r.usuario ?? undefined,
+        proyecto: { id: idProyecto },
+        estado: r.usuario ? estadoAsignada : estadoSinAsignar,
+        fechaAsignacion: r.usuario ? new Date() : undefined,
+      }));
+
+      await repo.save(tareas);
+      return { creadas: tareas.length };
+    });
+  }
+
+  private normalizar(s: string): string {
+    return s.trim().toLowerCase();
   }
 
   private async findOneOrFail(id: number): Promise<Tarea> {

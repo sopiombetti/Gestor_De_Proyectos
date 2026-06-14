@@ -4,7 +4,7 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { LoginDto } from './dto/login-usuario.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './entities/usuario.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import { JWT_SECRET, JWT_EXPIRES_IN } from 'src/auth/auth.constants';
@@ -42,13 +42,10 @@ export class UsuariosService {
     return await this.findOneOrFail(id);
   }
 
-  private async findOneByEmail(email: string): Promise<Usuario> {
-    const usuario = await this.usuarioRepo.findOne({ where: { email } });
-    if (!usuario) {
-      throw new NotFoundException('Usuario no encontrado');
-    }
-    return usuario;
-  }
+  async findByEmails(emails: string[]): Promise<Usuario[]> {
+  if (emails.length === 0) return [];
+  return this.usuarioRepo.find({ where: { email: In(emails) } });
+}
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     const usuario = await this.findOneOrFail(id);
