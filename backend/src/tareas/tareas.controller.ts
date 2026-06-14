@@ -5,7 +5,7 @@ import { UpdateTareaDto } from './dto/update-tarea.dto';
 import { FindTareasQueryDto } from './dto/find-tareas-query.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AdminGuard } from 'src/auth/admin.guard';
-import { CreateTareasBulkFileDTO } from './dto/create-tareas-bulkFile.dto copy';
+import { CreateTareasBulkFileDTO } from './dto/create-tareas-bulkFile.dto';
 
 @Controller('tareas')
 @UseGuards(JwtAuthGuard)

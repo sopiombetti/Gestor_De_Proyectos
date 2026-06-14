@@ -83,7 +83,7 @@ export class TareasService {
     return { message: 'Tarea eliminada correctamente' };
   }
 
-    private async crearTarea(dto: CreateTareaDto): Promise<Tarea> {
+  private async crearTarea(dto: CreateTareaDto): Promise<Tarea> {
     const tarea = this.tareaRepo.create({
       titulo: dto.titulo,
       descripcion: dto.descripcion,
@@ -158,7 +158,7 @@ export class TareasService {
   private async validarEstado(id: number) {
     return await this.estadoService.findOne(id);
   }
-  
+
   private async aplicarEstadoDefault(tarea: Tarea, dto: UpdateTareaDto | CreateTareaDto): Promise<void> {
     const codigo = (dto.idUsuario != null || tarea.usuario != null) ? 'ASIGNADA' : 'SIN_ASIGNAR';
 
