@@ -22,7 +22,7 @@ export class ProyectosService {
   async create(createProyectoDto: CreateProyectoDto) {
 
     const lider = await this.usuarioService.findOne(createProyectoDto.idLider);
-    this.validarAdmin(lider);
+    await this.validarAdmin(lider);
 
     const nuevoProyecto = this.proyectoRepo.create({
       titulo: createProyectoDto.titulo,
@@ -60,7 +60,7 @@ export class ProyectosService {
 
     if (updateProyectoDto.idLider !== undefined) {
       const lider = await this.usuarioService.findOne(updateProyectoDto.idLider);
-      this.validarAdmin(lider);
+      await this.validarAdmin(lider);
       proyecto.lider = { id: lider.id } as Usuario;
     }
     if (updateProyectoDto.titulo !== undefined) proyecto.titulo = updateProyectoDto.titulo;
@@ -89,7 +89,7 @@ export class ProyectosService {
   }
 
   async getReportData(projectId: number): Promise<ProjectReport> {
-    const proyecto = await this.proyectoRepo.findOneOrFail({
+    const proyecto = await this.proyectoRepo.findOne({
       where: { id: projectId },
       relations: [
         'tareas',
