@@ -135,24 +135,20 @@ export class TareasService {
       const fila = i + 1;
       const mensajes: string[] = [];
 
-      // Prioridad: tiene que existir
       const prioridad = prioridadPorNombre.get(this.normalizar(row.prioridad));
       if (!prioridad) mensajes.push(`La prioridad "${row.prioridad}" no existe.`);
 
-      // Email: opcional, pero si viene tiene que resolver
       let usuario: Usuario | undefined;
       if (row.email) {
         usuario = usuarioPorEmail.get(row.email);
         if (!usuario) mensajes.push(`No existe un usuario con el email "${row.email}".`);
       }
 
-      // Duplicados: dentro del archivo Y contra lo ya cargado en el proyecto
       const titulo = row.titulo.trim();
       if (titulosExistentes.has(titulo)) mensajes.push(`Ya existe una tarea "${titulo}" en el proyecto.`);
       if (titulosArchivo.has(titulo)) mensajes.push(`El título "${titulo}" está repetido en el archivo.`);
       titulosArchivo.add(titulo);
 
-      // Si la fila está limpia, la dejo resuelta para la fase 2; si no, acumulo el error
       if (mensajes.length) {
         errores.push({ fila, mensajes });
       } else {
