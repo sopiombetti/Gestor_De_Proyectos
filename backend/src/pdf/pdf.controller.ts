@@ -5,7 +5,10 @@ import { PdfService } from './pdf.service';
 import { ProyectosService } from '../proyectos/proyectos.service';
 import { AdminGuard } from '../auth/admin.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Reportes')
+@ApiBearerAuth()    
 @Controller('reportes')
 @UseGuards(JwtAuthGuard)
 export class PdfController {
@@ -15,6 +18,7 @@ export class PdfController {
   ) {}
   
   @Get('proyectos/:id')
+  @ApiOperation({ summary: 'Genera y descarga el informe PDF de un proyecto (solo admin)' })  
   @UseGuards(AdminGuard)
   async getProjectReport(@Param('id') id: string, @Res() res: express.Response) {
     const project = await this.projectsService.getReportData(+id);
