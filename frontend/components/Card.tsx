@@ -18,11 +18,9 @@ export default function Card({ tarea }: { tarea: Tarea }){
     const router = useRouter();
     return(
 
-        <div 
-        onClick={() => router.push(`/tasks/task-detail?id=${tarea.id}`)}
-        className="flex justify-between items-center shadow-xl/30 h-16 rounded-md px-16">
+        <div className="flex justify-between items-center shadow-xl/30 h-16 rounded-md px-16">
 
-            <h3 className="font-semibold">{tarea.titulo}</h3>
+            <h3 className="font-semibold hover:underline cursor-pointer" onClick={() => router.push(`/task-detail?id=${tarea.id}`)}>{tarea.titulo}</h3>
             <h4 className={`py-1 rounded-sm w-18 text-center
             ${
                 tarea.prioridad.nombre === "Alta"

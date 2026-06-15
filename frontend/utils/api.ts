@@ -70,12 +70,8 @@ export async function ApiGetReporte(id: number, token: string | null){
     });
 }
 
-
-
 export async function ApiGetUsuarios(token: string | null){
     let url = `${API_URL}/usuarios`;
-
-  
     return fetch(url, {
         method: "GET",
         headers: {
