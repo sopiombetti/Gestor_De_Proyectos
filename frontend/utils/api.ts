@@ -1,3 +1,4 @@
+import { FilaTarea } from "./parsearArchivo";
 
 const API_URL = "http://localhost:3000";
 
@@ -60,6 +61,20 @@ export async function ApiGetProyecto(idUsuario: number, token: string | null){
     });
 }
 
+export async function ApiCrearProyecto(
+  data: { titulo: string; descripcion: string; idLider: number },
+  token: string | null,
+) {
+  return fetch(`${API_URL}/proyectos`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    },
+    body: JSON.stringify(data),
+  });
+}
+
 export async function ApiGetReporte(id: number, token: string | null){
   return fetch(`${API_URL}/reportes/proyectos/${id}`, {
         method: "GET",
@@ -79,6 +94,20 @@ export async function ApiGetUsuarios(token: string | null){
           ...authHeaders(token),
         }
     });
+}
+
+export async function ApiCrearTareasBulk(
+  payload: { idProyecto: number; tareas: FilaTarea[] },
+  token: string | null,
+) {
+  return fetch(`${API_URL}/tareas/bulk`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    },
+    body: JSON.stringify(payload),
+  });
 }
 
 export async function ApiEditarTarea(
