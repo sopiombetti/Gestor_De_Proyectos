@@ -51,6 +51,18 @@ export async function ApiGetTareas(idUsuario: number, idPrioridad: string, token
     });
 }
 
+export async function ApiGetTareasProyecto(idProyecto: number, token: string | null){
+    let url = `${API_URL}/tareas?proyecto=${idProyecto}`;
+
+    return fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(token),
+        }
+    });
+}
+
 export async function ApiGetProyecto(idUsuario: number, token: string | null){
   return fetch(`${API_URL}/proyectos?idUsuario=${idUsuario}`, {
         method: "GET",
@@ -86,8 +98,7 @@ export async function ApiGetReporte(id: number, token: string | null){
 }
 
 export async function ApiGetUsuarios(token: string | null){
-    let url = `${API_URL}/usuarios`;
-    return fetch(url, {
+    return fetch(`${API_URL}/usuarios`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -140,6 +151,26 @@ export async function ApiGetTareaPorId(
       "Content-Type": "application/json",
       ...authHeaders(token),
     },
+  });
+}
+
+export async function ApiEditarTareaAdmin(
+  idTarea: number,
+  body: {
+    titulo?: string;
+    descripcion?: string;
+    idPrioridad?: number;
+    idUsuario?: number;
+  },
+  token: string | null
+) {
+  return fetch(`${API_URL}/tareas/${idTarea}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    },
+    body: JSON.stringify(body),
   });
 }
     

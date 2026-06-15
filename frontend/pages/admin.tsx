@@ -1,6 +1,6 @@
 import CardProyecto from "@/components/CardProyecto";
 import MensajeError from "@/components/Error";
-import { ApiGetProyecto, ApiCrearProyecto, ApiCrearTareasBulk } from "@/utils/api";
+import { ApiGetProyecto, ApiCrearProyecto, ApiCrearTareasBulk, ApiGetTareasProyecto } from "@/utils/api";
 import { parsearArchivoTareas } from "@/utils/parsearArchivo";
 import { useUserContext } from "@/utils/userContext";
 import { useEffect, useState } from "react";
@@ -12,7 +12,6 @@ export default function Admin() {
   const [show, setShow] = useState(false);
   const { user, token } = useUserContext();
   const [error, setError] = useState("");
-
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -85,6 +84,8 @@ export default function Admin() {
       setError("Ocurrió un error procesando el archivo. Volvé a seleccionarlo y reintentá.");
     }
   }
+
+
 
   return (
     <>

@@ -56,9 +56,9 @@ export default function Home() {
         <h3 className="mr-20 ml-10 font-semibold text-lg">Filtrar Tareas</h3>
         <select className="w-40 bg-white" value={prioridad} onChange={(e) => setPrioridad(e.target.value)}>
           <option value="">Todas</option>
-          <option value="1">Prioridad Alta</option>
+          <option value="1">Prioridad Baja</option>
           <option value="2">Prioridad Media</option>
-          <option value="4">Prioridad Baja</option>
+          <option value="3">Prioridad Alta</option>
         </select>
       </section>
       <section className="flex flex-col space-y-5 mt-16 mb-16">
