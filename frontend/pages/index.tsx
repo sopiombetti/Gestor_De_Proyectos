@@ -10,8 +10,8 @@ export default function index(){
       <h2 className="text-xl mt-8">La aplicación que te permite gestionar tus proyectos de trabajo.</h2>
       <div className="flex flex-col items-center mt-20 text-md space-y-4">
         <p>¿Ya tenes cuenta?</p>
-        <Link href="/login" className="bg-secondary px-3 py-1.5 leading-6 font-semibold text-gray-900 shadow-sm cursor-pointer rounded-lg hover:bg-blue-300">Iniciá sesión</Link>
-        <Link href="/register" className="bg-secondary px-3 py-1.5 leading-6 font-semibold text-gray-900 shadow-sm cursor-pointer rounded-lg hover:bg-blue-300">Registrate</Link>
+        <Link href="/login" className="bg-secondary text-white px-3 py-1.5 leading-6 font-semibold text-gray-900 shadow-sm cursor-pointer rounded-lg hover:bg-blue-400">Iniciá sesión</Link>
+        <Link href="/register" className="bg-secondary text-white px-3 py-1.5 leading-6 font-semibold text-gray-900 shadow-sm cursor-pointer rounded-lg hover:bg-blue-400">Registrate</Link>
       </div>
     </div>
     </div>
