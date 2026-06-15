@@ -52,7 +52,7 @@ describe('UsuariosService', () => {
 
       const result = await service.create(dto);
 
-      expect(bcrypt.hash).toHaveBeenCalledWith('1234', 10);
+      expect(bcrypt.hash).toHaveBeenCalledWith('1234', 12);
       expect(repo.create).toHaveBeenCalledWith(
         expect.objectContaining({ email: 'juan@test.com', password: 'hashed-pass' }),
       );
@@ -115,7 +115,7 @@ describe('UsuariosService', () => {
       expect(actual.nombre).toBe('Pedro');
       expect(actual.apellido).toBe('Gómez');
       expect(actual.password).toBe('new-hash');
-      expect(bcrypt.hash).toHaveBeenCalledWith('nueva', 10);
+      expect(bcrypt.hash).toHaveBeenCalledWith('nueva', 12);
     });
 
     it('lanza NotFoundException si el usuario no existe', async () => {
