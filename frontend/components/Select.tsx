@@ -16,10 +16,12 @@ export default function Select({
 }: SelectProps) {
   return (
     <div className="flex flex-col gap-2 w-full">
-      <label className="text-sm font-medium text-gray-700">
-        {title}
-      </label>
-
+      <div className="flex items-center space-x-2">
+        <img src="/check.svg" alt="check"/>
+        <label className="text-lg font-medium text-gray-800">
+          {title}:
+        </label>
+      </div>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}

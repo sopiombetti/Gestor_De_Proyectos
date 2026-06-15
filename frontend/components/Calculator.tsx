@@ -21,16 +21,15 @@ export default function Calculator({
       (optimista + 4 * probable + pesimista) / 6;
 
     setResultado(estimacion);
-
-   
-    devolverResultado(estimacion);
+    const redondeo = Math.round(estimacion);
+    console.log(redondeo);
+    devolverResultado(redondeo);
   };
 
   return (
-    <div className="mt-8">
-
-      <h2 className="text-xl font-semibold mb-4">
-        Calcular estimación de horas (PERT)
+    <div className="mt-6 border border-secondary p-3 rounded-lg">
+      <h2 className="text-lg font-semibold mb-4 text-gray-800">
+        Calcular estimación de horas (PERT):
       </h2>
 
       <Input
@@ -54,7 +53,7 @@ export default function Calculator({
         onChange={(e) => setPesimista(Number(e.target.value))}
       />
 
-      <div className="mt-6">
+      <div className="mt-4">
         <Button
           title="Calcular"
           type="button"
