@@ -1,12 +1,13 @@
 import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Estado } from "src/estados/entities/estado.entity";
+import { ESTADOS } from "src/estados/RegistroEstados";
 import { Prioridad } from "src/prioridad/entities/prioridad.entity";
-import { ObjectLiteral, Repository } from "typeorm";
+import { ObjectLiteral, QueryDeepPartialEntity, Repository } from "typeorm";
 
 @Injectable()
 export class SeederService implements OnApplicationBootstrap {
-    
+
     constructor(
         @InjectRepository(Estado)
         private readonly estadoRepo: Repository<Estado>,
@@ -19,20 +20,19 @@ export class SeederService implements OnApplicationBootstrap {
         await this.seedPrioridades();
     }
 
-    private async seed<T extends ObjectLiteral>(repo: Repository<T>, values: { nombre: string }[]): Promise<void> {
+    private async seed<T extends ObjectLiteral>(repo: Repository<T>, values: QueryDeepPartialEntity<T>[]): Promise<void> {
 
         if (values.length === 0) return;
         await repo
             .createQueryBuilder()
             .insert()
-            .values(values as any)
+            .values(values)
             .orIgnore()
             .execute();
     }
 
     async seedEstados() {
-        const nombres = ['Sin asignar', 'Asignada', 'En progreso', 'Finalizada'];
-        await this.seed(this.estadoRepo, nombres.map(nombre => ({ nombre })));
+        await this.seed(this.estadoRepo, ESTADOS.map(estado => ({ codigo: estado.codigo, nombre: estado.nombre })));
     }
 
     async seedPrioridades() {
