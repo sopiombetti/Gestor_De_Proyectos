@@ -84,14 +84,13 @@ skinparam componentStyle rectangle
 [API de Usuarios] --> [Crear Usuario]
 [API de Usuarios] --> [Editar Usuario]
 [API de Usuarios] --> [Eliminar Usuario]
-[API de Usuarios] --> [Miembros Usuario]
 [API de Usuarios] --> [Roles Usuario]
 
-[Backend] --> [Importación WBS]
-[Importación WBS] --> [Lectura Archivo]
-[Importación WBS] --> [Validación Estructura]
-[Importación WBS] --> [Creación Automática Tareas]
-[Importación WBS] --> [Manejo Errores]
+[Backend] --> [Importación de Tareas]
+[Importación de Tareas] --> [Lectura Archivo]
+[Importación de Tareas] --> [Validación Estructura]
+[Importación de Tareas] --> [Creación Automática Tareas]
+[Importación de Tareas] --> [Manejo Errores]
 
 
 'BASE DE DATOS'
@@ -106,6 +105,7 @@ skinparam componentStyle rectangle
 [Creación Tablas] --> [Tabla Proyectos]
 [Creación Tablas] --> [Tabla Tareas]
 [Creación Tablas] --> [Tabla Prioridades]
+[Creación Tablas] --> [Tabla Estados]
 
 [Database] --> [Relaciones ER]
 [Relaciones ER] --> [Usuario crea Proyecto]
@@ -152,10 +152,10 @@ skinparam componentStyle rectangle
 [Tests de Tareas] --> [Test Prioridades]
 [Tests de Tareas] --> [Test Comentarios]
 
-[QA Testing] --> [Tests de Importación WBS]
-[Tests de Importación WBS] --> [Test Lectura Archivo]
-[Tests de Importación WBS] --> [Test Validación Datos]
-[Tests de Importación WBS] --> [Test Creación Automática]
+[QA Testing] --> [Tests de Importación de Tareas]
+[Tests de Importación de Tareas] --> [Test Lectura Archivo]
+[Tests de Importación de Tareas] --> [Test Validación Datos]
+[Tests de Importación de Tareas] --> [Test Creación Automática]
 
 
 @enduml

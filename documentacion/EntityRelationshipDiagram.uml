@@ -1,37 +1,60 @@
 @startuml
+hide circle
+skinparam linetype ortho
 
-entity Usuario {
-    id : integer
-    nombre : varchar
-    apellido : varchar
-    mail : varchar
-    contrasenia : varchar
-    posicionLaboral : varchar
+entity "usuarios" as usuarios {
+  *id : serial <<PK>>
+  --
+  *nombre : varchar
+  *apellido : varchar
+  *email : varchar <<unique>>
+  *password : varchar
+  *rol_admin : boolean
 }
 
-entity Proyecto {
-    id : integer
-    titulo : varchar
-    descripcion : varchar
-    fechaCreacion : timestamp
-    id_lider : integer
+entity "proyecto" as proyecto {
+  *id : serial <<PK>>
+  --
+  *titulo : varchar
+  *descripcion : varchar
+  *idLider : int <<FK>>
+  *fechaCreacion : timestamptz
 }
 
-entity Tarea {
-    id : integer
-    titulo : string
-    descripcion : string
-    prioridad : string
-    estimacion : double
+entity "tarea" as tarea {
+  *id : serial <<PK>>
+  --
+  *titulo : varchar
+  *descripcion : varchar
+  *idProyecto : int <<FK>>
+  *idEstado : int <<FK>>
+  *idPrioridad : int <<FK>>
+  idUsuario : int <<FK>>
+  estimacion : int
+  tiempoFinal : int
+  fechaAsignacion : timestamptz
+  fechaCierre : timestamptz
+  --
+  unique (idProyecto, titulo)
 }
 
-entity Estado {
-    id : string
-    nombre : string
+entity "estados" as estados {
+  *id : serial <<PK>>
+  --
+  *nombre : varchar <<unique>>
+  *codigo : varchar <<unique>>
 }
 
-Proyecto "1" --> "*" Tarea
-Usuario "1" --> "*" Tarea
-Estado "1" --> "*" Tarea
+entity "prioridad" as prioridad {
+  *id : serial <<PK>>
+  --
+  *nombre : varchar <<unique>>
+}
 
+' Relaciones (notación pata de gallo)
+usuarios  ||--o{ proyecto : "lidera"
+usuarios  |o--o{ tarea    : "asignada a"
+proyecto  ||--o{ tarea    : "contiene"
+estados   ||--o{ tarea    : "clasifica"
+prioridad ||--o{ tarea    : "prioriza"
 @enduml

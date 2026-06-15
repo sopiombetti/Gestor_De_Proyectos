@@ -31,8 +31,9 @@
 - 2.1.1 Registro Usuario
 - 2.1.2 Login Usuario
 - 2.1.3 Validación JWT
-- 2.1.4 Roles y Permisos
-- 2.1.5 Recuperación Contraseña
+- 2.1.4 Hash Contraseñas
+- 2.1.5 Roles y Permisos
+- 2.1.6 Recuperación Contraseña
 
 ## 2.2 API de Tareas
 - 2.2.1 Crear Tarea
@@ -56,7 +57,7 @@
 - 2.4.3 Eliminar Usuario
 - 2.4.4 Roles Usuario
 
-## 2.5 Importación WBS
+## 2.5 Importación de Tareas
 - 2.5.1 Lectura Archivo
 - 2.5.2 Validación Estructura
 - 2.5.3 Creación Automática Tareas
@@ -77,6 +78,7 @@
 - 3.2.2 Tabla Proyectos
 - 3.2.3 Tabla Tareas
 - 3.2.4 Tabla Prioridades
+- 3.2.5 Tabla Estados
 
 ## 3.3 Relaciones
 - 3.3.1 Usuario crea Proyecto
@@ -127,7 +129,7 @@
 - 5.2.4 Test Prioridades
 - 5.2.5 Test Comentarios
 
-## 5.3 Tests de Importación WBS
+## 5.3 Tests de Importación de Tareas
 - 5.3.1 Test Lectura Archivo
 - 5.3.2 Test Validación Datos
 - 5.3.3 Test Creación Automática

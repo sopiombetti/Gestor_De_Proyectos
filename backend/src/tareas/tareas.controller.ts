@@ -30,7 +30,7 @@ export class TareasController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Lista tareas, con filtros opcionales por usuario/prioridad' })
+  @ApiOperation({ summary: 'Lista tareas, con filtros opcionales por usuario/prioridad/proyecto/estado' })
   findAll(@Query() filters: FindTareasQueryDto) {
     return this.tareasService.findAll(filters);
   }

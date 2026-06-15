@@ -21,7 +21,7 @@ export class UsuariosService {
       throw new ConflictException('Ya existe un usuario con ese email.');
     }
 
-    const hashedPassword = await bcrypt.hash(createUsuarioDto.password, 10);
+    const hashedPassword = await bcrypt.hash(createUsuarioDto.password, 12);
 
     const nuevoUsuario = this.usuarioRepo.create({
       nombre: createUsuarioDto.nombre,
@@ -63,7 +63,7 @@ export class UsuariosService {
     if (updateUsuarioDto.nombre !== undefined) usuario.nombre = updateUsuarioDto.nombre;
     if (updateUsuarioDto.apellido !== undefined) usuario.apellido = updateUsuarioDto.apellido;
     if (updateUsuarioDto.password) {
-      usuario.password = await bcrypt.hash(updateUsuarioDto.password, 10);
+      usuario.password = await bcrypt.hash(updateUsuarioDto.password, 12);
     }
 
     await this.usuarioRepo.save(usuario);
