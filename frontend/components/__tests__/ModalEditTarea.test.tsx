@@ -1,0 +1,148 @@
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import ModalEditarTarea from "../ModalEditTarea";
+import {
+  ApiEditarTareaAdmin,
+  ApiGetUsuarios,
+} from "@/utils/api";
+import { useUserContext } from "@/utils/userContext";
+
+jest.mock("@/utils/api", () => ({
+  ApiEditarTareaAdmin: jest.fn(),
+  ApiGetUsuarios: jest.fn(),
+}));
+
+jest.mock("@/utils/userContext", () => ({
+  useUserContext: jest.fn(),
+}));
+
+jest.mock("../Select", () => (props: any) => (
+  <select
+    data-testid="usuario-select"
+    value={props.value}
+    onChange={(e) => props.onChange(e.target.value)}
+  >
+    {props.options.map((option: any) => (
+      <option
+        key={option.value}
+        value={option.value}
+      >
+        {option.label}
+      </option>
+    ))}
+  </select>
+));
+
+describe("ModalEditarTarea", () => {
+  const onClose = jest.fn();
+
+  const tarea = {
+    id: 1,
+    titulo: "Tarea Test",
+    descripcion: "Descripción Test",
+    prioridad: {
+      id: 2,
+      nombre: "Media",
+    },
+  };
+
+  beforeEach(() => {
+    (useUserContext as jest.Mock).mockReturnValue({
+      token: "token-test",
+    });
+
+    (ApiGetUsuarios as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => [
+        {
+          id: 1,
+          nombre: "Juan",
+          apellido: "Pérez",
+        },
+      ],
+    });
+
+    jest.clearAllMocks();
+  });
+
+  test("renderiza los datos de la tarea", () => {
+    render(
+      <ModalEditarTarea
+        tarea={tarea}
+        onClose={onClose}
+      />
+    );
+
+    expect(
+      screen.getByDisplayValue("Tarea Test")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByDisplayValue("Descripción Test")
+    ).toBeInTheDocument();
+  });
+
+  test("cierra el modal al hacer click en Cancelar", () => {
+    render(
+      <ModalEditarTarea
+        tarea={tarea}
+        onClose={onClose}
+      />
+    );
+
+    fireEvent.click(
+      screen.getByText("Cancelar")
+    );
+
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  test("obtiene los usuarios al montar el componente", async () => {
+    render(
+      <ModalEditarTarea
+        tarea={tarea}
+        onClose={onClose}
+      />
+    );
+
+    await waitFor(() => {
+      expect(ApiGetUsuarios).toHaveBeenCalledWith(
+        "token-test"
+      );
+    });
+  });
+
+  test("guarda los cambios de la tarea", async () => {
+    (ApiEditarTareaAdmin as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
+
+    render(
+      <ModalEditarTarea
+        tarea={tarea}
+        onClose={onClose}
+      />
+    );
+
+    fireEvent.change(
+      screen.getByDisplayValue("Tarea Test"),
+      {
+        target: {
+          value: "Nueva tarea",
+        },
+      }
+    );
+
+    fireEvent.click(
+      screen.getByText("Guardar")
+    );
+
+    await waitFor(() => {
+      expect(
+        ApiEditarTareaAdmin
+      ).toHaveBeenCalled();
+    });
+
+    expect(onClose).toHaveBeenCalled();
+  });
+});
