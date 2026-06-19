@@ -8,7 +8,7 @@ function authHeaders(token: string | null): Record<string, string> {
     : {};
 }
 
-export async function ApiRegister(nombre: string, apellido: string, email: string, password: string){
+export async function ApiRegister(nombre: string, apellido: string, email: string, password: string, isAdmin: boolean){
     return fetch(`${API_URL}/usuarios`, {
         method: "POST",
         headers: {
@@ -18,7 +18,8 @@ export async function ApiRegister(nombre: string, apellido: string, email: strin
         nombre,
         apellido,
         email,
-        password
+        password,
+        isAdmin
         })
     })
 }

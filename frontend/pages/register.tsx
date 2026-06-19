@@ -9,10 +9,11 @@ export default function Register() {
 
     const [nombre, setNombre] = useState("");
     const [apellido, setApellido] = useState("");
-    const [email, setEmail] = useState("")
-    const [contrasenia, setContrasenia] = useState("")
-    const [reContrasenia, setReContrasenia] = useState("")
-    const [error, setError] = useState("")
+    const [email, setEmail] = useState("");
+    const [contrasenia, setContrasenia] = useState("");
+    const [reContrasenia, setReContrasenia] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const router = useRouter();
 
@@ -36,7 +37,7 @@ export default function Register() {
         setSuccess("");
 
         try {
-            const response = await ApiRegister(nombre, apellido, email, contrasenia);
+            const response = await ApiRegister(nombre, apellido, email, contrasenia, isAdmin);
             const data = await response.json();
             if (!response.ok) {
                 setError(data.message);
@@ -132,6 +133,31 @@ export default function Register() {
                                                 value={reContrasenia}
                                                 onChange={(e) => setReContrasenia(e.target.value)}
                                             />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex gap-4 flex-col mt-4">
+                                    <label className="block font-medium leading-6 text-gray-900">Rol</label>
+                                    <div className="flex justify-around border-0 shadow-sm ring-1 ring-inset p-2 ring-blue-400 rounded-md">
+                                        <div className="flex space-x-2">
+                                            <input
+                                                type="radio"
+                                                id="lider"
+                                                name="rol"
+                                                checked={isAdmin === true}
+                                                onChange={() => setIsAdmin(true)}
+                                            />
+                                            <label htmlFor="lider">Soy líder</label>
+                                        </div>
+                                        <div className="flex space-x-2">
+                                            <input
+                                                type="radio"
+                                                id="colaborador"
+                                                name="rol"
+                                                checked={isAdmin === false}
+                                                onChange={() => setIsAdmin(false)}
+                                            />
+                                            <label htmlFor="colaborador">Soy colaborador</label>
                                         </div>
                                     </div>
                                 </div>
