@@ -10,6 +10,10 @@ jest.mock("next/link", () => {
   return ({ children }: { children: React.ReactNode }) => children;
 });
 
+jest.mock("next/router", () => ({
+  useRouter: jest.fn(),
+}));
+
 jest.mock("../../components/Error", () => {
   return ({ text }: { text: string }) => <div>{text}</div>;
 });
@@ -18,9 +22,16 @@ jest.mock("../../components/success", () => {
   return ({ text }: { text: string }) => <div>{text}</div>;
 });
 
+import { useRouter } from "next/router";
+
+const mockPush = jest.fn();
+
 describe("Register", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (useRouter as jest.Mock).mockReturnValue({
+      push: mockPush,
+    });
   });
 
   it("renderiza correctamente el formulario", () => {
@@ -35,30 +46,52 @@ describe("Register", () => {
     expect(screen.getAllByPlaceholderText("🔒 ******")).toHaveLength(2);
   });
 
-  it("muestra error cuando las contraseñas no coinciden", async () => {
+  it("muestra error cuando la contraseña no cumple el formato mínimo", async () => {
     render(<Register />);
 
     fireEvent.change(screen.getByPlaceholderText("👤 Nombre"), {
       target: { value: "Juan" },
     });
-
     fireEvent.change(screen.getByPlaceholderText("👤 Apellido"), {
       target: { value: "Perez" },
     });
-
     fireEvent.change(screen.getByPlaceholderText("📧 ejemplo@email.com"), {
       target: { value: "juan@test.com" },
     });
 
     const passwords = screen.getAllByPlaceholderText("🔒 ******");
 
-    fireEvent.change(passwords[0], {
-      target: { value: "123456" },
+    fireEvent.change(passwords[0], { target: { value: "123456" } });
+    fireEvent.change(passwords[1], { target: { value: "123456" } });
+
+    fireEvent.click(screen.getByRole("button", { name: /crear cuenta/i }));
+
+    expect(
+      await screen.findByText(
+        "La contraseña debe contener al menos 8 caracteres y al menos 1 número."
+      )
+    ).toBeInTheDocument();
+
+    expect(ApiRegister).not.toHaveBeenCalled();
+  });
+
+  it("muestra error cuando las contraseñas no coinciden", async () => {
+    render(<Register />);
+
+    fireEvent.change(screen.getByPlaceholderText("👤 Nombre"), {
+      target: { value: "Juan" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("👤 Apellido"), {
+      target: { value: "Perez" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("📧 ejemplo@email.com"), {
+      target: { value: "juan@test.com" },
     });
 
-    fireEvent.change(passwords[1], {
-      target: { value: "654321" },
-    });
+    const passwords = screen.getAllByPlaceholderText("🔒 ******");
+
+    fireEvent.change(passwords[0], { target: { value: "12345678" } });
+    fireEvent.change(passwords[1], { target: { value: "87654321" } });
 
     fireEvent.click(screen.getByRole("button", { name: /crear cuenta/i }));
 
@@ -82,24 +115,17 @@ describe("Register", () => {
     fireEvent.change(screen.getByPlaceholderText("👤 Nombre"), {
       target: { value: "Juan" },
     });
-
     fireEvent.change(screen.getByPlaceholderText("👤 Apellido"), {
       target: { value: "Perez" },
     });
-
     fireEvent.change(screen.getByPlaceholderText("📧 ejemplo@email.com"), {
       target: { value: "juan@test.com" },
     });
 
     const passwords = screen.getAllByPlaceholderText("🔒 ******");
 
-    fireEvent.change(passwords[0], {
-      target: { value: "123456" },
-    });
-
-    fireEvent.change(passwords[1], {
-      target: { value: "123456" },
-    });
+    fireEvent.change(passwords[0], { target: { value: "12345678" } });
+    fireEvent.change(passwords[1], { target: { value: "12345678" } });
 
     fireEvent.click(screen.getByRole("button", { name: /crear cuenta/i }));
 
@@ -108,13 +134,50 @@ describe("Register", () => {
         "Juan",
         "Perez",
         "juan@test.com",
-        "123456"
+        "12345678",
+        false
       );
     });
 
     expect(
       await screen.findByText("El usuario fue creado exitosamente.")
     ).toBeInTheDocument();
+  });
+
+  it("llama a ApiRegister con isAdmin true cuando se selecciona 'Soy líder'", async () => {
+    (ApiRegister as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({ message: "ok" }),
+    });
+
+    render(<Register />);
+
+    fireEvent.change(screen.getByPlaceholderText("👤 Nombre"), {
+      target: { value: "Juan" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("👤 Apellido"), {
+      target: { value: "Perez" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("📧 ejemplo@email.com"), {
+      target: { value: "juan@test.com" },
+    });
+
+    const passwords = screen.getAllByPlaceholderText("🔒 ******");
+    fireEvent.change(passwords[0], { target: { value: "12345678" } });
+    fireEvent.change(passwords[1], { target: { value: "12345678" } });
+
+    fireEvent.click(screen.getByLabelText(/soy líder/i));
+    fireEvent.click(screen.getByRole("button", { name: /crear cuenta/i }));
+
+    await waitFor(() => {
+      expect(ApiRegister).toHaveBeenCalledWith(
+        "Juan",
+        "Perez",
+        "juan@test.com",
+        "12345678",
+        true
+      );
+    });
   });
 
   it("muestra el mensaje de error devuelto por la API", async () => {
@@ -130,24 +193,17 @@ describe("Register", () => {
     fireEvent.change(screen.getByPlaceholderText("👤 Nombre"), {
       target: { value: "Juan" },
     });
-
     fireEvent.change(screen.getByPlaceholderText("👤 Apellido"), {
       target: { value: "Perez" },
     });
-
     fireEvent.change(screen.getByPlaceholderText("📧 ejemplo@email.com"), {
       target: { value: "juan@test.com" },
     });
 
     const passwords = screen.getAllByPlaceholderText("🔒 ******");
 
-    fireEvent.change(passwords[0], {
-      target: { value: "123456" },
-    });
-
-    fireEvent.change(passwords[1], {
-      target: { value: "123456" },
-    });
+    fireEvent.change(passwords[0], { target: { value: "12345678" } });
+    fireEvent.change(passwords[1], { target: { value: "12345678" } });
 
     fireEvent.click(screen.getByRole("button", { name: /crear cuenta/i }));
 
@@ -164,24 +220,17 @@ describe("Register", () => {
     fireEvent.change(screen.getByPlaceholderText("👤 Nombre"), {
       target: { value: "Juan" },
     });
-
     fireEvent.change(screen.getByPlaceholderText("👤 Apellido"), {
       target: { value: "Perez" },
     });
-
     fireEvent.change(screen.getByPlaceholderText("📧 ejemplo@email.com"), {
       target: { value: "juan@test.com" },
     });
 
     const passwords = screen.getAllByPlaceholderText("🔒 ******");
 
-    fireEvent.change(passwords[0], {
-      target: { value: "123456" },
-    });
-
-    fireEvent.change(passwords[1], {
-      target: { value: "123456" },
-    });
+    fireEvent.change(passwords[0], { target: { value: "12345678" } });
+    fireEvent.change(passwords[1], { target: { value: "12345678" } });
 
     fireEvent.click(screen.getByRole("button", { name: /crear cuenta/i }));
 

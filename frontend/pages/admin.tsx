@@ -7,8 +7,24 @@ import { useEffect, useState } from "react";
 
 type ErrorFila = { fila: number; mensajes: string[] };
 
+type Usuario = {
+  id: number
+  nombre: string
+  apellido: string
+  email: string
+  rol_admin: boolean
+}
+
+type Proyecto = {
+  id: number
+  titulo: string
+  descripcion: string
+  fechaCreacion: string
+  lider: Usuario
+}
+
 export default function Admin() {
-  const [proyectos, setProyectos] = useState([]);
+  const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [show, setShow] = useState(false);
   const { user, token } = useUserContext();
   const [error, setError] = useState("");
@@ -21,6 +37,7 @@ export default function Admin() {
     if (!user?.id) return;
     async function obtenerProyecto() {
       try {
+        if (!user) return;
         const response = await ApiGetProyecto(user.id, token);
         if (!response.ok) {
           setError("No se pudieron obtener los proyectos.");
@@ -44,12 +61,8 @@ export default function Admin() {
     setError("");
     setErroresFilas([]);
 
-    if (!user?.id) {
-      setError("No se pudo identificar al usuario. ¿Iniciaste sesión?");
-      return;
-    }
-
     try {
+      if (!user) return;
       const resProyecto = await ApiCrearProyecto(
         { titulo, descripcion, idLider: Number(user.id) },
         token,
@@ -85,8 +98,6 @@ export default function Admin() {
     }
   }
 
-
-
   return (
     <>
       {error && <MensajeError text={error} />}
@@ -104,40 +115,40 @@ export default function Admin() {
         </div>
       )}
 
-      <div className="flex flex-col m-20 space-y-10">
-        <div className="flex flex-col space-y-6">
-          <h1 className="font-bold text-2xl">Panel Administración</h1>
+      <div className="flex flex-col my-20 mx-30 space-y-10">
+        <div className="flex justify-between">
+          <h1 className="font-bold text-4xl">Panel Administración</h1>
           <button
             className="flex justify-center w-[200px] rounded-full bg-secondary px-3 py-1.5 font-semibold leading-6 text-white shadow-sm cursor-pointer hover:bg-blue-400"
             onClick={handleCreate}
           >
-            Crear Proyecto
+            + Crear Proyecto
           </button>
         </div>
         {show ? (
-          <div className="flex bg-gray-200 rounded-2xl p-6">
-            <form className="flex flex-col space-y-3" onSubmit={handleSubmit}>
+          <div className="flex border-1 border-gray-800 rounded-2xl p-6 shadow-xl">
+            <form className="flex flex-col w-full space-y-3" onSubmit={handleSubmit}>
               <label>Título:</label>
               <input
-                className="bg-white rounded-md w-[500px] p-2"
+                className="bg-white rounded-md p-2 border-1 border-secondary shadow-xl"
                 type="text" placeholder="Título"
                 value={titulo} onChange={(e) => setTitulo(e.target.value)}
               />
               <label>Descripción:</label>
-              <input
-                className="bg-white rounded-md w-[500px] p-2"
-                type="text" placeholder="Descripción"
+              <textarea
+                className="bg-white rounded-md p-2 border-1 border-secondary shadow-xl"
+                placeholder="Descripción"
                 value={descripcion} onChange={(e) => setDescripcion(e.target.value)}
               />
               <label>Subir archivo (.xls / .csv)</label>
               <input
-                className="bg-white rounded-md w-[500px] p-2"
+                className="bg-white rounded-md p-2 border-1 border-secondary shadow-xl"
                 type="file" accept=".xls,.xlsx,.csv"
                 onChange={(e) => setFile(e.target.files?.[0] ?? null)}
               />
               <button
                 type="submit"
-                className="flex justify-center w-[200px] rounded-full bg-secondary px-3 py-1.5 font-semibold text-white cursor-pointer hover:bg-blue-400"
+                className="flex justify-center mt-4 w-[200px] rounded-full bg-secondary px-3 py-1.5 font-semibold text-white cursor-pointer hover:bg-blue-400"
               >
                 Guardar
               </button>

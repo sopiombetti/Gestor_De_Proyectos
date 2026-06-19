@@ -17,7 +17,7 @@ export default function Select({
   return (
     <div className="flex flex-col gap-2 w-full">
       <div className="flex items-center space-x-2">
-        <img className="w-5" src="/check.svg" alt="check"/>
+        <img className="w-5" src="/check.svg" alt="check" />
         <label className="text-md font-medium text-gray-800">
           {title}:
         </label>

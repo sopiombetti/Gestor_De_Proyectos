@@ -99,21 +99,21 @@ describe("Home", () => {
           id: 1,
           titulo: "A",
           estado: {
-            nombre: "Asignada",
+            codigo: "ASIGNADA",
           },
         },
         {
           id: 2,
           titulo: "B",
           estado: {
-            nombre: "En progreso",
+            codigo: "EN_PROGRESO",
           },
         },
         {
           id: 3,
           titulo: "C",
           estado: {
-            nombre: "Finalizada",
+            codigo: "FINALIZADA",
           },
         },
       ],
