@@ -1,0 +1,48 @@
+@startuml
+
+
+class Estado {
+  +id: number
+  +nombre: string
+  +codigo: string
+}
+
+class Tarea {
+  +id: number
+  +estado: Estado
+  +usuario: Usuario
+  +estimacion: number
+  +tiempoFinal: number
+  +fechaCierre: Date
+}
+
+class Usuario
+
+
+
+interface CambiarEstado {
+  +validarCambio(dto: UpdateTareaDto, tarea: Tarea): Tarea
+}
+
+class SinAsignar
+class Asignada
+class EnProgreso
+class Finalizada
+
+CambiarEstado <|.. SinAsignar
+CambiarEstado <|.. Asignada
+CambiarEstado <|.. EnProgreso
+CambiarEstado <|.. Finalizada
+
+SinAsignar --> Estado
+Asignada --> Estado
+EnProgreso --> Estado
+Finalizada --> Estado
+
+
+
+Tarea --> Estado
+Tarea --> Usuario
+
+
+@enduml
