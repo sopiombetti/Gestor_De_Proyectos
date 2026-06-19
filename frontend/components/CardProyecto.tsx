@@ -99,7 +99,7 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
       <div className="flex flex-col space-y-3 border border-2 rounded-xl border-primary p-5">
         <div className="flex justify-between">
           <h2 className="text-xl font-semibold">{proyecto.titulo}</h2>
-          <img src="/edit.svg" onClick={() => setModalProyectoAbierto(true)} className="cursor-pointer"/>
+          <img src="/edit.svg" alt="Editar proyecto" onClick={() => setModalProyectoAbierto(true)} className="cursor-pointer"/>
         </div>
         
         <p>{proyecto.descripcion}</p>

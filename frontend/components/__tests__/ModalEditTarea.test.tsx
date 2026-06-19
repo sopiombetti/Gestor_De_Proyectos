@@ -34,6 +34,7 @@ jest.mock("../Select", () => (props: any) => (
 
 describe("ModalEditarTarea", () => {
   const onClose = jest.fn();
+  const onGuardado = jest.fn();
 
   const tarea = {
     id: 1,
@@ -43,9 +44,18 @@ describe("ModalEditarTarea", () => {
       id: 2,
       nombre: "Media",
     },
+    usuario:{
+      id: 1,
+      nombre: "Sofia",
+      apellido: "Piombetti",
+      email: "sofia@mail.com",
+      rol_admin: true
+    }
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
+
     (useUserContext as jest.Mock).mockReturnValue({
       token: "token-test",
     });
@@ -60,8 +70,6 @@ describe("ModalEditarTarea", () => {
         },
       ],
     });
-
-    jest.clearAllMocks();
   });
 
   test("renderiza los datos de la tarea", () => {
@@ -69,6 +77,7 @@ describe("ModalEditarTarea", () => {
       <ModalEditarTarea
         tarea={tarea}
         onClose={onClose}
+        onGuardado={onGuardado}
       />
     );
 
@@ -86,6 +95,7 @@ describe("ModalEditarTarea", () => {
       <ModalEditarTarea
         tarea={tarea}
         onClose={onClose}
+        onGuardado={onGuardado}
       />
     );
 
@@ -101,6 +111,7 @@ describe("ModalEditarTarea", () => {
       <ModalEditarTarea
         tarea={tarea}
         onClose={onClose}
+        onGuardado={onGuardado}
       />
     );
 
@@ -121,6 +132,7 @@ describe("ModalEditarTarea", () => {
       <ModalEditarTarea
         tarea={tarea}
         onClose={onClose}
+        onGuardado={onGuardado}
       />
     );
 
@@ -143,6 +155,33 @@ describe("ModalEditarTarea", () => {
       ).toHaveBeenCalled();
     });
 
+    expect(onGuardado).toHaveBeenCalled();
     expect(onClose).toHaveBeenCalled();
+  });
+
+  test("no llama a onGuardado ni onClose cuando falla el guardado", async () => {
+    (ApiEditarTareaAdmin as jest.Mock).mockResolvedValue({
+      ok: false,
+    });
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <ModalEditarTarea
+        tarea={tarea}
+        onClose={onClose}
+        onGuardado={onGuardado}
+      />
+    );
+
+    fireEvent.click(
+      screen.getByText("Guardar")
+    );
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalled();
+    });
+
+    expect(onGuardado).not.toHaveBeenCalled();
+    expect(onClose).not.toHaveBeenCalled();
   });
 });

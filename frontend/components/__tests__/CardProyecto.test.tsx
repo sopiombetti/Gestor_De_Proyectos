@@ -5,12 +5,27 @@ import { useUserContext } from '@/utils/userContext';
 
 jest.mock('@/utils/api');
 jest.mock('@/utils/userContext');
+
 jest.mock('@/components/ModalEditTarea', () => ({
   __esModule: true,
-  default: ({ tarea, onClose }: { tarea: any; onClose: () => void }) => (
+  default: ({ tarea, onClose, onGuardado }: { tarea: any; onClose: () => void; onGuardado: () => void }) => (
     <div data-testid="modal-editar">
       <span>{tarea.titulo}</span>
       <button onClick={onClose}>Cerrar modal</button>
+      <button onClick={onGuardado}>Guardar modal</button>
+    </div>
+  ),
+}));
+
+jest.mock('@/components/ModalEditProyecto', () => ({
+  __esModule: true,
+  default: ({ proyecto, onClose, onGuardado }: { proyecto: any; onClose: () => void; onGuardado: (p: any) => void }) => (
+    <div data-testid="modal-editar-proyecto">
+      <span>{proyecto.titulo}</span>
+      <button onClick={onClose}>Cerrar modal proyecto</button>
+      <button onClick={() => onGuardado({ ...proyecto, titulo: 'Proyecto Editado' })}>
+        Guardar modal proyecto
+      </button>
     </div>
   ),
 }));
@@ -195,6 +210,39 @@ describe('CardProyecto', () => {
       });
     });
 
+    it('cambia el texto del botón a "Ocultar tareas" después de mostrarlas', async () => {
+      mockApiGetTareasProyecto.mockResolvedValue({
+        ok: true,
+        json: async () => tareasMock,
+      } as Response);
+
+      render(<CardProyecto proyecto={proyectoMock} />);
+      fireEvent.click(screen.getByRole('button', { name: /mostrar tareas/i }));
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /ocultar tareas/i })).toBeInTheDocument();
+      });
+    });
+
+    it('oculta las tareas al clickear "Ocultar tareas" sin volver a pedir al backend', async () => {
+      mockApiGetTareasProyecto.mockResolvedValue({
+        ok: true,
+        json: async () => tareasMock,
+      } as Response);
+
+      render(<CardProyecto proyecto={proyectoMock} />);
+      fireEvent.click(screen.getByRole('button', { name: /mostrar tareas/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Tarea 1')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: /ocultar tareas/i }));
+
+      expect(screen.queryByText('Tarea 1')).not.toBeInTheDocument();
+      expect(mockApiGetTareasProyecto).toHaveBeenCalledTimes(1);
+    });
+
     it('loguea el error cuando la respuesta no es ok', async () => {
       mockApiGetTareasProyecto.mockResolvedValue({ ok: false } as Response);
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -221,7 +269,7 @@ describe('CardProyecto', () => {
 
   });
 
-  describe('Modal de edición', () => {
+  describe('Modal de edición de tarea', () => {
 
     beforeEach(() => {
       mockApiGetTareasProyecto.mockResolvedValue({
@@ -243,7 +291,7 @@ describe('CardProyecto', () => {
         expect(screen.getByText('Tarea 1')).toBeInTheDocument();
       });
 
-      const botonesEditar = screen.getAllByRole('button', { name: '' });
+      const botonesEditar = screen.getAllByRole('button', { name: /editar tarea/i });
       fireEvent.click(botonesEditar[0]);
 
       expect(screen.getByTestId('modal-editar')).toBeInTheDocument();
@@ -257,7 +305,7 @@ describe('CardProyecto', () => {
         expect(screen.getByText('Tarea 1')).toBeInTheDocument();
       });
 
-      const botonesEditar = screen.getAllByRole('button', { name: '' });
+      const botonesEditar = screen.getAllByRole('button', { name: /editar tarea/i });
       fireEvent.click(botonesEditar[0]);
 
       expect(screen.getByTestId('modal-editar')).toHaveTextContent('Tarea 1');
@@ -271,12 +319,51 @@ describe('CardProyecto', () => {
         expect(screen.getByText('Tarea 1')).toBeInTheDocument();
       });
 
-      const botonesEditar = screen.getAllByRole('button', { name: '' });
+      const botonesEditar = screen.getAllByRole('button', { name: /editar tarea/i });
       fireEvent.click(botonesEditar[0]);
       expect(screen.getByTestId('modal-editar')).toBeInTheDocument();
 
       fireEvent.click(screen.getByRole('button', { name: /cerrar modal/i }));
       expect(screen.queryByTestId('modal-editar')).not.toBeInTheDocument();
+    });
+
+  });
+
+  describe('Modal de edición de proyecto', () => {
+
+    it('no muestra el modal de proyecto inicialmente', () => {
+      render(<CardProyecto proyecto={proyectoMock} />);
+      expect(screen.queryByTestId('modal-editar-proyecto')).not.toBeInTheDocument();
+    });
+
+    it('abre el modal de proyecto al clickear el ícono de editar', () => {
+      render(<CardProyecto proyecto={proyectoMock} />);
+
+      const iconoEditarProyecto = screen.getByAltText(/editar proyecto/i);
+      fireEvent.click(iconoEditarProyecto);
+
+      expect(screen.getByTestId('modal-editar-proyecto')).toBeInTheDocument();
+    });
+
+    it('cierra el modal de proyecto al llamar onClose', () => {
+      render(<CardProyecto proyecto={proyectoMock} />);
+
+      fireEvent.click(screen.getByAltText(/editar proyecto/i));
+      expect(screen.getByTestId('modal-editar-proyecto')).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: /cerrar modal proyecto/i }));
+      expect(screen.queryByTestId('modal-editar-proyecto')).not.toBeInTheDocument();
+    });
+
+    it('actualiza el título mostrado cuando se guarda la edición del proyecto', async () => {
+      render(<CardProyecto proyecto={proyectoMock} />);
+
+      fireEvent.click(screen.getByAltText(/editar proyecto/i));
+      fireEvent.click(screen.getByRole('button', { name: /guardar modal proyecto/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Proyecto Editado')).toBeInTheDocument();
+      });
     });
 
   });
