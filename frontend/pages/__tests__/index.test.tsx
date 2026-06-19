@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Index from "../../pages/index"; 
+import Index from "../index"; 
 
 describe("Index Page", () => {
   it("renderiza el título principal", () => {

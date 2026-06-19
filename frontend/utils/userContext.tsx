@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useState, ReactNode} from "react";
 
 type User = {
   id: number;
@@ -14,20 +9,13 @@ type User = {
 type AuthContextType = {
   user: User | null;
   token: string | null;
-  login: (
-    user: User,
-    token: string
-  ) => void;
+  login: (user: User, token: string) => void;
   logout: () => void;
 };
 
 const UserContext = createContext<AuthContextType | null>(null);
 
-export function UserProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function UserProvider({children}: {children: ReactNode}) {
 
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -51,14 +39,7 @@ export function UserProvider({
   }
 
   return (
-    <UserContext.Provider
-      value={{
-        user,
-        token,
-        login,
-        logout,
-      }}
-    >
+    <UserContext.Provider value={{user, token, login, logout}}>
       {children}
     </UserContext.Provider>
   );

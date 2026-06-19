@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import Register from "../../pages/register";
+import Register from "../register";
 import { ApiRegister } from "@/utils/api";
 
 jest.mock("@/utils/api", () => ({
