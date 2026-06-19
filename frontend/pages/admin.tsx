@@ -7,8 +7,24 @@ import { useEffect, useState } from "react";
 
 type ErrorFila = { fila: number; mensajes: string[] };
 
+type Usuario = {
+  id: number
+  nombre: string
+  apellido: string
+  email: string
+  rol_admin: boolean
+}
+
+type Proyecto = {
+  id: number
+  titulo: string
+  descripcion: string
+  fechaCreacion: string
+  lider: Usuario
+}
+
 export default function Admin() {
-  const [proyectos, setProyectos] = useState([]);
+  const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [show, setShow] = useState(false);
   const { user, token } = useUserContext();
   const [error, setError] = useState("");
@@ -21,6 +37,7 @@ export default function Admin() {
     if (!user?.id) return;
     async function obtenerProyecto() {
       try {
+        if (!user) return;
         const response = await ApiGetProyecto(user.id, token);
         if (!response.ok) {
           setError("No se pudieron obtener los proyectos.");
@@ -44,12 +61,8 @@ export default function Admin() {
     setError("");
     setErroresFilas([]);
 
-    if (!user?.id) {
-      setError("No se pudo identificar al usuario. ¿Iniciaste sesión?");
-      return;
-    }
-
     try {
+      if (!user) return;
       const resProyecto = await ApiCrearProyecto(
         { titulo, descripcion, idLider: Number(user.id) },
         token,
@@ -84,8 +97,6 @@ export default function Admin() {
       setError("Ocurrió un error procesando el archivo. Volvé a seleccionarlo y reintentá.");
     }
   }
-
-
 
   return (
     <>

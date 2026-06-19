@@ -19,12 +19,29 @@ type Proyecto = {
   lider: Usuario
 }
 
+type Tarea = {
+  id: number
+  titulo: string
+  descripcion: string
+  prioridad:{
+    id: number
+    nombre: string
+  }
+  usuario: {
+    id: number
+    nombre: string
+    apellido: string
+    email: string
+    rol_admin: boolean
+  }
+}
+
 export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
 
   const { token } = useUserContext();
-  const [tareas, setTareas] = useState([]);
+  const [tareas, setTareas] = useState<Tarea[]>([]);
   const [modalAbierto, setModalAbierto] = useState(false);
-  const [tareaSeleccionada, setTareaSeleccionada] = useState<any>(null);
+  const [tareaSeleccionada, setTareaSeleccionada] = useState<Tarea>();
 
   const handleDownload = async () => {
     try {

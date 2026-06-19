@@ -3,8 +3,27 @@ import { useUserContext } from "@/utils/userContext";
 import { useEffect, useState } from "react";
 import Select from "./Select";
 
+type Usuario = {
+  id: number
+  nombre: string
+  apellido: string
+  email: string
+  rol_admin: boolean
+}
+
+type Tarea = {
+  id: number
+  titulo: string
+  descripcion: string
+  prioridad:{
+    id: number
+    nombre: string
+  }
+  usuario: Usuario
+}
+
 interface Props {
-    tarea: any;
+    tarea: Tarea;
     onClose: () => void;
 }
 
@@ -14,7 +33,7 @@ export default function ModalEditarTarea({ tarea, onClose }: Props) {
     const [descripcion, setDescripcion] = useState(tarea.descripcion);
     const [prioridad, setPrioridad] = useState(tarea.prioridad.id);
     const { token } = useUserContext();
-    const [usuarios, setUsuarios] = useState([]);
+    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(0);
 
     useEffect(() => {

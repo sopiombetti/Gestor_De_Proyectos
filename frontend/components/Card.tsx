@@ -1,16 +1,18 @@
 import { useRouter } from "next/router"
 
-type Objeto = {
-    id: number
-    nombre: string
-}
-
 type Tarea = {
   id: number
   titulo: string
   descripcion: string
-  prioridad: Objeto
-  estado: Objeto
+  prioridad: {
+    id: number
+    nombre: string
+  }
+  estado: {
+    id: number
+    nombre: string
+    codigo: string
+  }
   proyectoid: number
 }
 
