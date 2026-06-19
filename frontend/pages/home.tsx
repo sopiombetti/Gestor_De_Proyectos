@@ -65,7 +65,7 @@ export default function Home() {
   return (
     <>
       {error && <MensajeError text={error} />}
-      <div className="mx-10 md:mx-20 mt-10">
+      <div className="mx-10 md:mx-30 mt-10">
         <section>
           <h2 className="text-2xl font-bold text-gray-900">Hola, {user?.nombre}</h2>
           <div className="flex flex-col items-center">

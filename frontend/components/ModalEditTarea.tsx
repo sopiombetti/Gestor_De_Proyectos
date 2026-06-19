@@ -25,9 +25,10 @@ type Tarea = {
 interface Props {
     tarea: Tarea;
     onClose: () => void;
+    onGuardado: () => void;
 }
 
-export default function ModalEditarTarea({ tarea, onClose }: Props) {
+export default function ModalEditarTarea({ tarea, onClose, onGuardado }: Props) {
 
     const [titulo, setTitulo] = useState(tarea.titulo);
     const [descripcion, setDescripcion] = useState(tarea.descripcion);
@@ -61,6 +62,7 @@ export default function ModalEditarTarea({ tarea, onClose }: Props) {
             }
             const data = await response.json();
             console.log(data);
+            onGuardado();
             onClose();
         }
         catch (err) {

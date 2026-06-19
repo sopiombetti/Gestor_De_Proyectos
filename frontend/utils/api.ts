@@ -8,70 +8,70 @@ function authHeaders(token: string | null): Record<string, string> {
     : {};
 }
 
-export async function ApiRegister(nombre: string, apellido: string, email: string, password: string, isAdmin: boolean){
-    return fetch(`${API_URL}/usuarios`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-        nombre,
-        apellido,
-        email,
-        password,
-        rol_admin: isAdmin
-        })
+export async function ApiRegister(nombre: string, apellido: string, email: string, password: string, isAdmin: boolean) {
+  return fetch(`${API_URL}/usuarios`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      nombre,
+      apellido,
+      email,
+      password,
+      rol_admin: isAdmin
     })
+  })
 }
 
-export function ApiLogin(email: string, password: string){
-    return fetch(`${API_URL}/usuarios/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-    });
+export function ApiLogin(email: string, password: string) {
+  return fetch(`${API_URL}/usuarios/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  });
 }
 
-export async function ApiGetTareas(idUsuario: number, idPrioridad: string, token: string | null){
-    let url = `${API_URL}/tareas?idUsuario=${idUsuario}`;
+export async function ApiGetTareas(idUsuario: number, idPrioridad: string, token: string | null) {
+  let url = `${API_URL}/tareas?idUsuario=${idUsuario}`;
 
-    if (idPrioridad) {
-      url += `&idPrioridad=${idPrioridad}`;
+  if (idPrioridad) {
+    url += `&idPrioridad=${idPrioridad}`;
+  }
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
     }
-    return fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders(token),
-        }
-    });
+  });
 }
 
-export async function ApiGetTareasProyecto(idProyecto: number, token: string | null){
-    let url = `${API_URL}/tareas?proyecto=${idProyecto}`;
+export async function ApiGetTareasProyecto(idProyecto: number, token: string | null) {
+  let url = `${API_URL}/tareas?proyecto=${idProyecto}`;
 
-    return fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders(token),
-        }
-    });
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    }
+  });
 }
 
-export async function ApiGetProyecto(idUsuario: number, token: string | null){
+export async function ApiGetProyecto(idUsuario: number, token: string | null) {
   return fetch(`${API_URL}/proyectos?idUsuario=${idUsuario}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders(token),
-        }
-    });
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    }
+  });
 }
 
 export async function ApiCrearProyecto(
@@ -88,24 +88,42 @@ export async function ApiCrearProyecto(
   });
 }
 
-export async function ApiGetReporte(id: number, token: string | null){
-  return fetch(`${API_URL}/reportes/proyectos/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders(token),
-        }
-    });
+export async function ApiEditarProyectoAdmin(
+  id: number,
+  body: {
+    titulo: string;
+    descripcion: string;
+  },
+  token: string | null
+) {
+  return fetch(`${API_URL}/proyectos/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    },
+    body: JSON.stringify(body),
+  });
 }
 
-export async function ApiGetUsuarios(token: string | null){
-    return fetch(`${API_URL}/usuarios`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders(token),
-        }
-    });
+export async function ApiGetReporte(id: number, token: string | null) {
+  return fetch(`${API_URL}/reportes/proyectos/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    }
+  });
+}
+
+export async function ApiGetUsuarios(token: string | null) {
+  return fetch(`${API_URL}/usuarios`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    }
+  });
 }
 
 export async function ApiCrearTareasBulk(
@@ -174,4 +192,3 @@ export async function ApiEditarTareaAdmin(
     body: JSON.stringify(body),
   });
 }
-    
