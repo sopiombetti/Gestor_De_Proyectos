@@ -19,7 +19,7 @@ export async function ApiRegister(nombre: string, apellido: string, email: strin
         apellido,
         email,
         password,
-        isAdmin
+        rol_admin: isAdmin
         })
     })
 }

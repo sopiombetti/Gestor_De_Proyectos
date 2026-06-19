@@ -28,6 +28,7 @@ export class UsuariosService {
       apellido: createUsuarioDto.apellido,
       email: createUsuarioDto.email,
       password: hashedPassword,
+      rol_admin: createUsuarioDto.rol_admin
     });
     const saved = await this.usuarioRepo.save(nuevoUsuario);
     return this.findOne(saved.id);
