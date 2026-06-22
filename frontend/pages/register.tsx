@@ -56,26 +56,30 @@ export default function Register() {
             {success && <Success text={success} />}
             {error && <MensajeError text={error} />}
 
-            <section className="bg-gray-50 dark:bg-gray-900 pt-10">
-                <div className="flex flex-col items-center px-6 mx-auto md:h-screen lg:py-0">
-                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <section className="bg-gray-50 dark:bg-gray-900 min-h-screen pt-10">
+                <div className="flex flex-col items-center px-4 sm:px-6 mx-auto pb-10 lg:py-0">
+                    <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                        <div className="p-5 sm:p-8 space-y-4 md:space-y-6">
 
                             <div className="flex flex-col items-center text-center space-y-1">
-                                <h1 className="text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                                <h1 className="text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
                                     Crear cuenta
                                 </h1>
-                                <p className="text-sm text-gray-500">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
                                     Empezá a organizar tus proyectos y tareas de forma simple
                                 </p>
                             </div>
+
                             <form onSubmit={handleSubmit} className="space-y-4">
-                                <div className="flex gap-4">
-                                    <div className="w-1/2">
-                                        <label className="block font-medium leading-6 text-gray-900">Nombre</label>
+
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <div className="w-full sm:w-1/2">
+                                        <label className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
+                                            Nombre
+                                        </label>
                                         <div className="mt-2">
                                             <input
-                                                className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-blue-400 focus:outline-blue-400 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                                                className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 dark:text-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-blue-400 dark:ring-blue-500 focus:outline-blue-400 dark:focus:outline-blue-400 placeholder:text-gray-400 dark:placeholder:text-gray-500 sm:text-sm sm:leading-6"
                                                 type="text"
                                                 placeholder="👤 Nombre"
                                                 value={nombre}
@@ -83,11 +87,13 @@ export default function Register() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="w-1/2">
-                                        <label className="block font-medium leading-6 text-gray-900">Apellido</label>
+                                    <div className="w-full sm:w-1/2">
+                                        <label className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
+                                            Apellido
+                                        </label>
                                         <div className="mt-2">
                                             <input
-                                                className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-blue-400 focus:outline-blue-400 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                                                className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 dark:text-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-blue-400 dark:ring-blue-500 focus:outline-blue-400 dark:focus:outline-blue-400 placeholder:text-gray-400 dark:placeholder:text-gray-500 sm:text-sm sm:leading-6"
                                                 type="text"
                                                 placeholder="👤 Apellido"
                                                 value={apellido}
@@ -96,26 +102,30 @@ export default function Register() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex gap-4">
-                                    <div className="w-1/2">
-                                        <label className="block font-medium leading-6 text-gray-900">Correo Electrónico</label>
-                                        <div className="mt-2">
-                                            <input
-                                                className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-blue-400 focus:outline-blue-400 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                                                type="email"
-                                                placeholder="📧 ejemplo@email.com"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                            />
-                                        </div>
+
+                                <div>
+                                    <label className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
+                                        Correo Electrónico
+                                    </label>
+                                    <div className="mt-2">
+                                        <input
+                                            className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 dark:text-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-blue-400 dark:ring-blue-500 focus:outline-blue-400 dark:focus:outline-blue-400 placeholder:text-gray-400 dark:placeholder:text-gray-500 sm:text-sm sm:leading-6"
+                                            type="email"
+                                            placeholder="📧 ejemplo@email.com"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
                                     </div>
                                 </div>
-                                <div className="flex gap-4">
-                                    <div className="w-1/2">
-                                        <label className="block font-medium leading-6 text-gray-900">Contraseña</label>
+
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <div className="w-full sm:w-1/2">
+                                        <label className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
+                                            Contraseña
+                                        </label>
                                         <div className="mt-2">
                                             <input
-                                                className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-blue-400 focus:outline-blue-400 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                                                className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 dark:text-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-blue-400 dark:ring-blue-500 focus:outline-blue-400 dark:focus:outline-blue-400 placeholder:text-gray-400 dark:placeholder:text-gray-500 sm:text-sm sm:leading-6"
                                                 type="password"
                                                 placeholder="🔒 ******"
                                                 value={contrasenia}
@@ -123,11 +133,13 @@ export default function Register() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="w-1/2">
-                                        <label className="block font-medium leading-6 text-gray-900 whitespace-nowrap">Confirmar contraseña</label>
+                                    <div className="w-full sm:w-1/2">
+                                        <label className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
+                                            Confirmar contraseña
+                                        </label>
                                         <div className="mt-2">
                                             <input
-                                                className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-blue-400 focus:outline-blue-400 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                                                className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 dark:text-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-blue-400 dark:ring-blue-500 focus:outline-blue-400 dark:focus:outline-blue-400 placeholder:text-gray-400 dark:placeholder:text-gray-500 sm:text-sm sm:leading-6"
                                                 type="password"
                                                 placeholder="🔒 ******"
                                                 value={reContrasenia}
@@ -136,40 +148,51 @@ export default function Register() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex gap-4 flex-col mt-4">
-                                    <label className="block font-medium leading-6 text-gray-900">Rol</label>
-                                    <div className="flex justify-around border-0 shadow-sm ring-1 ring-inset p-2 ring-blue-400 rounded-md">
-                                        <div className="flex space-x-2">
+
+                                <div className="flex flex-col gap-3 mt-2">
+                                    <label className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
+                                        Rol
+                                    </label>
+                                    <div className="flex flex-col sm:flex-row justify-around border-0 shadow-sm ring-1 ring-inset p-3 ring-blue-400 dark:ring-blue-500 rounded-md gap-3 sm:gap-0">
+                                        <div className="flex items-center space-x-2">
                                             <input
                                                 type="radio"
                                                 id="lider"
                                                 name="rol"
+                                                className="accent-blue-500"
                                                 checked={isAdmin === true}
                                                 onChange={() => setIsAdmin(true)}
                                             />
-                                            <label htmlFor="lider">Soy líder</label>
+                                            <label htmlFor="lider" className="text-gray-800 dark:text-gray-200 cursor-pointer">
+                                                Soy líder
+                                            </label>
                                         </div>
-                                        <div className="flex space-x-2">
+                                        <div className="flex items-center space-x-2">
                                             <input
                                                 type="radio"
                                                 id="colaborador"
                                                 name="rol"
+                                                className="accent-blue-500"
                                                 checked={isAdmin === false}
                                                 onChange={() => setIsAdmin(false)}
                                             />
-                                            <label htmlFor="colaborador">Soy colaborador</label>
+                                            <label htmlFor="colaborador" className="text-gray-800 dark:text-gray-200 cursor-pointer">
+                                                Soy colaborador
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
+
                                 <button
                                     type="submit"
-                                    className="flex w-full mt-8 justify-center rounded-full bg-secondary px-3 py-1.5 font-semibold leading-6 text-gray-900 shadow-sm cursor-pointer hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    className="flex w-full mt-6 justify-center rounded-full bg-secondary px-3 py-2 font-semibold leading-6 text-gray-900 dark:text-white shadow-sm cursor-pointer hover:bg-blue-400 dark:hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors duration-200"
                                 >
                                     Crear cuenta
                                 </button>
+
                                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                    ¿Ya tenés cuenta?
-                                    <Link href="/login" className="px-2 font-medium text-gray-600 hover:underline dark:text-gray-500">
+                                    ¿Ya tenés cuenta?{" "}
+                                    <Link href="/login" className="font-medium text-gray-600 dark:text-gray-300 hover:underline">
                                         Iniciá sesión
                                     </Link>
                                 </p>
