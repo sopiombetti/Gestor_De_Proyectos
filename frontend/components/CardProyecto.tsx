@@ -1,8 +1,9 @@
-import { ApiGetReporte, ApiGetTareasProyecto } from "@/utils/api"
+import { ApiDeleteProyecto, ApiGetReporte, ApiGetTareasProyecto } from "@/utils/api"
 import { useUserContext } from "@/utils/userContext"
 import { useState } from "react"
 import ModalEditarTarea from "./ModalEditTarea"
 import ModalEditarProyecto from "./ModalEditProyecto"
+import Swal from "sweetalert2";
 
 type Usuario = {
   id: number
@@ -45,7 +46,7 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
   const [mostrarTareas, setMostrarTareas] = useState(false);
   const [tareaSeleccionada, setTareaSeleccionada] = useState<Tarea>();
   const [modalProyectoAbierto, setModalProyectoAbierto] = useState(false);
-  const [proyectoActual, setProyectoActual] = useState(proyecto); 
+  const [proyectoActual, setProyectoActual] = useState(proyecto);
 
   const handleDownload = async () => {
     try {
@@ -89,6 +90,29 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
     }
   }
 
+  const handleDelete = async () => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Está seguro de que desea eliminar el proyecto?",
+        text: "Se eliminarán todas las tareas asociadas.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+      });
+      if (!result.isConfirmed) return;
+
+      const response = await ApiDeleteProyecto(proyecto.id, token);
+      if (!response.ok) {
+        console.log(response);
+        throw new Error("No se pudo eliminar el proyecto");
+      }
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const abrirModalEditar = (tarea: any) => {
     setTareaSeleccionada(tarea);
     setModalAbierto(true);
@@ -99,9 +123,13 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
       <div className="flex flex-col space-y-3 border border-2 rounded-xl border-primary p-5">
         <div className="flex justify-between">
           <h2 className="text-xl font-semibold">{proyecto.titulo}</h2>
-          <img src="/edit.svg" alt="Editar proyecto" onClick={() => setModalProyectoAbierto(true)} className="cursor-pointer"/>
+          <div className="flex space-x-5">
+            <img src="/edit.svg" alt="Editar proyecto" onClick={() => setModalProyectoAbierto(true)} className="cursor-pointer" />
+            <img src="/delete.svg" alt="Eliminar proyecto" onClick={handleDelete} className="cursor-pointer" />
+          </div>
+
         </div>
-        
+
         <p>{proyecto.descripcion}</p>
         <div className="flex space-x-3 items-center">
           <img src="/calendar.svg" className="h-5" />
@@ -144,7 +172,7 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
         )}
       </div>
       {modalAbierto && tareaSeleccionada && (<ModalEditarTarea tarea={tareaSeleccionada} onClose={() => setModalAbierto(false)} onGuardado={getTareasProyecto} />)}
-      {modalProyectoAbierto && (<ModalEditarProyecto proyecto={proyectoActual} onClose={() => setModalProyectoAbierto(false)} onGuardado={(p) => setProyectoActual(p)}/>)}
+      {modalProyectoAbierto && (<ModalEditarProyecto proyecto={proyectoActual} onClose={() => setModalProyectoAbierto(false)} onGuardado={(p) => setProyectoActual(p)} />)}
     </>
   )
 }
