@@ -45,7 +45,7 @@ describe("Login", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: /inicia sesión en tu cuenta/i,
+        name: /Iniciá sesión en tu cuenta/i,
       })
     ).toBeInTheDocument();
 

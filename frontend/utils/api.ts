@@ -106,6 +106,16 @@ export async function ApiEditarProyectoAdmin(
   });
 }
 
+export async function ApiDeleteProyecto(idProyecto: number, token: string | null) {
+  return fetch(`${API_URL}/proyectos/${idProyecto}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    }
+  });
+}
+
 export async function ApiGetReporte(id: number, token: string | null) {
   return fetch(`${API_URL}/reportes/proyectos/${id}`, {
     method: "GET",

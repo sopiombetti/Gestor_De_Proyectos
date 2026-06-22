@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode} from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 type User = {
   id: number;
@@ -15,10 +15,30 @@ type AuthContextType = {
 
 const UserContext = createContext<AuthContextType | null>(null);
 
-export function UserProvider({children}: {children: ReactNode}) {
+export function UserProvider({ children }: { children: ReactNode }) {
 
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const cookies = document.cookie;
+    if (!cookies) return;
+    const savedToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
+
+    if (savedToken) {
+      const payload = JSON.parse(atob(savedToken.split(".")[1]));
+
+      setToken(savedToken);
+      setUser({
+        id: payload.id,
+        nombre: payload.nombre,
+        isAdmin: payload.rol_admin,
+      });
+    }
+  }, []);
 
   function login(user: User, token: string) {
     setUser(user);
@@ -39,7 +59,7 @@ export function UserProvider({children}: {children: ReactNode}) {
   }
 
   return (
-    <UserContext.Provider value={{user, token, login, logout}}>
+    <UserContext.Provider value={{ user, token, login, logout }}>
       {children}
     </UserContext.Provider>
   );

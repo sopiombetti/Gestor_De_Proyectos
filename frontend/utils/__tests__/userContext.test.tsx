@@ -37,7 +37,10 @@ function TestComponent() {
 describe("UserContext", () => {
   beforeEach(() => {
     localStorage.clear();
-    document.cookie = "";
+    Object.defineProperty(document, "cookie", {
+      writable: true,
+      value: "",
+    });
   });
 
   test("inicia sin usuario ni token", () => {
