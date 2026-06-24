@@ -202,13 +202,16 @@
 
 const nextJest = require("next/jest");
 const createJestConfig = nextJest({
-  dir: "./",
+    dir: "./",
 });
 const customJestConfig = {
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
-  testEnvironment: "jest-environment-jsdom",
-  moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/$1",
-  },
+    setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+    testEnvironment: "jest-environment-jsdom",
+    moduleNameMapper: {
+        "^@/(.*)$": "<rootDir>/$1",
+    },
+    collectCoverage: true,
+    collectCoverageFrom: ["./**/*.{tsx,ts}"],
+    coveragePathIgnorePatterns: ['/node_modules/', '/.next/', '/jest.config.ts', '/middleware.ts', '/next-env.d.ts', '/next.config.ts', '/pages/_app.tsx', '/pages/_document.tsx']
 };
 module.exports = createJestConfig(customJestConfig);
