@@ -1,9 +1,10 @@
-import { ApiDeleteProyecto, ApiGetReporte, ApiGetTareasProyecto } from "@/utils/api"
+import { ApiDeleteProyecto, ApiGetTareasProyecto } from "@/utils/api"
 import { useUserContext } from "@/utils/userContext"
 import { useState } from "react"
 import ModalEditarTarea from "./ModalEditTarea"
 import ModalEditarProyecto from "./ModalEditProyecto"
 import Swal from "sweetalert2";
+import ReporteButton from "./ReporteButton"
 
 type Usuario = {
   id: number
@@ -38,7 +39,13 @@ type Tarea = {
   }
 }
 
-export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
+type CardProyectoProps = {
+    proyecto: Proyecto;
+    setError: React.Dispatch<React.SetStateAction<string>>;
+    setSuccess: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export default function CardProyecto({ proyecto, setError, setSuccess }:CardProyectoProps ) {
 
   const { token } = useUserContext();
   const [tareas, setTareas] = useState<Tarea[]>([]);
@@ -47,28 +54,6 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
   const [tareaSeleccionada, setTareaSeleccionada] = useState<Tarea>();
   const [modalProyectoAbierto, setModalProyectoAbierto] = useState(false);
   const [proyectoActual, setProyectoActual] = useState(proyecto);
-
-  const handleDownload = async () => {
-    try {
-      const response = await ApiGetReporte(proyecto.id, token);
-
-      if (!response.ok) {
-        throw new Error("No se puede obtener el reporte");
-      }
-
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `informe.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-    catch (error) {
-      console.error(error);
-    }
-
-  }
 
   async function getTareasProyecto() {
     if (mostrarTareas) {
@@ -79,6 +64,7 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
       const response = await ApiGetTareasProyecto(proyecto.id, token);
       console.log(response);
       if (!response.ok) {
+        setError("No se pudieron obtener las tareas.")
         throw new Error();
       }
       const data = await response.json();
@@ -105,8 +91,10 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
       const response = await ApiDeleteProyecto(proyecto.id, token, true);
       if (!response.ok) {
         console.log(response);
+        setError("No se pudo eliminar el proyecto.")
         throw new Error("No se pudo eliminar el proyecto");
       }
+      setSuccess("El proyecto se eliminó correctamente.")
       console.log(response);
     } catch (error) {
       console.error(error);
@@ -122,25 +110,21 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
     <>
       <div className="flex flex-col space-y-3 border border-2 rounded-xl border-primary p-5">
         <div className="flex justify-between">
-          <h2 className="text-xl font-semibold">{proyecto.titulo}</h2>
+          <h2 className="text-xl font-semibold">{proyectoActual.titulo}</h2>
           <div className="flex space-x-5">
             <img src="/edit.svg" alt="Editar proyecto" onClick={() => setModalProyectoAbierto(true)} className="cursor-pointer" />
             <img src="/delete.svg" alt="Eliminar proyecto" onClick={handleDelete} className="cursor-pointer" />
           </div>
-
         </div>
 
-        <p>{proyecto.descripcion}</p>
+        <p>{proyectoActual.descripcion}</p>
         <div className="flex space-x-3 items-center">
           <img src="/calendar.svg" className="h-5" />
           <p>Creado el: {proyecto.fechaCreacion.slice(0, 10)}</p>
         </div>
 
         <div className="flex space-x-5">
-          <button onClick={handleDownload} className="flex items-center mt-6 justify-center w-[200px] rounded-full bg-primary p-3 space-x-2 py-1.5 font-semibold leading-6 text-gray-900 shadow-sm cursor-pointer hover:bg-violet-400">
-            <img src="/report.svg" className="h-5" />
-            <p>Generar Informe</p>
-          </button>
+          <ReporteButton proyectoId={proyecto.id} setError={setError}/>
           <button onClick={getTareasProyecto} className="flex items-center mt-6 max-w-[170px] font-semibold justify-center border-2 border-primary rounded-md space-x-2 p-2 cursor-pointer hover:border-violet-600 hover:border-2">
             <img src="/list.svg" className="h-5" />
             <p>{mostrarTareas ? "Ocultar tareas" : "Mostrar tareas"}</p>
@@ -171,8 +155,8 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
           </div>
         )}
       </div>
-      {modalAbierto && tareaSeleccionada && (<ModalEditarTarea tarea={tareaSeleccionada} onClose={() => setModalAbierto(false)} onGuardado={getTareasProyecto} />)}
-      {modalProyectoAbierto && (<ModalEditarProyecto proyecto={proyectoActual} onClose={() => setModalProyectoAbierto(false)} onGuardado={(p) => setProyectoActual(p)} />)}
+      {modalAbierto && tareaSeleccionada && (<ModalEditarTarea tarea={tareaSeleccionada} onClose={() => setModalAbierto(false)} onGuardado={getTareasProyecto} setError={setError} setSuccess={setSuccess}/>)}
+      {modalProyectoAbierto && (<ModalEditarProyecto proyecto={proyectoActual} onClose={() => setModalProyectoAbierto(false)} onGuardado={(p) => setProyectoActual(p)} setError={setError} setSuccess={setSuccess}/>)}
     </>
   )
 }

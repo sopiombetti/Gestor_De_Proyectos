@@ -14,7 +14,6 @@ export default function Input({
   return (
     <div className="flex flex-col gap-2 mb-4">
       <label className="text-md">{title}</label>
-
         <input
         type={type}
         value={value}

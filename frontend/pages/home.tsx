@@ -1,12 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import Image from 'next/image'
-import Card from "@/components/Card";
+import Card from "@/components/tareas/Card";
 import { ApiGetTareas } from "@/utils/api";
 import { useUserContext } from "@/utils/userContext";
-import BoxTareas from "@/components/BoxTareas";
-import MensajeError from "@/components/Error";
+import BoxTareas from "@/components/tareas/BoxTareas";
+import MensajeError from "@/components/ui/Error";
 
 type Tarea = {
   id: number

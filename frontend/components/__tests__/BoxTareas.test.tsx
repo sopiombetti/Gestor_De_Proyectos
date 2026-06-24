@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import BoxTareas from "../BoxTareas";
+import BoxTareas from "../tareas/BoxTareas";
 
 describe("BoxTareas", () => {
   test("renderiza el nombre recibido por props", () => {
