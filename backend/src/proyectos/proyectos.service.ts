@@ -72,13 +72,15 @@ export class ProyectosService {
   async remove(id: number, force = false) {
     const proyecto = await this.findOneOrFail(id);
     const tareasCount = await this.tareaRepo.count({ where: { proyecto: { id } } });
-
     if (tareasCount > 0 && !force) {
       throw new ConflictException(
         `El proyecto tiene ${tareasCount} tarea(s) asociada(s). Requiere confirmación.`,
-      )
+      );
     }
-    await this.proyectoRepo.remove(proyecto)
+    if (tareasCount > 0) {
+      await this.tareaRepo.delete({ proyecto: { id } });
+    }
+    await this.proyectoRepo.remove(proyecto);
     return { message: 'Se eliminó el proyecto' };
   }
 
@@ -116,7 +118,7 @@ export class ProyectosService {
         : undefined,
 
       assignedAt: tarea.fechaAsignacion ?? undefined,
-      estimatedHours: tarea.estimacion  ?? undefined,
+      estimatedHours: tarea.estimacion ?? undefined,
       actualHours: tarea.tiempoFinal ?? undefined,
       completedAt: tarea.fechaCierre ?? undefined
     }));

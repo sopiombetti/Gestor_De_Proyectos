@@ -102,7 +102,7 @@ export default function CardProyecto({ proyecto }: { proyecto: Proyecto }) {
       });
       if (!result.isConfirmed) return;
 
-      const response = await ApiDeleteProyecto(proyecto.id, token);
+      const response = await ApiDeleteProyecto(proyecto.id, token, true);
       if (!response.ok) {
         console.log(response);
         throw new Error("No se pudo eliminar el proyecto");

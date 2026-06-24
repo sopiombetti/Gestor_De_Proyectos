@@ -106,8 +106,8 @@ export async function ApiEditarProyectoAdmin(
   });
 }
 
-export async function ApiDeleteProyecto(idProyecto: number, token: string | null) {
-  return fetch(`${API_URL}/proyectos/${idProyecto}`, {
+export async function ApiDeleteProyecto(idProyecto: number, token: string | null, force: boolean) {
+  return fetch(`${API_URL}/proyectos/${idProyecto}?force=${force}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
