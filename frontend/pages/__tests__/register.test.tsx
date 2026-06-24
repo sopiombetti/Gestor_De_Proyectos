@@ -14,11 +14,11 @@ jest.mock("next/router", () => ({
   useRouter: jest.fn(),
 }));
 
-jest.mock("../../components/Error", () => {
+jest.mock("../../components/ui/Error", () => {
   return ({ text }: { text: string }) => <div>{text}</div>;
 });
 
-jest.mock("../../components/success", () => {
+jest.mock("../../components/ui/Success", () => {
   return ({ text }: { text: string }) => <div>{text}</div>;
 });
 

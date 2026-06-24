@@ -14,7 +14,7 @@ const tareaMock = {
   titulo: 'Tarea Test',
   descripcion: 'Tarea de prueba',
   prioridad: { id: 1, nombre: 'Baja' },
-  estado: { id: 2, nombre: 'Asignada' },
+  estado: { id: 2, nombre: 'Asignada', codigo: 'ASIGNADA' },
   proyectoid: 1
 };
 
@@ -43,7 +43,7 @@ describe('Card', () => {
   it('navega a la página de detalle al clickear el título', () => {
     render(<Card tarea={tareaMock} />);
     fireEvent.click(screen.getByText('Tarea Test'));
-    expect(mockPush).toHaveBeenCalledWith('/task-detail?id=1');
+    expect(mockPush).toHaveBeenCalledWith('/taskDetail?id=1');
   });
 
   describe('Estilos de prioridad', () => {

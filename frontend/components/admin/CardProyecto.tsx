@@ -1,10 +1,10 @@
-import { ApiDeleteProyecto, ApiGetReporte, ApiGetTareasProyecto } from "@/utils/api"
+import { ApiDeleteProyecto, ApiGetTareasProyecto } from "@/utils/api"
 import { useUserContext } from "@/utils/userContext"
 import { useState } from "react"
 import ModalEditarTarea from "./ModalEditTarea"
 import ModalEditarProyecto from "./ModalEditProyecto"
 import Swal from "sweetalert2";
-import ReporteButton from "../ReporteButton"
+import ReporteButton from "./ReporteButton"
 
 type Usuario = {
   id: number

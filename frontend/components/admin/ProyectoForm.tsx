@@ -93,8 +93,9 @@ export default function ProyectoForm({ onProyectoCreado, onClose, setError, setE
                     placeholder="Descripción"
                     value={descripcion} onChange={(e) => setDescripcion(e.target.value)}
                 />
-                <label>Subir archivo (.xls / .csv)</label>
+                <label htmlFor="file-upload">Subir archivo (.xls / .csv)</label>
                 <input
+                    id="file-upload"
                     className="bg-white rounded-md p-2 border-1 border-secondary shadow-xl"
                     type="file" accept=".xls,.xlsx,.csv"
                     onChange={(e) => setFile(e.target.files?.[0] ?? null)}

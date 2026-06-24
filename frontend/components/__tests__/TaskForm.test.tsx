@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import TaskForm from "../tareas/TaskForm";
 
-jest.mock("@/components/Input", () => ({
+jest.mock("@/components/ui/Input", () => ({
   __esModule: true,
   default: ({ title, value, onChange }: any) => (
     <input
@@ -12,7 +12,7 @@ jest.mock("@/components/Input", () => ({
   ),
 }));
 
-jest.mock("@/components/Select", () => ({
+jest.mock("@/components/ui/Select", () => ({
   __esModule: true,
   default: ({ title, value, onChange, options }: any) => (
     <select
@@ -29,7 +29,7 @@ jest.mock("@/components/Select", () => ({
   ),
 }));
 
-jest.mock("@/components/Button", () => ({
+jest.mock("@/components/ui/Button", () => ({
   __esModule: true,
   default: ({ title }: any) => (
     <button>{title}</button>

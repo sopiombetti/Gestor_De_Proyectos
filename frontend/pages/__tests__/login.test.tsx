@@ -26,7 +26,7 @@ jest.mock("next/link", () => {
   return ({ children }: { children: React.ReactNode }) => children;
 });
 
-jest.mock("@/components/Error", () => ({
+jest.mock("@/components/ui/Error", () => ({
   __esModule: true,
   default: ({ text }: { text: string }) => <div>{text}</div>,
 }));

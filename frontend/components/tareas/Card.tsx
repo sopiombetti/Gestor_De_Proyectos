@@ -23,7 +23,7 @@ export default function Card({ tarea }: { tarea: Tarea }) {
             style={{ gridTemplateColumns: 'minmax(0,1fr) 190px 130px' }}>
             <h3
                 className="font-semibold hover:underline cursor-pointer truncate text-gray-900 dark:text-white"
-                onClick={() => router.push(`/task-detail?id=${tarea.id}`)}
+                onClick={() => router.push(`/taskDetail?id=${tarea.id}`)}
             >
                 {tarea.titulo}
             </h3>

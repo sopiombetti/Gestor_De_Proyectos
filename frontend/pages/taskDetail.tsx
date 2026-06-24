@@ -56,18 +56,23 @@ export default function TaskDetail() {
     const obtenerTarea = async () => {
       try {
         const response = await ApiGetTareaPorId(Number(id), token);
+
         if (!response.ok) {
-          setError("No se pudo obtener la tarea.");
+          const data = await response.json().catch(() => null);
+          setError(
+            data?.message || "No se pudo obtener la tarea."
+          );
           return;
         }
+
         const data = await response.json();
-        console.log(data);
         setTarea(data);
         setEstadoSeleccionado(data.estado.id);
         setEstimacionCalculada(data.estimacion ?? 0);
-      }
-      catch (error) {
+
+      } catch (error) {
         console.error(error);
+        setError("Error inesperado al obtener la tarea.");
       }
     };
     obtenerTarea();
