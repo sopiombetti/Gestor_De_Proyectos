@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import MensajeError from "../Error";
+import MensajeError from "../ui/Error";
 
 describe("MensajeError", () => {
   test("renderiza el mensaje recibido por props", () => {

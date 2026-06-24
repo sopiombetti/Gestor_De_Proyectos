@@ -1,6 +1,6 @@
-import Button from "@/components/Button";
+import Button from "@/components/ui/Button";
 import { useEffect, useState } from "react";
-import Select from "./Select";
+import Select from "./ui/Select";
 import { ApiEditarTarea, ApiGetUsuarios } from "@/utils/api"
 import { useUserContext } from "@/utils/userContext";
 

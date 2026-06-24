@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import ModalEditarTarea from "../ModalEditTarea";
+import ModalEditarTarea from "../admin/ModalEditTarea";
 import {
   ApiEditarTareaAdmin,
   ApiGetUsuarios,

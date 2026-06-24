@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import MensajeError from "../components/Error";
-import Success from "../components/success";
+import MensajeError from "../components/ui/Error";
+import Success from "../components/ui/Success";
 import { ApiRegister } from "@/utils/api";
 import { useRouter } from "next/router";
 

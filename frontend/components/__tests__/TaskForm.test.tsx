@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import TaskForm from "../TaskForm";
+import TaskForm from "../tareas/TaskForm";
 
 jest.mock("@/components/Input", () => ({
   __esModule: true,

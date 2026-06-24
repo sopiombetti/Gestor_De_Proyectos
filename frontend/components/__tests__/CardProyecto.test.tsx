@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import CardProyecto from '@/components/CardProyecto';
+import CardProyecto from '@/components/admin/CardProyecto';
 import { ApiGetReporte, ApiGetTareasProyecto } from '@/utils/api';
 import { useUserContext } from '@/utils/userContext';
 

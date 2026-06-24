@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Input from "@/components/Input";
-import Button from "@/components/Button";
-import Select from "@/components/Select";
-import Calculator from "./Calculator";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import Select from "@/components/ui/Select";
+import Calculator from "../Calculator";
 
 export default function TaskForm() {
   const [titulo, setTitulo] = useState("");
