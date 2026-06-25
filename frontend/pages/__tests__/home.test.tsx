@@ -11,12 +11,12 @@ jest.mock("@/utils/userContext", () => ({
   useUserContext: jest.fn(),
 }));
 
-jest.mock("@/components/Card", () => ({
+jest.mock("@/components/tareas/Card", () => ({
   __esModule: true,
   default: ({ tarea }: any) => <div>{tarea.titulo}</div>,
 }));
 
-jest.mock("@/components/BoxTareas", () => ({
+jest.mock("@/components/tareas/BoxTareas", () => ({
   __esModule: true,
   default: ({ nombre, cantidad }: any) => (
     <div>
@@ -25,7 +25,7 @@ jest.mock("@/components/BoxTareas", () => ({
   ),
 }));
 
-jest.mock("@/components/Error", () => ({
+jest.mock("@/components/ui/Error", () => ({
   __esModule: true,
   default: ({ text }: any) => <div>{text}</div>,
 }));

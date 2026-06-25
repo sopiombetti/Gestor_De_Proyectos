@@ -8,21 +8,23 @@ type Proyecto = {
   descripcion: string
   fechaCreacion: string
   lider: {
-  id: number
-  nombre: string
-  apellido: string
-  email: string
-  rol_admin: boolean
-}
+    id: number
+    nombre: string
+    apellido: string
+    email: string
+    rol_admin: boolean
+  }
 }
 
 interface Props {
   proyecto: Proyecto;
   onClose: () => void;
   onGuardado: (proyectoActualizado: Proyecto) => void;
+  setError: React.Dispatch<React.SetStateAction<string>>;
+  setSuccess: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function ModalEditarProyecto({ proyecto, onClose, onGuardado }: Props) {
+export default function ModalEditarProyecto({ proyecto, onClose, onGuardado, setError, setSuccess }: Props) {
 
   const [titulo, setTitulo] = useState(proyecto.titulo);
   const [descripcion, setDescripcion] = useState(proyecto.descripcion);
@@ -32,8 +34,10 @@ export default function ModalEditarProyecto({ proyecto, onClose, onGuardado }: P
     try {
       const response = await ApiEditarProyectoAdmin(proyecto.id, { titulo, descripcion }, token);
       if (!response.ok) {
+        setError("No se pudo editar el proyecto.")
         throw new Error("No se pudo editar el proyecto.");
       }
+      setSuccess("El proyecto se editó correctamente.")
       onGuardado({ ...proyecto, titulo, descripcion });
       onClose();
     }

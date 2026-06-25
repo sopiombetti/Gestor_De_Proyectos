@@ -1,7 +1,7 @@
 import { ApiEditarTareaAdmin, ApiGetUsuarios } from "@/utils/api";
 import { useUserContext } from "@/utils/userContext";
 import { useEffect, useState } from "react";
-import Select from "./Select";
+import Select from "../ui/Select";
 
 type Usuario = {
   id: number
@@ -26,9 +26,11 @@ interface Props {
     tarea: Tarea;
     onClose: () => void;
     onGuardado: () => void;
+    setError: React.Dispatch<React.SetStateAction<string>>;
+    setSuccess: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function ModalEditarTarea({ tarea, onClose, onGuardado }: Props) {
+export default function ModalEditarTarea({ tarea, onClose, onGuardado, setError, setSuccess }: Props) {
 
     const [titulo, setTitulo] = useState(tarea.titulo);
     const [descripcion, setDescripcion] = useState(tarea.descripcion);
@@ -58,10 +60,12 @@ export default function ModalEditarTarea({ tarea, onClose, onGuardado }: Props) 
         try {
             const response = await ApiEditarTareaAdmin(tarea.id, { titulo, descripcion, idPrioridad: prioridad, idUsuario: usuarioSeleccionado }, token);
             if (!response.ok) {
+                setError("No se pudo editar la tarea.")
                 throw new Error("No se pudo editar la tarea.");
             }
             const data = await response.json();
             console.log(data);
+            setSuccess("La tarea se editó correctamente.")
             onGuardado();
             onClose();
         }

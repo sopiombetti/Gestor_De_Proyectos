@@ -3,7 +3,7 @@ import { useState, type FormEvent } from "react";
 import { ApiLogin } from "../utils/api"
 import { useRouter } from "next/router";
 import { useUserContext } from "@/utils/userContext";
-import MensajeError from "../components/Error";
+import MensajeError from "../components/ui/Error";
 
 export default function Login() {
 

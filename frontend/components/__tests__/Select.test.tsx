@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import Select from "../Select";
+import Select from "../ui/Select";
 
 describe("Select", () => {
   const opciones = [
