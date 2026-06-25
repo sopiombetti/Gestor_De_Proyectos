@@ -70,17 +70,22 @@ export class ProyectosService {
   }
 
   async remove(id: number, force = false) {
-    const proyecto = await this.findOneOrFail(id);
-    const tareasCount = await this.tareaRepo.count({ where: { proyecto: { id } } });
+  const proyecto = await this.findOneOrFail(id);
+  const tareasCount = await this.tareaRepo.count({ where: { proyecto: { id } } });
 
-    if (tareasCount > 0 && !force) {
-      throw new ConflictException(
-        `El proyecto tiene ${tareasCount} tarea(s) asociada(s). Requiere confirmación.`,
-      )
-    }
-    await this.proyectoRepo.remove(proyecto)
-    return { message: 'Se eliminó el proyecto' };
+  if (tareasCount > 0 && !force) {
+    throw new ConflictException(
+      `El proyecto tiene ${tareasCount} tarea(s) asociada(s). Requiere confirmación.`,
+    );
   }
+
+  if (tareasCount > 0) {
+    await this.tareaRepo.delete({ proyecto: { id } });
+  }
+  await this.proyectoRepo.remove(proyecto);
+
+  return { message: 'Se eliminó el proyecto' };
+}
 
   private async findOneOrFail(id: number): Promise<Proyecto> {
     const proyecto = await this.proyectoRepo.findOne({ where: { id } });
