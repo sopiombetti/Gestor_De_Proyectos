@@ -18,7 +18,7 @@ describe('ProyectosService', () => {
     find: jest.Mock; findOne: jest.Mock; findOneOrFail: jest.Mock;
     create: jest.Mock; save: jest.Mock; remove: jest.Mock;
   };
-  let tareaRepo: { count: jest.Mock };
+  let tareaRepo: { count: jest.Mock; delete: jest.Mock };
   let usuarioService: { findOne: jest.Mock };
 
   beforeEach(async () => {
@@ -26,7 +26,7 @@ describe('ProyectosService', () => {
       find: jest.fn(), findOne: jest.fn(), findOneOrFail: jest.fn(),
       create: jest.fn(), save: jest.fn(), remove: jest.fn(),
     };
-    tareaRepo = { count: jest.fn() };
+    tareaRepo = { count: jest.fn(), delete: jest.fn() };
     usuarioService = { findOne: jest.fn() };
 
     const module = await Test.createTestingModule({

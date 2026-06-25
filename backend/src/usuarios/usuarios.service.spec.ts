@@ -110,10 +110,10 @@ describe('UsuariosService', () => {
   describe('update', () => {
     it('actualiza nombre y re-hashea la password', async () => {
       const actual = usuarioFixture();
-      repo.findOne.mockResolvedValueOnce(actual); // findOneOrFail
+      repo.findOne.mockResolvedValueOnce(actual);
       (bcrypt.hash as jest.Mock).mockResolvedValue('new-hash');
       repo.save.mockResolvedValue(actual);
-      repo.findOne.mockResolvedValueOnce(actual); // findOne final
+      repo.findOne.mockResolvedValueOnce(actual);
 
       await service.update(1, { nombre: 'Pedro', apellido: 'Gómez', password: 'nueva' });
 

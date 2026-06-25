@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { EstadosController } from './estados.controller';
 import { EstadosService } from './estados.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 describe('EstadosController', () => {
   let controller: EstadosController;
@@ -11,7 +12,10 @@ describe('EstadosController', () => {
     const module = await Test.createTestingModule({
       controllers: [EstadosController],
       providers: [{ provide: EstadosService, useValue: service }],
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
     controller = module.get(EstadosController);
   });
 

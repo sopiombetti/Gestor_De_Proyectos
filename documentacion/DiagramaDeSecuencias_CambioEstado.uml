@@ -1,0 +1,70 @@
+@startuml DiagramaDeSecuencia_EditarEstado
+title Diagrama de Secuencia — Edición del estado de una Tarea (PATCH /tareas/:id)
+
+actor Cliente
+participant "TareasController" as Ctrl
+participant "TareasService" as Svc
+participant "EstadosService" as EstSvc
+participant "instanciarEstado()" as Factory
+participant "nuevoEstado\n(: CambiarEstado)" as Estado
+participant "TareaRepository" as Repo
+
+Cliente -> Ctrl : PATCH /tareas/:id { idEstado }
+activate Ctrl
+Ctrl -> Svc : update(id, dto)
+activate Svc
+
+Svc -> Repo : findOneOrFail(id)
+activate Repo
+Repo --> Svc : tarea
+deactivate Repo
+
+Svc -> Svc : guardFinalizadas(tarea)
+note right of Svc
+  Si la tarea ya está FINALIZADA
+  -> ConflictException (no se edita)
+end note
+
+Svc -> Svc : cambiarEstado(dto, tarea)
+activate Svc
+
+Svc -> EstSvc : validarEstado(idEstado)
+activate EstSvc
+EstSvc --> Svc : estado (modelo destino)
+deactivate EstSvc
+
+Svc -> Factory : instanciarEstado(estado)
+activate Factory
+note right of Factory
+  Busca la clase por codigo
+  en el registro ESTADOS y la instancia
+end note
+Factory --> Svc : nuevoEstado (: CambiarEstado)
+deactivate Factory
+
+Svc -> Estado : validarCambio(dto, tarea)
+activate Estado
+alt condiciones de la transición OK
+  Estado -> Estado : tarea.estado = modeloEstado
+  note right of Estado
+    Finalizada además setea
+    tiempoFinal y fechaCierre
+  end note
+  Estado --> Svc : tarea
+else faltan datos (usuario / estimación / tiempoFinal)
+  Estado --> Svc : ConflictException
+end
+deactivate Estado
+
+deactivate Svc
+
+Svc -> Repo : save(tarea)
+activate Repo
+Repo --> Svc : tarea actualizada
+deactivate Repo
+
+Svc --> Ctrl : tarea
+deactivate Svc
+Ctrl --> Cliente : 200 OK (tarea)
+deactivate Ctrl
+@enduml
