@@ -1,161 +1,130 @@
-@startuml
-skinparam componentStyle rectangle
+@startwbs
+title Work Breakdown Structure — Gestor de Proyectos
 
-[Gestor de Proyectos] --> [Frontend]
-[Gestor de Proyectos] --> [Backend]
-[Gestor de Proyectos] --> [Database]
-[Gestor de Proyectos] --> [UX/UI Design]
-[Gestor de Proyectos] --> [QA Testing]
++ Gestor de Proyectos
 
-'FRONTEND AUTENTIFICACION'
+' ============ IZQUIERDA ============
+-- Frontend
+--- Autenticación
+---- Formulario de Registro
+---- Formulario de Ingreso
+--- Dashboard de Usuario
+---- Proyecto Asignado
+---- Lista de Tareas
+---- Tus Tareas
+---- Navegación
+----- Mi Perfil
+----- Cerrar Sesión
+----- Volver al Dashboard
+--- Gestión de Tareas
+---- Vista de Tareas
+---- Crear Tarea
+---- Editar Tarea
+---- Usuarios Asignados
+---- Prioridades
+---- Estados
 
-[Frontend] --> [Interfaz de Autenticación]
-[Interfaz de Autenticación] --> [Formulario de Registro]
-[Formulario de Registro] --> [Input Nombre]
-[Formulario de Registro] --> [Input Mail]
-[Formulario de Registro] --> [Input Contraseña]
-[Formulario de Registro] --> [Botón Registrar]
-[Formulario de Registro] --> [Validaciones Registro]
-[Formulario de Registro] --> [Conexión Backend Registro]
-[Formulario de Registro] --> [Pantalla Usuario Registrado]
+-- Base de Datos
+--- Diseño Base de Datos
+---- Modelo Usuarios
+---- Modelo Proyecto
+---- Modelo Tareas
+---- Modelo Roles
+--- Creación de Tablas
+---- Tabla Usuarios
+---- Tabla Proyectos
+---- Tabla Tareas
+---- Tabla Prioridades
+---- Tabla Estados
+--- Relaciones
+---- Usuario crea Proyecto
+---- Proyecto contiene Tareas
+---- Usuario asignado a Tarea
+---- Roles y Permisos
 
-[Interfaz de Autenticación] --> [Formulario de Ingreso]
-[Formulario de Ingreso] --> [Input Mail Login]
-[Formulario de Ingreso] --> [Input Contraseña Login]
-[Formulario de Ingreso] --> [Botón Ingresar]
-[Formulario de Ingreso] --> [Autenticación Usuario]
-[Formulario de Ingreso] --> [Conexión Backend Login]
-[Formulario de Ingreso] --> [Pantalla Bienvenida]
+-- UX/UI Design
+--- Wireframes
+---- Pantalla Login
+---- Pantalla Registro
+---- Dashboard Usuario
+---- Vista Tareas
+--- Design System
+---- Paleta de Colores
+---- Tipografía
+---- Botones
+---- Inputs
+---- Cards
+---- Modales
+--- User Flows
+---- Flujo Registro
+---- Flujo Login
+---- Flujo Crear Proyecto
+---- Flujo Crear Tarea
+---- Flujo Asignar Usuarios
 
+' ============ DERECHA ============
+++ Backend
++++ API de Autenticación
+++++ Registro Usuario
+++++ Login Usuario
+++++ Validación JWT
+++++ Hash Contraseñas
+++++ Roles y Permisos
++++ API de Tareas
+++++ Crear Tarea
+++++ Editar Tarea
+++++ Eliminar Tarea
+++++ Obtener Tareas
+++++ Asignar Usuarios
+++++ Cambiar Prioridad
+++++ Estados de Tarea
++++ API de Proyectos
+++++ Crear Proyecto
+++++ Editar Proyecto
+++++ Eliminar Proyecto
++++ API de Usuarios
+++++ Crear Usuario
+++++ Editar Usuario
+++++ Eliminar Usuario
+++++ Roles Usuario
++++ Importación de Tareas
+++++ Lectura Archivo
+++++ Validación Estructura
+++++ Creación Automática Tareas
+++++ Manejo Errores
++++ API de Reportes
+++++ Armado de Datos del Proyecto
+++++ Generación de Informe PDF
 
-'FRONTEND DASHBOARD USUARIO'
-[Frontend] --> [Dashboard de Usuario]
-[Dashboard de Usuario] --> [ Proyecto Asignado]
-[Dashboard de Usuario] --> [Lista de Tareas]
-[Dashboard de Usuario] --> [Tus Tareas]
-[Dashboard de Usuario] --> [Nav menu]
-[Nav menu] --> [Mi perfil]
-[Nav menu] --> [Volver al Dashboard de usuario]
-[Nav menu] --> [Notificaciones]
-[Nav menu] --> [Cerrar Sesión]
+++ QA Testing
++++ Tests de Autenticación
+++++ Test Login
+++++ Test Registro
+++++ Test JWT
+++++ Test Permisos
++++ Tests de Tareas
+++++ Test Crear Tarea
+++++ Test Editar Tarea
+++++ Test Eliminar Tarea
+++++ Test Prioridades
++++ Tests de Importación de Tareas
+++++ Test Lectura Archivo
+++++ Test Validación Datos
+++++ Test Creación Automática
++++ Tests de Proyectos
+++++ Test Crear Proyecto
+++++ Test Editar Proyecto
+++++ Test Eliminar Proyecto
+++++ Test Reglas de Admin
++++ Tests de Usuarios
+++++ Test Crear Usuario
+++++ Test Editar Usuario
+++++ Test Eliminar Usuario
++++ Tests del Patrón State
+++++ Test Transiciones de Estado
+++++ Test Factory de Estados
++++ Tests de Estados y Prioridades
+++++ Test Estados
+++++ Test Prioridades
 
-
-'FRONTEND TAREAS'
-[Frontend] --> [Lista de Tareas]
-[Lista de Tareas] --> [Estado]
-[Lista de Tareas] --> [input Título de Tarea]
-[Lista de Tareas] --> [seleccion Prioridad de Tarea]
-[Lista de Tareas] --> [seleccion Usuario Asignado]
-
-[Lista de Tareas] --> [Vista Tareas]
-[Vista Tareas] --> [Panel Detalle de Tarea]
-[Vista Tareas] --> [Panel Crear Tarea]
-[Vista Tareas] --> [Panel Editar Tarea]
-[Vista Tareas] --> [Panel Usuarios Asignados]
-[Vista Tareas] --> [Panel Prioridad]
-
-
-'BACKEND API-AUTENTIFICACION'
-[Backend] --> [API de Autenticación]
-[API de Autenticación] --> [Registro Usuario]
-[API de Autenticación] --> [Login Usuario]
-[API de Autenticación] --> [Validación JWT]
-[API de Autenticación] --> [Hash Contraseñas]
-[API de Autenticación] --> [Roles y Permisos]
-[API de Autenticación] --> [Recuperación Contraseña]
-
-[Backend] --> [API de Tareas]
-[API de Tareas] --> [Crear Tarea]
-[API de Tareas] --> [Editar Tarea]
-[API de Tareas] --> [Eliminar Tarea]
-[API de Tareas] --> [Obtener Tareas]
-[API de Tareas] --> [Asignar Usuarios]
-[API de Tareas] --> [Cambiar Prioridad]
-[API de Tareas] --> [Estados de Tarea]
-
-[Backend] --> [API de Proyectos]
-[API de Proyectos] --> [Crear Proyecto]
-[API de Proyectos] --> [Editar Proyecto]
-[API de Proyectos] --> [Eliminar Proyecto]
-[API de Proyectos] --> [Miembros Proyecto]
-[API de Proyectos] --> [Roles Proyecto]
-
-[Backend] --> [API de Usuarios]
-[API de Usuarios] --> [Crear Usuario]
-[API de Usuarios] --> [Editar Usuario]
-[API de Usuarios] --> [Eliminar Usuario]
-[API de Usuarios] --> [Roles Usuario]
-
-[Backend] --> [Importación de Tareas]
-[Importación de Tareas] --> [Lectura Archivo]
-[Importación de Tareas] --> [Validación Estructura]
-[Importación de Tareas] --> [Creación Automática Tareas]
-[Importación de Tareas] --> [Manejo Errores]
-
-
-'BASE DE DATOS'
-[Database] --> [Diseño Base Datos]
-[Diseño Base Datos] --> [Modelo Usuarios]
-[Diseño Base Datos] --> [Modelo Proyecto]
-[Diseño Base Datos] --> [Modelo Tareas]
-[Diseño Base Datos] --> [Modelo Roles]
-
-[Database] --> [Creación Tablas]
-[Creación Tablas] --> [Tabla Usuarios]
-[Creación Tablas] --> [Tabla Proyectos]
-[Creación Tablas] --> [Tabla Tareas]
-[Creación Tablas] --> [Tabla Prioridades]
-[Creación Tablas] --> [Tabla Estados]
-
-[Database] --> [Relaciones ER]
-[Relaciones ER] --> [Usuario crea Proyecto]
-[Relaciones ER] --> [Proyecto contiene Tareas]
-[Relaciones ER] --> [Usuario asignado a Tarea]
-[Relaciones ER] --> [Roles y Permisos]
-
-
-'UX/UI DESIGN'
-[UX/UI Design] --> [Wireframes]
-[Wireframes] --> [Pantalla Login]
-[Wireframes] --> [Pantalla Registro]
-[Wireframes] --> [Dashboard Usuario]
-[Wireframes] --> [Vista Tareas]
-[Wireframes] --> [Kanban Board]
-
-[UX/UI Design] --> [Design System]
-[Design System] --> [Paleta de Colores]
-[Design System] --> [Tipografía]
-[Design System] --> [Botones]
-[Design System] --> [Inputs]
-[Design System] --> [Cards]
-[Design System] --> [Modales]
-
-[UX/UI Design] --> [User Flows]
-[User Flows] --> [Flujo Registro]
-[User Flows] --> [Flujo Login]
-[User Flows] --> [Flujo Crear Proyecto]
-[User Flows] --> [Flujo Crear Tarea]
-[User Flows] --> [Flujo Asignar Usuarios]
-
-
-'QA TESTING'
-[QA Testing] --> [Tests de Autenticación]
-[Tests de Autenticación] --> [Test Login]
-[Tests de Autenticación] --> [Test Registro]
-[Tests de Autenticación] --> [Test JWT]
-[Tests de Autenticación] --> [Test Permisos]
-
-[QA Testing] --> [Tests de Tareas]
-[Tests de Tareas] --> [Test Crear Tarea]
-[Tests de Tareas] --> [Test Editar Tarea]
-[Tests de Tareas] --> [Test Eliminar Tarea]
-[Tests de Tareas] --> [Test Prioridades]
-[Tests de Tareas] --> [Test Comentarios]
-
-[QA Testing] --> [Tests de Importación de Tareas]
-[Tests de Importación de Tareas] --> [Test Lectura Archivo]
-[Tests de Importación de Tareas] --> [Test Validación Datos]
-[Tests de Importación de Tareas] --> [Test Creación Automática]
-
-
-@enduml
+@endwbs
