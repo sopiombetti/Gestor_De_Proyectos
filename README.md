@@ -164,6 +164,7 @@ En la carpeta `documentacion/` se encuentran:
 - `DiagramaDeSecuencias_CambioEstado.uml` — Diagrama de secuencia del cambio de estado de una tarea (patrón State).
 - `WorkBreakdownStructure.uml` — Estructura de desglose del trabajo (WBS).
 - `HISTORIAS-DE-USUARIO.xlsx` — Historias de usuario.
+- `diagramaDeComponentes.uml` — Diagrama de componentes del sistema.
 
 > Los diagramas `.uml` se visualizan en https://www.plantuml.com/plantuml o con la extensión *PlantUML* de VS Code.
 
