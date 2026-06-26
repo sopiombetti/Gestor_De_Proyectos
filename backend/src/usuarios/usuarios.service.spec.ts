@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import { In } from 'typeorm';
 import { UsuariosService } from './usuarios.service';
 import { Usuario } from './entities/usuario.entity';
+import { ConfigService } from '@nestjs/config';
 
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
@@ -33,14 +34,18 @@ describe('UsuariosService', () => {
   beforeEach(async () => {
     repo = { find: jest.fn(), findOne: jest.fn(), create: jest.fn(), save: jest.fn(), delete: jest.fn() };
     const module = await Test.createTestingModule({
-      providers: [UsuariosService, { provide: getRepositoryToken(Usuario), useValue: repo }],
+      providers: [
+        UsuariosService,
+        { provide: getRepositoryToken(Usuario), useValue: repo },
+        { provide: ConfigService, useValue: { get: jest.fn().mockReturnValue('test') } },
+      ],
     }).compile();
     service = module.get(UsuariosService);
     jest.clearAllMocks();
   });
 
   describe('create', () => {
-    const dto = { nombre: 'Juan', apellido: 'Pérez', email: 'juan@test.com', password: '1234' };
+    const dto = { nombre: 'Juan', apellido: 'Pérez', email: 'juan@test.com', password: '1234', rol_admin: true};
 
     it('crea el usuario hasheando la contraseña y lo devuelve', async () => {
       const guardado = usuarioFixture({ id: 10 });
@@ -105,10 +110,10 @@ describe('UsuariosService', () => {
   describe('update', () => {
     it('actualiza nombre y re-hashea la password', async () => {
       const actual = usuarioFixture();
-      repo.findOne.mockResolvedValueOnce(actual); // findOneOrFail
+      repo.findOne.mockResolvedValueOnce(actual);
       (bcrypt.hash as jest.Mock).mockResolvedValue('new-hash');
       repo.save.mockResolvedValue(actual);
-      repo.findOne.mockResolvedValueOnce(actual); // findOne final
+      repo.findOne.mockResolvedValueOnce(actual);
 
       await service.update(1, { nombre: 'Pedro', apellido: 'Gómez', password: 'nueva' });
 

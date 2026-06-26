@@ -1,6 +1,7 @@
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import jwt from 'jsonwebtoken';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { ConfigService } from '@nestjs/config';
 
 jest.mock('jsonwebtoken');
 
@@ -18,7 +19,8 @@ describe('JwtAuthGuard', () => {
   let guard: JwtAuthGuard;
 
   beforeEach(() => {
-    guard = new JwtAuthGuard();
+    const config = { get: jest.fn().mockReturnValue('test-secret') } as unknown as ConfigService;
+    guard = new JwtAuthGuard(config);
     jest.clearAllMocks();
   });
 

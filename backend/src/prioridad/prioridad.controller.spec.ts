@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { PrioridadController } from './prioridad.controller';
 import { PrioridadService } from './prioridad.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 describe('PrioridadController', () => {
   let controller: PrioridadController;
@@ -11,7 +12,10 @@ describe('PrioridadController', () => {
     const module = await Test.createTestingModule({
       controllers: [PrioridadController],
       providers: [{ provide: PrioridadService, useValue: service }],
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
     controller = module.get(PrioridadController);
   });
 

@@ -4,6 +4,7 @@ import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { LoginDto } from './dto/login-usuario.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 describe('UsuariosController', () => {
   let controller: UsuariosController;
@@ -21,12 +22,15 @@ describe('UsuariosController', () => {
     const module = await Test.createTestingModule({
       controllers: [UsuariosController],
       providers: [{ provide: UsuariosService, useValue: service }],
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
     controller = module.get(UsuariosController);
   });
 
   it('create delega en el service', () => {
-    const dto: CreateUsuarioDto = { nombre: 'A', apellido: 'B', email: 'a@b.com', password: '1234' };
+    const dto: CreateUsuarioDto = { nombre: 'A', apellido: 'B', email: 'a@b.com', password: '1234', rol_admin: false };
     controller.create(dto);
     expect(service.create).toHaveBeenCalledWith(dto);
   });

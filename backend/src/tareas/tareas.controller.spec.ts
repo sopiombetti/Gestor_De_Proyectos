@@ -5,6 +5,7 @@ import { CreateTareaDto } from './dto/create-tarea.dto';
 import { UpdateTareaDto } from './dto/update-tarea.dto';
 import { FindTareasQueryDto } from './dto/find-tareas-query.dto';
 import { CreateTareasBulkFileDTO } from './dto/create-tareas-bulkFile.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 describe('TareasController', () => {
   let controller: TareasController;
@@ -22,7 +23,10 @@ describe('TareasController', () => {
     const module = await Test.createTestingModule({
       controllers: [TareasController],
       providers: [{ provide: TareasService, useValue: service }],
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
     controller = module.get(TareasController);
   });
 

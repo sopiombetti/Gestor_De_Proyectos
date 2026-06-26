@@ -1,12 +1,44 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import CardProyecto from '@/components/CardProyecto';
-import { ApiGetReporte } from '@/utils/api';
+import CardProyecto from '@/components/admin/CardProyecto';
+import { ApiGetTareasProyecto } from '@/utils/api';
 import { useUserContext } from '@/utils/userContext';
 
 jest.mock('@/utils/api');
 jest.mock('@/utils/userContext');
 
-const mockApiGetReporte = ApiGetReporte as jest.MockedFunction<typeof ApiGetReporte>;
+jest.mock('@/components/admin/ReporteButton', () => ({
+  __esModule: true,
+  default: ({ proyectoId }: any) => (
+    <button>
+      Generar informe {proyectoId}
+    </button>
+  ),
+}));
+
+jest.mock('@/components/admin/ModalEditTarea', () => ({
+  __esModule: true,
+  default: ({ tarea, onClose }: any) => (
+    <div data-testid="modal-editar">
+      <span>{tarea.titulo}</span>
+      <button onClick={onClose}>Cerrar modal</button>
+    </div>
+  ),
+}));
+
+jest.mock('@/components/admin/ModalEditProyecto', () => ({
+  __esModule: true,
+  default: ({ proyecto, onClose, onGuardado }: any) => (
+    <div data-testid="modal-editar-proyecto">
+      <span>{proyecto.titulo}</span>
+      <button onClick={onClose}>Cerrar modal proyecto</button>
+      <button onClick={() => onGuardado({ ...proyecto, titulo: 'Proyecto Editado' })}>
+        Guardar modal proyecto
+      </button>
+    </div>
+  ),
+}));
+
+const mockApiGetTareasProyecto = ApiGetTareasProyecto as jest.MockedFunction<typeof ApiGetTareasProyecto>;
 const mockUseUserContext = useUserContext as jest.MockedFunction<typeof useUserContext>;
 
 const proyectoMock = {
@@ -23,101 +55,98 @@ const proyectoMock = {
   },
 };
 
+const tareasMock = [
+  { id: 1, titulo: 'Tarea 1', usuario: { nombre: 'Sofia', apellido: 'Piombetti' } },
+  { id: 2, titulo: 'Tarea 2', usuario: null },
+];
+
 describe('CardProyecto', () => {
 
-beforeEach(() => {
-  mockUseUserContext.mockReturnValue({
-    token: 'fake-token',
-    user: null,
-    login: jest.fn(),
-    logout: jest.fn(),
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    mockUseUserContext.mockReturnValue({
+      token: 'fake-token',
+      user: null,
+      login: jest.fn(),
+      logout: jest.fn(),
+    });
   });
-  jest.clearAllMocks();
-});
 
-
-  it('renderiza el título del proyecto', () => {
-    render(<CardProyecto proyecto={proyectoMock} />);
+  it('renderiza el proyecto', () => {
+    render(<CardProyecto proyecto={proyectoMock} setError={jest.fn()} setSuccess={jest.fn()} />);
     expect(screen.getByText('Proyecto Test')).toBeInTheDocument();
-  });
-
-  it('renderiza la descripción del proyecto', () => {
-    render(<CardProyecto proyecto={proyectoMock} />);
     expect(screen.getByText('Proyecto de prueba')).toBeInTheDocument();
   });
 
-  it('renderiza la fecha recortada a 10 caracteres', () => {
-    render(<CardProyecto proyecto={proyectoMock} />);
+  it('renderiza la fecha', () => {
+    render(<CardProyecto proyecto={proyectoMock} setError={jest.fn()} setSuccess={jest.fn()} />);
     expect(screen.getByText('Creado el: 2024-03-15')).toBeInTheDocument();
   });
 
-  it('renderiza el botón de generar informe', () => {
-    render(<CardProyecto proyecto={proyectoMock} />);
-    expect(screen.getByRole('button', { name: /generar informe/i })).toBeInTheDocument();
-  });
+  it('llama API al mostrar tareas', async () => {
+    mockApiGetTareasProyecto.mockResolvedValue({
+      ok: true,
+      json: async () => tareasMock,
+    } as any);
 
+    render(<CardProyecto proyecto={proyectoMock} setError={jest.fn()} setSuccess={jest.fn()} />);
 
-  it('llama a ApiGetReporte con el id del proyecto y el token al hacer click', async () => {
-    mockApiGetReporte.mockResolvedValue({ ok: true, blob: async () => new Blob() } as Response);
-
-    render(<CardProyecto proyecto={proyectoMock} />);
-    fireEvent.click(screen.getByRole('button', { name: /generar informe/i }));
+    fireEvent.click(screen.getByText(/mostrar tareas/i));
 
     await waitFor(() => {
-      expect(mockApiGetReporte).toHaveBeenCalledWith(1, 'fake-token');
+      expect(mockApiGetTareasProyecto).toHaveBeenCalledWith(1, 'fake-token');
     });
   });
 
-  it('crea y clickea un link de descarga cuando la respuesta es ok', async () => {
-    const blob = new Blob(['pdf content'], { type: 'application/pdf' });
-    mockApiGetReporte.mockResolvedValue({ ok: true, blob: async () => blob } as Response);
+  it('renderiza tareas', async () => {
+    mockApiGetTareasProyecto.mockResolvedValue({
+      ok: true,
+      json: async () => tareasMock,
+    } as any);
 
-    const mockObjectUrl = 'blob:http://localhost/fake-url';
-    global.URL.createObjectURL = jest.fn().mockReturnValue(mockObjectUrl);
-    global.URL.revokeObjectURL = jest.fn();
+    render(<CardProyecto proyecto={proyectoMock} setError={jest.fn()} setSuccess={jest.fn()} />);
 
-    const mockClick = jest.fn();
-    const mockAnchor = { href: '', download: '', click: mockClick };
-    jest.spyOn(document, 'createElement').mockReturnValue(mockAnchor as unknown as HTMLElement);
-
-    render(<CardProyecto proyecto={proyectoMock} />);
-    fireEvent.click(screen.getByRole('button', { name: /generar informe/i }));
+    fireEvent.click(screen.getByText(/mostrar tareas/i));
 
     await waitFor(() => {
-      expect(mockAnchor.href).toBe(mockObjectUrl);
-      expect(mockAnchor.download).toBe('informe.pdf');
-      expect(mockClick).toHaveBeenCalled();
-      expect(URL.revokeObjectURL).toHaveBeenCalledWith(mockObjectUrl);
+      expect(screen.getByText('Tarea 1')).toBeInTheDocument();
+      expect(screen.getByText('Tarea 2')).toBeInTheDocument();
     });
   });
 
+  it('muestra usuario o sin asignar', async () => {
+    mockApiGetTareasProyecto.mockResolvedValue({
+      ok: true,
+      json: async () => tareasMock,
+    } as any);
 
-  it('loguea el error cuando la respuesta no es ok', async () => {
-    mockApiGetReporte.mockResolvedValue({ ok: false } as Response);
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    render(<CardProyecto proyecto={proyectoMock} setError={jest.fn()} setSuccess={jest.fn()} />);
 
-    render(<CardProyecto proyecto={proyectoMock} />);
-    fireEvent.click(screen.getByRole('button', { name: /generar informe/i }));
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
-    });
-
-    consoleSpy.mockRestore();
-  });
-
-  it('loguea el error cuando ApiGetReporte lanza una excepción', async () => {
-    mockApiGetReporte.mockRejectedValue(new Error('Network error'));
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    render(<CardProyecto proyecto={proyectoMock} />);
-    fireEvent.click(screen.getByRole('button', { name: /generar informe/i }));
+    fireEvent.click(screen.getByText(/mostrar tareas/i));
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
+      expect(screen.getByText('Sofia Piombetti')).toBeInTheDocument();
+      expect(screen.getByText('Sin asignar')).toBeInTheDocument();
     });
-
-    consoleSpy.mockRestore();
   });
 
+  it('abre modal proyecto', () => {
+    render(<CardProyecto proyecto={proyectoMock} setError={jest.fn()} setSuccess={jest.fn()} />);
+
+    fireEvent.click(screen.getByAltText(/editar proyecto/i));
+
+    expect(screen.getByTestId('modal-editar-proyecto')).toBeInTheDocument();
+  });
+
+  it('actualiza proyecto al guardar modal', async () => {
+    render(<CardProyecto proyecto={proyectoMock} setError={jest.fn()} setSuccess={jest.fn()} />);
+
+    fireEvent.click(screen.getByAltText(/editar proyecto/i));
+    fireEvent.click(screen.getByText(/guardar modal proyecto/i));
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'Proyecto Editado' })).toBeInTheDocument();
+    });
+  });
 });

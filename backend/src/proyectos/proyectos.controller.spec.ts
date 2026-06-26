@@ -4,6 +4,7 @@ import { ProyectosService } from './proyectos.service';
 import { CreateProyectoDto } from './dto/create-proyecto.dto';
 import { UpdateProyectoDto } from './dto/update-proyecto.dto';
 import { FindProyectoQueryDto } from './dto/find-proyecto.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 describe('ProyectosController', () => {
   let controller: ProyectosController;
@@ -20,7 +21,10 @@ describe('ProyectosController', () => {
     const module = await Test.createTestingModule({
       controllers: [ProyectosController],
       providers: [{ provide: ProyectosService, useValue: service }],
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
     controller = module.get(ProyectosController);
   });
 

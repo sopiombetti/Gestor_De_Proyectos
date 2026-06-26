@@ -21,7 +21,7 @@ export class Usuario {
     password!: string;
 
     @Column()
-    rol_admin: boolean = false;
+    rol_admin!: boolean;
 
     // @OneToMany(() => Tarea, tarea => tarea.usuario)
     // tareas: Tarea[];

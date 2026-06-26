@@ -6,13 +6,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import jwt from "jsonwebtoken";
-import { JWT_SECRET, JWT_EXPIRES_IN } from 'src/auth/auth.constants';
+import type { StringValue } from 'ms';
+import { ConfigService } from '@nestjs/config';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 
 @Injectable()
 export class UsuariosService {
   constructor(@InjectRepository(Usuario)
-  private readonly usuarioRepo: Repository<Usuario>) { }
+  private readonly usuarioRepo: Repository<Usuario>, private readonly config: ConfigService,) { }
 
   async create(createUsuarioDto: CreateUsuarioDto) {
     const existente = await this.usuarioRepo.findOne({ where: { email: createUsuarioDto.email } });
@@ -28,6 +29,7 @@ export class UsuariosService {
       apellido: createUsuarioDto.apellido,
       email: createUsuarioDto.email,
       password: hashedPassword,
+      rol_admin: createUsuarioDto.rol_admin
     });
     const saved = await this.usuarioRepo.save(nuevoUsuario);
     return this.findOne(saved.id);
@@ -43,9 +45,9 @@ export class UsuariosService {
   }
 
   async findByEmails(emails: string[]): Promise<Usuario[]> {
-  if (emails.length === 0) return [];
-  return this.usuarioRepo.find({ where: { email: In(emails) } });
-}
+    if (emails.length === 0) return [];
+    return this.usuarioRepo.find({ where: { email: In(emails) } });
+  }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     const usuario = await this.findOneOrFail(id);
@@ -84,17 +86,17 @@ export class UsuariosService {
       where: { email },
     });
 
-    function generarToken(usuario: any) {
+    const generarToken = (usuario: any) => {
       return jwt.sign(
         {
           id: usuario.id,
           email: usuario.email,
           rol_admin: usuario.rol_admin
         },
-        JWT_SECRET,
-        {
-          expiresIn: JWT_EXPIRES_IN,
-        }
+        this.config.get<string>('JWT_SECRET')!,
+        { 
+          expiresIn: this.config.get<string>('JWT_EXPIRES_IN') as SignOptions['expiresIn'] 
+        },
       );
     }
 

@@ -110,7 +110,7 @@ describe('TareasService', () => {
       await expect(service.findOne(1)).resolves.toBe(tarea);
       expect(tareaRepo.findOne).toHaveBeenCalledWith({
         where: { id: 1 },
-        relations: ['proyecto', 'estado', 'prioridad', 'usuario'],
+        relations: ['estado', 'usuario', 'proyecto', 'prioridad'],
       });
     });
 

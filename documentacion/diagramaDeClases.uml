@@ -1,0 +1,207 @@
+@startuml DiagramaDeClases_Sistema
+title Diagrama de Clases — Sistema (Gestor de Proyectos)
+
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam packageStyle rectangle
+
+' ===================== DOMINIO (ENTIDADES) =====================
+package "Dominio (Entidades)" {
+  class Usuario {
+    +id: number
+    +nombre: string
+    +apellido: string
+    +email: string
+    +password: string
+    +rol_admin: boolean
+  }
+  class Proyecto {
+    +id: number
+    +titulo: string
+    +descripcion: string
+    +fechaCreacion: Date
+  }
+  class Tarea {
+    +id: number
+    +titulo: string
+    +descripcion: string
+    +estimacion: number
+    +tiempoFinal: number
+    +fechaAsignacion: Date
+    +fechaCierre: Date
+  }
+  class Estado {
+    +id: number
+    +nombre: string
+    +codigo: string
+  }
+  class Prioridad {
+    +id: number
+    +nombre: string
+  }
+
+  Proyecto "1" *-- "*" Tarea
+  Proyecto "*" --> "1" Usuario : lider
+  Tarea "*" --> "1" Estado
+  Tarea "*" --> "1" Prioridad
+  Tarea "*" --> "0..1" Usuario : asignado
+}
+
+' ===================== SERVICIOS =====================
+package "Servicios" {
+  class UsuariosService {
+    +create(dto)
+    +findAll()
+    +findOne(id)
+    +findByEmails(emails)
+    +update(id, dto)
+    +remove(id)
+    +login(dto)
+    -findOneOrFail(id)
+  }
+  class ProyectosService {
+    +create(dto)
+    +findAll(filtros)
+    +findOne(id)
+    +update(id, dto)
+    +remove(id, force)
+    +getReportData(id)
+    -findOneOrFail(id)
+    -validarAdmin(lider)
+  }
+  class TareasService {
+    +create(dto)
+    +createBulk(dto)
+    +findAll(filtros)
+    +findOne(id)
+    +update(id, dto)
+    +remove(id)
+    -crearTarea(dto)
+    -validarFilas(dto)
+    -insertarTareas(idProyecto, resueltas)
+    -aplicarEstadoDefault(tarea, dto)
+    -cambiarEstado(dto, tarea)
+    -cambiarUsuario(dto, tarea)
+    -cambiarPrioridad(dto, tarea)
+    -cambiarTitulo(dto, tarea)
+    -cambiarDescripcion(dto, tarea)
+    -cambiarEstimacion(dto, tarea)
+    -guardFinalizadas(tarea)
+    -guardTiempoFinal(dto, tarea)
+    -validarProyecto(id)
+    -validarPrioridad(id)
+    -validarUsuario(id)
+    -validarEstado(id)
+    -whereBuilder(filters)
+    -normalizar(s)
+    -findOneOrFail(id)
+  }
+  class EstadosService {
+    +findAll()
+    +findOne(id)
+    +findByCodigo(codigo)
+    -findOneOrFail(id)
+  }
+  class PrioridadService {
+    +findAll()
+    +findOne(id)
+    +findOneByName(nombre)
+    -findOneOrFail(id)
+  }
+  class SeederService {
+    +seedEstados()
+    +seedPrioridades()
+    +onApplicationBootstrap()
+    -seed(repo, values)
+  }
+  class PdfService {
+    +generateProjectReport(data)
+    -buildDocDefinition(project)
+    -buildCover(project)
+    -buildSummary(tasks)
+    -buildStatusSections(tasksByStatus)
+    -buildStatusSection(status, tasks)
+    -getColumnWidths(status)
+    -getTableHeader(status)
+    -buildTaskRow(task, status, index)
+    -buildStyles()
+    -groupByStatus(tasks)
+    -formatDate(date)
+  }
+}
+
+' ===================== CONTROLLERS (API) =====================
+package "Controllers (API)" {
+  class UsuariosController
+  class ProyectosController
+  class TareasController
+  class EstadosController
+  class PrioridadController
+  class PdfController
+}
+
+' ===================== AUTH =====================
+package "Auth" {
+  interface CanActivate {
+    +canActivate(ctx): boolean
+  }
+  class JwtAuthGuard
+  class AdminGuard
+
+  CanActivate <|.. JwtAuthGuard
+  CanActivate <|.. AdminGuard
+}
+
+' ===================== PATRÓN STATE =====================
+package "Estados (patrón State)" {
+  interface CambiarEstado {
+    +validarCambio(dto, tarea): Tarea
+  }
+  class SinAsignar
+  class Asignada
+  class EnProgreso
+  class Finalizada
+  class instanciarEstado <<factory>>
+  class RegistroEstados <<registry>>
+
+  CambiarEstado <|.. SinAsignar
+  CambiarEstado <|.. Asignada
+  CambiarEstado <|.. EnProgreso
+  CambiarEstado <|.. Finalizada
+
+  SinAsignar --> "1" Estado : modeloEstado
+  Asignada --> "1" Estado : modeloEstado
+  EnProgreso --> "1" Estado : modeloEstado
+  Finalizada --> "1" Estado : modeloEstado
+
+  instanciarEstado ..> RegistroEstados
+  instanciarEstado ..> CambiarEstado
+}
+
+' ===================== RELACIONES ENTRE CAPAS =====================
+' Asociación (colaboradores inyectados como campo)
+UsuariosController --> UsuariosService
+ProyectosController --> ProyectosService
+TareasController --> TareasService
+EstadosController --> EstadosService
+PrioridadController --> PrioridadService
+PdfController --> PdfService
+PdfController --> ProyectosService
+
+TareasService --> UsuariosService
+TareasService --> EstadosService
+TareasService --> PrioridadService
+TareasService --> ProyectosService
+ProyectosService --> UsuariosService
+
+' Dependencia (uso transitorio: factory y entidades gestionadas)
+TareasService ..> instanciarEstado
+UsuariosService ..> Usuario
+ProyectosService ..> Proyecto
+TareasService ..> Tarea
+EstadosService ..> Estado
+PrioridadService ..> Prioridad
+SeederService ..> Estado
+SeederService ..> Prioridad
+
+@enduml

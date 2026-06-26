@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, Matches, MinLength } from "class-validator";
+import { IsBoolean, IsEmail, IsNotEmpty, IsString, Matches, MinLength } from "class-validator";
 
 export class CreateUsuarioDto {
 
@@ -19,4 +19,8 @@ export class CreateUsuarioDto {
     @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
     @Matches(/\d/, { message: 'La contraseña debe incluir al menos un número.' })
     password!: string;
+
+    @IsBoolean()
+    @IsNotEmpty({ message: '' })
+    rol_admin!: boolean;
 }

@@ -35,7 +35,7 @@
 | **Nombre**    | Registro de Usuarios |
 | **Tipo**      | Funcional       |
 | **Prioridad** | `Media`         |
-| **Estado**    | `En desarrollo` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -76,7 +76,7 @@ El sistema debe permitir a los usuarios crearse un perfil con un email y contras
 | **Nombre**    | Autenticación de Usuarios |
 | **Tipo**      | Funcional       |
 | **Prioridad** | `Media`         |
-| **Estado**    | `En desarrollo` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -119,7 +119,7 @@ El sistema debe permitir a los usuarios iniciar sesión con email y contraseña.
 | **Nombre**    | Mostrar Tareas  |
 | **Tipo**      | Funcional       |
 | **Prioridad** | `Alta`          |
-| **Estado**    | `En desarrollo` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -159,7 +159,7 @@ El sistema debe permitir a los usuarios ver en la página de inicio un listado d
 | **Nombre**       | Filtrado de Tareas por Prioridad |
 | **Tipo**         | Funcional |
 | **Prioridad**    | `Media` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -198,7 +198,7 @@ El sistema debe permitir a los usuarios filtrar las tareas por prioridad.
 | **Nombre**    | Estimar Tareas  |
 | **Tipo**      | Funcional       |
 | **Prioridad** | `Alta`          |
-| **Estado**    | `En desarrollo` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -240,7 +240,7 @@ El sistema debe permitir a los usuarios realizar una estimación de tiempo de ca
 | **Nombre**    | Cambiar de Estado |
 | **Tipo**      | Funcional         |
 | **Prioridad** | `Alta`            |
-| **Estado**    | `En desarrollo`   |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -282,7 +282,7 @@ El sistema debe permitir a los usuarios cambiar el estado de una tarea entre 'Si
 | **Nombre**       | Gestión de Roles |
 | **Tipo**         | Funcional |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -322,7 +322,7 @@ El sistema debe permitir diferenciar roles (administrador, colaborador).
 | **Nombre**       | Acceso al Panel de Administración |
 | **Tipo**         | Funcional |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -362,7 +362,7 @@ El sistema debe permitir a los usuarios administradores acceder al panel adminis
 | **Nombre**       | Creación de Proyectos |
 | **Tipo**         | Funcional |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -402,7 +402,7 @@ El sistema debe permitir a los usuarios administradores crear un nuevo proyecto.
 | **Nombre**       | Edición de Proyectos |
 | **Tipo**         | Funcional |
 | **Prioridad**    | `Media` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -442,7 +442,7 @@ El sistema debe permitir editar la información de un proyecto.
 | **Nombre**       | Importación de Tareas desde CSV |
 | **Tipo**         | Funcional |
 | **Prioridad**    | `Media` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -482,7 +482,7 @@ El sistema debe permitir a los usuarios administradores subir un archivo .csv y 
 | **Nombre**       | Asignación de Tareas |
 | **Tipo**         | Funcional |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -523,7 +523,7 @@ El sistema debe permitir a los usuarios administradores asignar tareas del proye
 | **Nombre**       | Registro de Fechas |
 | **Tipo**         | Funcional |
 | **Prioridad**    | `Media` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -565,7 +565,7 @@ El sistema debe permitir registrar la fecha de creación de un proyecto y la fec
 | **Nombre**       | Edición de Tareas |
 | **Tipo**         | Funcional |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -607,7 +607,7 @@ El sistema debe permitir editar tareas.
 | **Nombre**       | Generación de Informe de Progreso |
 | **Tipo**         | Funcional |
 | **Prioridad**    | `Media` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -654,7 +654,7 @@ El sistema debe permitir generar un informe de progreso del proyecto.
 | **Tipo**         | No Funcional |
 | **Categoría**    | `Rendimiento` |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -701,7 +701,7 @@ El sistema debe responder a las solicitudes en menos de 2 segundos bajo condicio
 | **Tipo**         | No Funcional |
 | **Categoría**    | `Seguridad` |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -748,7 +748,7 @@ El sistema debe almacenar las contraseñas de los usuarios de forma encriptada.
 | **Tipo**         | No Funcional |
 | **Categoría**    | `Usabilidad` |
 | **Prioridad**    | `Media` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -795,7 +795,7 @@ El usuario debe poder registrarse en menos de 5 clics.
 | **Tipo**         | No Funcional |
 | **Categoría**    | `Escalabilidad` |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -842,7 +842,7 @@ La arquitectura debe permitir agregar nuevas funcionalidades sin afectar las exi
 | **Tipo**         | No Funcional |
 | **Categoría**    | `Rendimiento` |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `No verificado` |
 
 #### Descripción
 
@@ -888,7 +888,7 @@ La aplicación debe soportar hasta 50 usuarios concurrentes sin degradar la expe
 | **Tipo**         | No Funcional |
 | **Categoría**    | `Portabilidad` |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado parcialmente` |
 
 #### Descripción
 
@@ -936,7 +936,7 @@ La aplicación debe ser responsive, siendo compatible con computadoras, tablets 
 | **Tipo**         | No Funcional |
 | **Categoría**    | `Mantenibilidad` |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -984,7 +984,7 @@ El sistema debe tener tests automatizados.
 | **Tipo**         | No Funcional |
 | **Categoría**    | `Otro` |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -1031,7 +1031,7 @@ No deben existir tareas sin proyecto asociado.
 | **Tipo**         | No Funcional |
 | **Categoría**    | `Otro` |
 | **Prioridad**    | `Alta` |
-| **Estado**       | `Pendiente` |
+| **Estado**    | `Implementado` |
 
 #### Descripción
 
@@ -1076,29 +1076,29 @@ No deben existir tareas asignadas a usuarios inexistentes.
 
 | ID Requerimiento | Nombre                                   | Tipo          | Depende de                | Relacionado con                | Prioridad | Estado        |
 |------------------|-------------------------------------------|---------------|---------------------------|--------------------------------|-----------|---------------|
-| RF-001           | Registro de Usuarios                      | Funcional     | RNF-002                   | RF-002, RNF-002               | Alta      | Pendiente     |
-| RF-002           | Inicio de Sesión                          | Funcional     | RF-001, RNF-002           | RF-001                        | Alta      | Pendiente     |
-| RF-003           | Visualización de Tareas Asignadas         | Funcional     | RF-002                    | RF-004                        | Alta      | Pendiente     |
-| RF-004           | Filtrado de Tareas por Prioridad          | Funcional     | RF-003                    | RF-003                        | Media     | Pendiente     |
-| RF-005           | Estimación de Tiempo de Tareas            | Funcional     | RF-003                    | RF-014                        | Media     | Pendiente     |
-| RF-006           | Cambio de Estado de Tareas                | Funcional     | RF-003                    | RF-015                        | Alta      | Pendiente     |
-| RF-007           | Gestión de Roles                          | Funcional     | RF-001                    | RF-008                        | Alta      | Pendiente     |
-| RF-008           | Acceso al Panel de Administración         | Funcional     | RF-007                    | RF-009                        | Alta      | Pendiente     |
-| RF-009           | Creación de Proyectos                     | Funcional     | RF-008                    | RF-010                        | Alta      | Pendiente     |
-| RF-010           | Edición de Proyectos                      | Funcional     | RF-009                    | RF-009                        | Media     | Pendiente     |
-| RF-011           | Importación de Tareas desde CSV           | Funcional     | RF-009                    | RF-012                        | Media     | Pendiente     |
-| RF-012           | Asignación de Tareas                      | Funcional     | RF-007, RF-011            | RF-003                        | Alta      | Pendiente     |
-| RF-013           | Registro de Fechas                        | Funcional     | RF-009, RF-012            | RF-015                        | Media     | Pendiente     |
-| RF-014           | Edición de Tareas                         | Funcional     | RF-003                    | RF-005, RF-006               | Alta      | Pendiente     |
-| RF-015           | Generación de Informe de Progreso         | Funcional     | RF-006, RF-013            | RF-006, RF-013               | Media     | Pendiente     |
-| RNF-001          | Tiempo de Respuesta del Sistema              | No Funcional  | —           | RNF-005          | Alta      | Pendiente     |
-| RNF-002          | Seguridad de Contraseñas                     | No Funcional  | —           | RNF-007          | Alta      | Pendiente     |
-| RNF-003          | Facilidad de Registro de Usuarios            | No Funcional  | —           | RNF-006          | Media     | Pendiente     |
-| RNF-004          | Escalabilidad de la Arquitectura             | No Funcional  | RNF-007    | RNF-007          | Alta      | Pendiente     |
-| RNF-005          | Soporte de Usuarios Concurrentes             | No Funcional  | RNF-001    | RNF-001          | Alta      | Pendiente     |
-| RNF-006          | Compatibilidad Responsive                    | No Funcional  | —           | RNF-003          | Alta      | Pendiente     |
-| RNF-007          | Tests Automatizados                          | No Funcional  | —           | RNF-002, RNF-004 | Alta      | Pendiente     |
-| RNF-008          | Integridad de Tareas Asociadas a Proyectos   | No Funcional  | —           | RNF-009          | Alta      | Pendiente     |
-| RNF-009          | Integridad de Asignación de Usuarios         | No Funcional  | —           | RNF-008          | Alta      | Pendiente     |
+| RF-001           | Registro de Usuarios                      | Funcional     | RNF-002                   | RF-002, RNF-002               | Alta      | Implementado |
+| RF-002           | Inicio de Sesión                          | Funcional     | RF-001, RNF-002           | RF-001                        | Alta      | Implementado |
+| RF-003           | Visualización de Tareas Asignadas         | Funcional     | RF-002                    | RF-004                        | Alta      | Implementado |
+| RF-004           | Filtrado de Tareas por Prioridad          | Funcional     | RF-003                    | RF-003                        | Media     | Implementado |
+| RF-005           | Estimación de Tiempo de Tareas            | Funcional     | RF-003                    | RF-014                        | Media     | Implementado |
+| RF-006           | Cambio de Estado de Tareas                | Funcional     | RF-003                    | RF-015                        | Alta      | Implementado |
+| RF-007           | Gestión de Roles                          | Funcional     | RF-001                    | RF-008                        | Alta      | Implementado |
+| RF-008           | Acceso al Panel de Administración         | Funcional     | RF-007                    | RF-009                        | Alta      | Implementado |
+| RF-009           | Creación de Proyectos                     | Funcional     | RF-008                    | RF-010                        | Alta      | Implementado |
+| RF-010           | Edición de Proyectos                      | Funcional     | RF-009                    | RF-009                        | Media     | Implementado |
+| RF-011           | Importación de Tareas desde CSV           | Funcional     | RF-009                    | RF-012                        | Media     | Implementado |
+| RF-012           | Asignación de Tareas                      | Funcional     | RF-007, RF-011            | RF-003                        | Alta      | Implementado |
+| RF-013           | Registro de Fechas                        | Funcional     | RF-009, RF-012            | RF-015                        | Media     | Implementado |
+| RF-014           | Edición de Tareas                         | Funcional     | RF-003                    | RF-005, RF-006               | Alta      | Implementado |
+| RF-015           | Generación de Informe de Progreso         | Funcional     | RF-006, RF-013            | RF-006, RF-013               | Media     | Implementado |
+| RNF-001          | Tiempo de Respuesta del Sistema              | No Funcional  | —           | RNF-005          | Alta      | Implementado |
+| RNF-002          | Seguridad de Contraseñas                     | No Funcional  | —           | RNF-007          | Alta      | Implementado |
+| RNF-003          | Facilidad de Registro de Usuarios            | No Funcional  | —           | RNF-006          | Media     | Implementado |
+| RNF-004          | Escalabilidad de la Arquitectura             | No Funcional  | RNF-007    | RNF-007          | Alta      | Implementado |
+| RNF-005          | Soporte de Usuarios Concurrentes             | No Funcional  | RNF-001    | RNF-001          | Alta      | No verificado |
+| RNF-006          | Compatibilidad Responsive                    | No Funcional  | —           | RNF-003          | Alta      | Implementado parcialmente |
+| RNF-007          | Tests Automatizados                          | No Funcional  | —           | RNF-002, RNF-004 | Alta      | Implementado |
+| RNF-008          | Integridad de Tareas Asociadas a Proyectos   | No Funcional  | —           | RNF-009          | Alta      | Implementado |
+| RNF-009          | Integridad de Asignación de Usuarios         | No Funcional  | —           | RNF-008          | Alta      | Implementado |
 
 ---

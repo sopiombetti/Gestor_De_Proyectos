@@ -1,20 +1,42 @@
 import { ApiEditarTareaAdmin, ApiGetUsuarios } from "@/utils/api";
 import { useUserContext } from "@/utils/userContext";
 import { useEffect, useState } from "react";
-import Select from "./Select";
+import Select from "../ui/Select";
 
-interface Props {
-    tarea: any;
-    onClose: () => void;
+type Usuario = {
+  id: number
+  nombre: string
+  apellido: string
+  email: string
+  rol_admin: boolean
 }
 
-export default function ModalEditarTarea({ tarea, onClose }: Props) {
+type Tarea = {
+  id: number
+  titulo: string
+  descripcion: string
+  prioridad:{
+    id: number
+    nombre: string
+  }
+  usuario: Usuario
+}
+
+interface Props {
+    tarea: Tarea;
+    onClose: () => void;
+    onGuardado: () => void;
+    setError: React.Dispatch<React.SetStateAction<string>>;
+    setSuccess: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function ModalEditarTarea({ tarea, onClose, onGuardado, setError, setSuccess }: Props) {
 
     const [titulo, setTitulo] = useState(tarea.titulo);
     const [descripcion, setDescripcion] = useState(tarea.descripcion);
     const [prioridad, setPrioridad] = useState(tarea.prioridad.id);
     const { token } = useUserContext();
-    const [usuarios, setUsuarios] = useState([]);
+    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(0);
 
     useEffect(() => {
@@ -38,10 +60,13 @@ export default function ModalEditarTarea({ tarea, onClose }: Props) {
         try {
             const response = await ApiEditarTareaAdmin(tarea.id, { titulo, descripcion, idPrioridad: prioridad, idUsuario: usuarioSeleccionado }, token);
             if (!response.ok) {
+                setError("No se pudo editar la tarea.")
                 throw new Error("No se pudo editar la tarea.");
             }
             const data = await response.json();
             console.log(data);
+            setSuccess("La tarea se editó correctamente.")
+            onGuardado();
             onClose();
         }
         catch (err) {

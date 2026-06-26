@@ -36,19 +36,28 @@ Creá la base de datos:
 CREATE DATABASE gestor_proyectos;
 ```
 
-### Credenciales por defecto
+### Variables de entorno
 
-El backend está configurado (en `backend/src/app.module.ts`) para conectarse con:
+El backend lee la configuración desde un archivo `.env` (no se versiona). Copiá la plantilla y completá tus valores:
 
-| Parámetro | Valor |
-|-----------|-------|
-| host | `localhost` |
-| puerto | `5432` |
-| usuario | `postgres` |
-| contraseña | `123456` |
-| base de datos | `gestor_proyectos` |
+```bash
+cd backend
+cp .env.example .env
+```
 
-> ⚠️ Si tu instalación de PostgreSQL usa otra contraseña o usuario, editá esos valores en `backend/src/app.module.ts` antes de levantar el backend.
+Variables que usa:
+
+| Variable | Ejemplo | Descripción |
+|----------|---------|-------------|
+| `DATABASE_HOST` | `localhost` | Host de PostgreSQL |
+| `DATABASE_PORT` | `5432` | Puerto |
+| `DATABASE_USERNAME` | `postgres` | Usuario |
+| `DATABASE_PASSWORD` | `123456` | Contraseña |
+| `DATABASE_NAME` | `gestor_proyectos` | Nombre de la base de datos |
+| `JWT_SECRET` | `cambiá-este-secreto` | Clave para firmar los tokens JWT |
+| `JWT_EXPIRES_IN` | `1h` | Tiempo de expiración del token |
+
+> ⚠️ Ajustá los valores `DATABASE_*` a tu instalación de PostgreSQL. Si falta el `.env` o alguna variable, la conexión (o el firmado del token) falla.
 
 ---
 
@@ -90,18 +99,14 @@ La aplicación queda disponible en **http://localhost:3001**.
 
 ---
 
-## 4. Crear un usuario administrador
+## 4. Roles de usuario
 
-El registro crea usuarios **colaboradores** por defecto. Para probar las funciones de administración (crear proyectos, carga masiva, generar informes) necesitás un usuario **administrador**.
+Al **registrarte**, la app te pregunta qué rol vas a tener:
 
-1. Registrate normalmente desde la app (o desde Swagger con `POST /usuarios`).
-2. Promové ese usuario a administrador con esta consulta SQL:
+- **Líder de proyecto** → usuario administrador: puede crear proyectos, hacer la carga masiva de tareas y generar informes.
+- **Colaborador** → usuario regular: ve y trabaja sobre las tareas que le asignan.
 
-```sql
-UPDATE usuarios SET rol_admin = true WHERE email = 'tu_correo@ejemplo.com';
-```
-
-3. Cerrá sesión y volvé a iniciar sesión para que el nuevo rol tome efecto en el token.
+Para probar las funciones de administración, registrate como **Líder de proyecto**.
 
 ---
 
@@ -109,7 +114,7 @@ UPDATE usuarios SET rol_admin = true WHERE email = 'tu_correo@ejemplo.com';
 
 Flujo sugerido de prueba:
 
-1. **Registro** — Creá una cuenta (nombre, apellido, email, contraseña de mínimo 8 caracteres con al menos un número).
+1. **Registro** — Creá una cuenta (nombre, apellido, email, contraseña de mínimo 8 caracteres con al menos un número) y elegí el rol (**Líder de proyecto** o **Colaborador**).
 2. **Login** — Iniciá sesión; el sistema guarda el token JWT.
 3. **Panel de administración** (con el usuario admin) — Accedé a `/admin`.
 4. **Crear proyecto** — Botón "Crear Proyecto". Completá título y descripción.
@@ -153,9 +158,11 @@ La suite cubre guards (JWT/Admin), el patrón State de las tareas, los servicios
 
 En la carpeta `documentacion/` se encuentran:
 
-- `Requisitos_funcionales.md` — Especificación de requerimientos funcionales y no funcionales, con matriz de trazabilidad.
-- `EntityRelationshipDiagram.uml` — Diagrama entidad-relación (DER) en PlantUML.
-- `WorkBreakdownStructure.md` / `.uml` — Estructura de desglose del trabajo (WBS).
+- `Requisitos.md` — Especificación de requerimientos funcionales y no funcionales, con matriz de trazabilidad.
+- `EntityRelationshipDiagram.uml` — Diagrama entidad-relación (DER).
+- `diagramaDeClases.uml` — Diagrama de clases del sistema.
+- `DiagramaDeSecuencias_CambioEstado.uml` — Diagrama de secuencia del cambio de estado de una tarea (patrón State).
+- `WorkBreakdownStructure.uml` — Estructura de desglose del trabajo (WBS).
 - `HISTORIAS-DE-USUARIO.xlsx` — Historias de usuario.
 
 > Los diagramas `.uml` se visualizan en https://www.plantuml.com/plantuml o con la extensión *PlantUML* de VS Code.
@@ -164,4 +171,4 @@ En la carpeta `documentacion/` se encuentran:
 
 ## Nota
 
-Este es un proyecto académico pensado para ejecución **local**. Las credenciales de base de datos y el secreto JWT están definidos directamente en el código por simplicidad y no deben usarse en un entorno productivo.
+Este es un proyecto académico pensado para ejecución **local**. Las credenciales de base de datos y el secreto JWT se configuran mediante variables de entorno (`.env`, no versionado). Los valores son para uso local y no deben usarse en un entorno productivo.

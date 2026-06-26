@@ -12,6 +12,7 @@ logs/
 # environment variables
 .env
 .env.*
+!.env.txt
 
 # OS
 .DS_Store
