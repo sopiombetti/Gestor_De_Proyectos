@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import Register from "../register";
+import Register from "../pages/register";
 import { ApiRegister } from "@/utils/api";
 
 jest.mock("@/utils/api", () => ({
@@ -14,11 +14,11 @@ jest.mock("next/router", () => ({
   useRouter: jest.fn(),
 }));
 
-jest.mock("../../components/ui/Error", () => {
+jest.mock("../components/ui/Error", () => {
   return ({ text }: { text: string }) => <div>{text}</div>;
 });
 
-jest.mock("../../components/ui/Success", () => {
+jest.mock("../components/ui/Success", () => {
   return ({ text }: { text: string }) => <div>{text}</div>;
 });
 
