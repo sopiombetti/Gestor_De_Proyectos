@@ -1,0 +1,73 @@
+@startuml DiagramaDeComponentes_Sistema
+title Diagrama de Componentes — Gestor de Proyectos
+
+skinparam componentStyle uml2
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+top to bottom direction
+
+actor Usuario
+
+package "Frontend (Next.js)" {
+  [Páginas / Componentes UI] as UI
+  [Cliente API (api.ts)] as ApiClient
+  [Parser de archivos (SheetJS)] as Parser
+}
+
+interface "REST API\n(HTTP / JSON)" as REST
+
+package "Backend (NestJS)" {
+  [AuthModule\n(JWT + Guards)] as Auth
+  [UsuariosModule] as Usuarios
+  [ProyectosModule] as Proyectos
+  [TareasModule] as Tareas
+  [EstadosModule] as Estados
+  [PrioridadModule] as Prioridad
+  [ReportesModule] as Reportes
+  [SeederModule] as Seeder
+}
+
+interface "TypeORM" as ORM
+database "PostgreSQL" as DB
+component "pdfmake" as Pdf
+
+' === Usuario / Frontend ===
+Usuario --> UI
+UI --> ApiClient
+UI --> Parser
+
+' === El frontend consume la API; el backend la provee (controllers) ===
+ApiClient --( REST
+Usuarios - REST
+Proyectos - REST
+Tareas - REST
+Estados - REST
+Prioridad - REST
+Reportes - REST
+
+' === Dependencias entre módulos ===
+Usuarios ..> Auth
+Proyectos ..> Auth
+Tareas ..> Auth
+Reportes ..> Auth
+Tareas ..> Usuarios
+Tareas ..> Proyectos
+Tareas ..> Estados
+Tareas ..> Prioridad
+Proyectos ..> Usuarios
+Reportes ..> Proyectos
+
+' === Librerías externas ===
+Reportes ..> Pdf : usa
+
+' === Persistencia ===
+Usuarios --( ORM
+Proyectos --( ORM
+Tareas --( ORM
+Estados --( ORM
+Prioridad --( ORM
+Seeder --( ORM
+ORM - DB
+
+@enduml
