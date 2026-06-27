@@ -38,15 +38,15 @@ export default function Navbar() {
         </button>
 
         {open && (
-          <div className="absolute right-0 mt-2 w-52 bg-white shadow-lg border z-50">
+          <div className="absolute right-0 mt-2 w-52 bg-white shadow-lg border border-secondary z-50">
             {user.isAdmin ? 
-            <Link href="/admin" className="block px-4 py-3 hover:bg-gray-100">
+            <Link href="/admin" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setOpen(false)}>
               Panel Administrador
             </Link> : <></>}
-            <Link href="/home" className="block px-4 py-3 hover:bg-gray-100">
+            <Link href="/home" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setOpen(false)}>
               Inicio
             </Link>
-            <button onClick={handleLogout} className="w-full text-left px-4 py-3 hover:bg-gray-100 cursor-pointer">
+            <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">
               Cerrar Sesión
             </button>
           </div>
