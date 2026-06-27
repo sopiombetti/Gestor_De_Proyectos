@@ -15,7 +15,7 @@ export default function Select({
   onChange,
 }: SelectProps) {
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-2 w-full mt-3 mb-3">
       <div className="flex items-center space-x-2">
         <img className="w-5" src="/check.svg" alt="check" />
         <label className="text-md font-medium text-gray-800">

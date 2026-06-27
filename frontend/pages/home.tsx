@@ -64,7 +64,7 @@ export default function Home() {
     <>
       {error && <MensajeError text={error} />}
 
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-4 sm:px-8 md:px-16 lg:px-24 pt-8 sm:pt-10 pb-16">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 px-4 sm:px-8 md:px-16 lg:px-32 pt-8 sm:pt-10 pb-16">
 
         <section>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -88,20 +88,25 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="flex flex-col sm:flex-row items-start sm:items-center my-8 sm:my-14 bg-gray-200 dark:bg-gray-700 rounded-lg p-4 sm:h-18 w-full sm:max-w-md border border-secondary gap-3 sm:gap-0">
-          <h3 className="sm:mr-6 sm:ml-4 font-semibold text-lg text-gray-900 dark:text-white whitespace-nowrap">
-            Filtrar Tareas
-          </h3>
-          <select
-            className="w-full sm:w-44 bg-white dark:bg-gray-800 dark:text-white rounded-md px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 focus:outline-blue-400"
-            value={prioridad}
-            onChange={(e) => setPrioridad(e.target.value)}
-          >
-            <option value="">Todas</option>
-            <option value="1">Prioridad Baja</option>
-            <option value="2">Prioridad Media</option>
-            <option value="3">Prioridad Alta</option>
-          </select>
+        <section className="w-full max-w-lg mt-8 mb-12">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-700 shadow-lg rounded-2xl px-5 py-4">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🔎</span>
+              <h3 className="font-semibold text-gray-800 dark:text-white text-lg">
+                Filtrar tareas
+              </h3>
+            </div>
+            <select
+              className="w-full sm:w-56 bg-white dark:bg-slate-800 text-gray-800 dark:text-white rounded-xl px-4 py-2.5 border border-gray-300 dark:border-slate-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+              value={prioridad}
+              onChange={(e) => setPrioridad(e.target.value)}
+            >
+              <option value="">Todas las prioridades</option>
+              <option value="1">Prioridad baja</option>
+              <option value="2">Prioridad media</option>
+              <option value="3">Prioridad alta</option>
+            </select>
+          </div>
         </section>
 
         <section className="flex flex-col space-y-4 sm:space-y-5 mt-8 sm:mt-16">

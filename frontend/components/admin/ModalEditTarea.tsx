@@ -2,6 +2,7 @@ import { ApiEditarTareaAdmin, ApiGetUsuarios } from "@/utils/api";
 import { useUserContext } from "@/utils/userContext";
 import { useEffect, useState } from "react";
 import Select from "../ui/Select";
+import { useUsuarios } from "@/hooks/useUsuarios";
 
 type Usuario = {
   id: number
@@ -36,25 +37,8 @@ export default function ModalEditarTarea({ tarea, onClose, onGuardado, setError,
     const [descripcion, setDescripcion] = useState(tarea.descripcion);
     const [prioridad, setPrioridad] = useState(tarea.prioridad.id);
     const { token } = useUserContext();
-    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(0);
-
-    useEffect(() => {
-        async function getUsuarios() {
-            try {
-                const response = await ApiGetUsuarios(token);
-                if (!response.ok) {
-                    throw new Error("No se pudieron obtener los proyectos.");
-                }
-                const data = await response.json();
-                setUsuarios(data);
-            }
-            catch (err) {
-                console.error(err);
-            }
-        }
-        getUsuarios();
-    }, [])
+    const {usuarios} = useUsuarios(token);
 
     async function editarTarea() {
         try {
@@ -65,9 +49,10 @@ export default function ModalEditarTarea({ tarea, onClose, onGuardado, setError,
             }
             const data = await response.json();
             console.log(data);
+            onClose();
             setSuccess("La tarea se editó correctamente.")
             onGuardado();
-            onClose();
+            
         }
         catch (err) {
             console.error(err);
