@@ -37,9 +37,10 @@ export default function ModalEditarProyecto({ proyecto, onClose, onGuardado, set
         setError("No se pudo editar el proyecto.")
         throw new Error("No se pudo editar el proyecto.");
       }
+      onClose();
       setSuccess("El proyecto se editó correctamente.")
       onGuardado({ ...proyecto, titulo, descripcion });
-      onClose();
+      
     }
     catch (err) {
       console.error(err);

@@ -5,6 +5,7 @@ import ModalEditarTarea from "./ModalEditTarea"
 import ModalEditarProyecto from "./ModalEditProyecto"
 import Swal from "sweetalert2";
 import ReporteButton from "./ReporteButton"
+import TaskForm from "../tareas/TaskForm"
 
 type Usuario = {
   id: number
@@ -54,6 +55,7 @@ export default function CardProyecto({ proyecto, setError, setSuccess }:CardProy
   const [tareaSeleccionada, setTareaSeleccionada] = useState<Tarea>();
   const [modalProyectoAbierto, setModalProyectoAbierto] = useState(false);
   const [proyectoActual, setProyectoActual] = useState(proyecto);
+  const [modalCrearTarea, setModalCrearTarea] = useState(false);
 
   async function getTareasProyecto() {
     if (mostrarTareas) {
@@ -123,11 +125,14 @@ export default function CardProyecto({ proyecto, setError, setSuccess }:CardProy
           <p>Creado el: {proyecto.fechaCreacion.slice(0, 10)}</p>
         </div>
 
-        <div className="flex space-x-5">
+        <div className="flex space-x-5 items-end">
           <ReporteButton proyectoId={proyecto.id} setError={setError}/>
           <button onClick={getTareasProyecto} className="flex items-center mt-6 max-w-[170px] font-semibold justify-center border-2 border-primary rounded-md space-x-2 p-2 cursor-pointer hover:border-violet-600 hover:border-2">
             <img src="/list.svg" className="h-5" />
             <p>{mostrarTareas ? "Ocultar tareas" : "Mostrar tareas"}</p>
+          </button>
+          <button onClick={() => setModalCrearTarea(true)} className="flex items-center justify-center py-2 px-4 rounded-full bg-primary font-semibold text-white shadow-sm cursor-pointer hover:bg-violet-500">
+            <p>+ Crear Tarea</p>
           </button>
         </div>
 
@@ -157,6 +162,7 @@ export default function CardProyecto({ proyecto, setError, setSuccess }:CardProy
       </div>
       {modalAbierto && tareaSeleccionada && (<ModalEditarTarea tarea={tareaSeleccionada} onClose={() => setModalAbierto(false)} onGuardado={getTareasProyecto} setError={setError} setSuccess={setSuccess}/>)}
       {modalProyectoAbierto && (<ModalEditarProyecto proyecto={proyectoActual} onClose={() => setModalProyectoAbierto(false)} onGuardado={(p) => setProyectoActual(p)} setError={setError} setSuccess={setSuccess}/>)}
+      {modalCrearTarea && (<TaskForm idProyecto={proyectoActual.id} onClose={() => setModalCrearTarea(false)} setError={setError} setSuccess={setSuccess}/>)}
     </>
   )
 }

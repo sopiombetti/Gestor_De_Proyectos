@@ -150,6 +150,26 @@ export async function ApiCrearTareasBulk(
   });
 }
 
+export async function ApiCrearTarea(
+  body: {
+    idProyecto: number;
+    titulo: string;
+    descripcion: string;
+    idPrioridad: number;
+    idUsuario?: number;
+  },
+  token: string | null
+) {
+  return fetch(`${API_URL}/tareas`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(token),
+    },
+    body: JSON.stringify(body),
+  });
+}
+
 export async function ApiEditarTarea(
   idTarea: number,
   body: {
